@@ -1,0 +1,201 @@
+{
+  "footerSect1": [
+    {
+      "name": "About Us",
+      "route": "/about"
+    },
+    {
+      "name": "FAQs",
+      "route": "/faqs"
+    },
+    {
+      "name": "Data Privacy Notice",
+      "route": "/data-privacy"
+    },
+    {
+      "name": "Privacy Policy",
+      "route": "/privacy-policy"
+    },
+    {
+      "name": "Cookies Policy",
+      "route": "/cookies-policy"
+    },
+    {
+      "name": "Terms and Conditions",
+      "route": "/terms"
+    },
+    {
+      "name": "Refund Policy",
+      "route": "/refund-policy"
+    }
+  ],
+  "footerSect2": [
+    {
+      "name": "Visa Facilitation",
+      "route": "/services/visa-services/visa-facilitation"
+    },
+    {
+      "name": "Book Paid Consultation",
+      "route": "/book-consultation"
+    },
+    {
+      "name": "Holiday Packages",
+      "route": "/services/holiday-packages"
+    },
+    {
+      "name": "International Conferences",
+      "route": "/services/international-conferences-events"
+    },
+    {
+      "name": "Overseas School Placements",
+      "route": "/services/overseas-school-placements"
+    },
+    {
+      "name": "Domestic Tours and Attraction",
+      "route": "/services/domestic-tours-attractions"
+    },
+    {
+      "name": "Relocation Opportunities",
+      "route": "/services/relocation-opportunities"
+    }
+  ],
+  "thirdPartyServices": [
+    {
+      "name": "IELTS",
+      "route": "/services/third-party-services/ielts-international-english-language-testing-systems"
+    },
+    {
+      "name": "Agile Online Coaching",
+      "route": "/services/third-party-services/agile-online-coaching"
+    },
+    {
+      "name": "International Passport",
+      "route": "/services/third-party-services/international-passport"
+    },
+    {
+      "name": "International Drivers License",
+      "route": "/services/third-party-services/international-drivers-license"
+    },
+    {
+      "name": "Travel Insurance",
+      "route": "/services/third-party-services/travel-insurance"
+    }
+  ],
+  "resources": [
+    {
+      "name": "Blog",
+      "route": "/"
+    },
+    {
+      "name": "Testimonials",
+      "route": "/#testimonials"
+    },
+    {
+      "name": "Reviews",
+      "route": "/"
+    },
+    {
+      "name": "Site Map",
+      "route": "/site-map"
+    }
+  ],
+  "footerContactSect": [
+    {
+      "title": "Office Address",
+      "icon": "material-symbols:home-rounded",
+      "text": "32, Yaya Abatan Street, Ogba, Ikeja. Lagos, Nigeria.",
+      "url": "https://goo.gl/maps/QJzZY6wfv2mGAToT6"
+    },
+    {
+      "title": "Email Us",
+      "icon": "dashicons:email",
+      "text": "enquiries.support@loiztravels.com",
+      "url": "mailto:enquiries.support@loiztravels.com?subject=Mail from website!"
+    },
+    {
+      "title": "Phone",
+      "multiple": true,
+      "icon": "ant-design:phone-filled",
+      "text": [
+        "+234 704 617 8336",
+        "+234 817 933 2985"
+      ],
+      "url": ""
+    }
+  ],
+  "loizContacts": [
+    {
+      "name": "Facebook",
+      "icon": "akar-icons:facebook-fill",
+      "url": "",
+      "color": "#1C54D1"
+    },
+    {
+      "name": "Twitter",
+      "icon": "mdi:twitter",
+      "url": "https://twitter.com/loiztravels",
+      "color": "#55ACEE"
+    },
+    {
+      "name": "Instagram",
+      "icon": "skill-icons:instagram",
+      "url": "https://www.instagram.com/loiztoursandtravels/"
+    },
+    {
+      "name": "LinkedIn",
+      "icon": "mdi:linkedin",
+      "url": "https://www.linkedin.com/company/loiz-tours-travels/",
+      "color": "#0A66C2"
+    },
+    {
+      "name": "Threads",
+      "icon": "simple-icons:threads",
+      "url": "https://www.threads.net/@loiztoursandtravels",
+      "color": "#222"
+    }
+  ],
+  "loizChat": [
+    {
+      "name": "Whatsapp",
+      "icon": "logos:whatsapp-icon",
+      "url": "https://api.whatsapp.com/message/IXDNZJC7JRPYD1",
+      "color": "blue"
+    },
+    {
+      "name": "Telegram",
+      "icon": "simple-icons:telegram",
+      "url": "https://t.me/Loiztravels",
+      "color": "#40B3E0"
+    },
+    {
+      "name": "Messanger",
+      "icon": "logos:messenger",
+      "url": "https://www.facebook.com/people/Loiz-Tours-Travels-Ltd/100093653414058/",
+      "color": ""
+    },
+    {
+      "name": "Pinterest",
+      "icon": "ri:pinterest-fill",
+      "url": "https://www.pinterest.co.uk/loiztours/",
+      "color": "#E60023"
+    }
+  ],
+  "partners": [
+    {
+      "name": "CAC",
+      "src": "/svg/cac.png"
+    },
+    {
+      "name": "iata",
+      "src": "/svg/iata.svg"
+    },
+    {
+      "name": "ncaa",
+      "src": "/svg/ncaa.svg"
+    },
+    {
+      "name": "nanta",
+      "src": "/svg/nanta.svg"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+/* Animations */
+
+@keyframes move-up {
+  0% {
+    left: 0;
+    top: 100vh;
+  }
+  100% {
+    left: 0;
+    top: 0;
+  }
+}
+@keyframes move-down {
+  0% {
+    left: 0;
+    top: -100vh;
+  }
+  100% {
+    left: 0;
+    top: 0;
+  }
+}
+@keyframes show {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+  50% {
+    display: block;
+    opacity: 0.5;
+  }
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+// Keyframes
+@keyframes dropdown {
+  0% {
+    opacity: 0.5;
+    max-height: 0px;
+    padding: 0;
+  }
+  100% {
+    opacity: 1;
+    max-height: max-content;
+  }
+}
+@keyframes fall {
+  0% {
+    opacity: 0.5;
+    transform: translate(0, -100%);
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+    max-height: max-content;
+    transform: translate(0, 0);
+  }
+}
+@keyframes close {
+  0% {
+    opacity: 1;
+    max-height: max-content;
+  }
+  100% {
+    opacity: 0;
+    max-height: 0px;
+    padding: 0;
+  }
+}
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes moveUp {
+  0% {
+    top: 100vh;
+  }
+  100% {
+    top: 0;
+  }
+}
+@keyframes slide {
+  0% {
+    left: 0;
+  }
+  50% {
+    left: 50%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+@keyframes fadeDown {
+  0% {
+    transform: translate(0, -100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes fadeUp {
+  0% {
+    transform: translate(0, 100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes fadeRight {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes fadeLeft {
+  0% {
+    transform: translate(50%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes zoomIn {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinClockwise {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Animations
+.animate-spin {
+  animation: spin 5s linear infinite;
+}
+.animate-spin-clockwise {
+  animation: spinClockwise 5s linear infinite;
+}

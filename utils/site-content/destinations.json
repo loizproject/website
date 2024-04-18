@@ -1,0 +1,38 @@
+[
+  {
+    "title": "UNITED STATES OF AMERICA: Statue of Liberty",
+    "text": "Have a favourite dream holiday package with us and visit the dazzling Statue of Liberty, one of New York’s most famous spectacular designed landmark.",
+    "img": "/img/destinations/usa.jpg",
+    "showContent": false
+  },
+  {
+    "title": "UNITED KINGDOM: London Eye",
+    "text": "Experience London's Iconic Skyline from New Heights at the UK's Spectacular London Eye!",
+    "img": "/img/destinations/london.png",
+    "showContent": false
+  },
+  {
+    "title": "UNITED ARAB EMIRATES: Dubai's Burj Khalifa",
+    "text": "Be awed with the Burj Khalifa during our Dubai holidays. Also known as Burj Dubai, the mixed-used skyscraper remains the world's tallest building.",
+    "img": "/img/destinations/uae.png",
+    "showContent": false
+  },
+  {
+    "title": "FRANCE: Eiffel Tower",
+    "text": "Discover the Eiffel in our holiday tour packages, and identify with the iconic symbol of Paris skyline, culture, economy and industrial strength.",
+    "img": "/img/destinations/french.png",
+    "showContent": false
+  },
+  {
+    "title": "CANADA: Niagara Falls.",
+    "text": "Visit the Niagara Falls, a geological wonder  and one of the most famous waterfalls in the world, embedded in our holiday packages",
+    "img": "/img/destinations/canada.jpg",
+    "showContent": false
+  },
+  {
+    "title": "NIGERIA: Lekki Conservative Center",
+    "text": "LCC represents the preservation of unique biodiversity, scenic, natural, scientific recreational values of the coastal environs of western Nigeria.",
+    "img": "/img/destinations/nigeria.png",
+    "showContent": false
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Home Page",
+    "route": "/site-map",
+    "imgUrl": "/img/site-map/home.svg"
+  },
+  {
+    "name": "Header",
+    "route": "/site-map/header",
+    "imgUrl": "/img/site-map/header.svg"
+  },
+  {
+    "name": "Services",
+    "route": "/site-map/services",
+    "imgUrl": "/img/site-map/services.svg"
+  },
+  {
+    "name": "Sub-header",
+    "route": "/site-map/sub-header",
+    "imgUrl": "/img/site-map/sub-header.svg"
+  },
+  {
+    "name": "Footer",
+    "route": "/site-map/footer",
+    "imgUrl": "/img/site-map/footer.svg"
+  }
+]

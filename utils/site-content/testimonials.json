@@ -1,0 +1,83 @@
+[
+  {
+    "id": 0,
+    "name": "Zino",
+    "imgUrl": "zino.jpg",
+    "location": "Benin City, Nigeria",
+    "date": "January, 2024",
+    "content": "Any day or time, I will heartily recommend Loiz Tours & Travels to everyone because of their excellent, well-managed services. I was turned down twice before finally obtaining a student visa to the United Kingdom. I'm grateful to Loiz Tours & Travels for easing my travel experience",
+    "aos": "fade-right"
+  },
+  {
+    "id": 8,
+    "name": "Onose",
+    "imgUrl": "nono.jpg",
+    "location": "Ibadan, Nigeria",
+    "date": "October 2019",
+    "content": "I had a seamless application process with Loiz Tours and Travels Ltd. They made sure my documents were intact, my forms were properly filled and I had the privilege of experiencing their premium service, the staff that worked on my application was pleasant and I got a Schengen visa with my daughter and had a lovely trip and holiday to Belgium",
+    "aos": "fade-right"
+  },
+  {
+    "id": 7,
+    "name": "Nkechi",
+    "imgUrl": "nkechi.jpg",
+    "location": "Lagos, Nigeria",
+    "date": "June, 2022",
+    "content": "My application processing support with Loiz Tours and Travels was professionally handled. They helped me identify the right supporting documents and pointed me to the right quarters to get genuine documents for the category of documents I needed for additional proof. I was given a visiting visa to the United Kingdom on a virgin passport. They helped me kick-start my international travel history. I will highly recommend them",
+    "aos": "fade-right"
+  },
+  {
+    "id": 5,
+    "name": "Nosa",
+    "imgUrl": "nosa.png",
+    "location": "Lagos, Nigeria",
+    "date": "March 2020",
+    "content": "I was issued a UK visa at first attempt through Loiz Tours & Travels. I was so overwhelmed with joy. Their expertise, customer relation services are top notch! Loiz Tours & Travels, you've got a client for life. I am super excited",
+    "aos": "fade-left"
+  },
+  {
+    "id": 1,
+    "name": "Adaobi",
+    "imgUrl": "adaobi.png",
+    "location": "Abuja, Nigeria",
+    "date": "June, 2022",
+    "content": "Your service was highly professional from the first day with reliable and transparent advice. I strongly recommend Loiz Tours & Travels for anyone seeking professional advice",
+    "aos": "fade-right"
+  },
+  {
+    "id": 2,
+    "name": "Ify",
+    "imgUrl": "ify.png",
+    "location": "Lagos, Nigeria",
+    "date": "November, 2016.",
+    "content": "Thanks to Loiz Tours & Travels, I was able to acquire a visa to the United States of America without any difficulty. The visa was facilitated by Loiz Tours & Travels. I also had a wonderful travel experience and everything was coordinated perfectly. Thank you for the opportunity.",
+    "aos": "fade-right"
+  },
+  {
+    "id": 3,
+    "name": "Lauretta",
+    "imgUrl": "lauretta.png",
+    "location": "Asaba, Nigeria",
+    "date": "September 2016",
+    "content": "It was my first international trip to attend a professional Conference in Spain and it was awesome. Thanks to Loiz Tours & Travels for the top-notch communication, excellent visa facilitation, packaging and well planned itinerary. I highly recommend them",
+    "aos": "zoom-out"
+  },
+  {
+    "id": 4,
+    "name": "Honourable Lucy",
+    "imgUrl": "lucy.png",
+    "location": "Edo State, Nigeria.",
+    "date": "November 2019",
+    "content": "I am an octogenarian and I am grateful to Loiz Tours and Travels for packaging my trip from Nigeria to Belgium to see my children and grandchildren. There is the general believe that Belgian visa is not easy to get but the facilitation was anchored by Loiz Tours & Travels and I was given. I am quite satisfied and has referred customers to them",
+    "aos": "zoom-in"
+  },
+  {
+    "id": 6,
+    "name": "Taiwo Family",
+    "imgUrl": "taiwo.png",
+    "location": "Lagos, Nigeria",
+    "date": "December 2015",
+    "content": "Our family holiday to the United States of America was packaged by Loiz Tours & Travels. We were given visas and had a swell time. We toured 10 American States all itineraries pre-planned by the indigenous Nigerian Company. Thanks Loiz Tours & Travels, you obviously have repeat customers here",
+    "aos": "fade-left"
+  }
+]

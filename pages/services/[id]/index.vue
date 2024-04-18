@@ -1,0 +1,60 @@
+<script setup>
+import { useContentStore } from "~/store/content";
+
+const route = useRoute();
+const contentStore = useContentStore();
+
+const getSlug = (route) => {
+  const arr = route.split("/");
+  const slug = arr[arr.length - 1];
+  return slug;
+};
+
+const slug = getSlug(route.path);
+const service = computed(() => {
+  return contentStore.getServiceBySlug(slug);
+});
+
+onMounted(async () => {
+  await contentStore.fetchServices();
+});
+</script>
+
+<template>
+  <div id="" class="visa-services">
+    <v-container v-if="service">
+      <h1 class="mb-4">{{ service.title }}</h1>
+      <v-img :src="service.image" class="my-4 rounded-md"></v-img>
+      <p class="mb-8">
+        {{ service.description }}
+      </p>
+      <div v-for="item in service.subservices" :key="item.title" class="my-2">
+        <nuxt-link :to="`/services/${service.slug}/${item.slug}`">
+          {{ item.title }}
+        </nuxt-link>
+      </div>
+      <div class="d-flex align-center justify-start mt-8">
+        <v-btn
+          large
+          type="submit"
+          class="submit"
+          elevation="0"
+          @click="$router.push(`/book-consultation/${service.slug}`)"
+        >
+          Book Consultation
+        </v-btn>
+      </div>
+    </v-container>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.visa-services {
+  padding: 0 2%;
+  & a {
+    color: #555;
+    // text-decoration: underline;
+    border-bottom: 0.1px solid #555;
+  }
+}
+</style>
