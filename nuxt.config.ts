@@ -40,18 +40,21 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     "nuxt-lodash",
     "maz-ui/nuxt",
+    // "nuxt-graphql-request",
   ],
-
+  mazUi: {
+    injectComponents: true,
+    injectCss: true,
+    injectAos: {
+      injectCss: true,
+    },
+    injectUseToast: true,
+    injectUseThemeHandler: true,
+    devtools: true,
+  },
   lodash: {
     prefix: "_",
-    exclude: ["map"],
-    alias: [
-      ["camelCase", "stringToCamelCase"], // => stringToCamelCase
-      ["kebabCase", "stringToKebab"], // => stringToKebab
-      ["isDate", "isLodashDate"], // => _isLodashDate
-    ],
   },
-
   image: {
     provider: 'cloudinary',
     cloudinary: {
@@ -82,11 +85,22 @@ export default defineNuxtConfig({
       },
     }
   },
+  // graphql: {
+  //   clients: {
+  //     default: {
+  //       endpoint: process.env.CMS_BASE_URL!,
+  //       options: {
+  //         method: 'get', // Default to `POST`
+  //       },
+  //     },
+  //   },
+  // },
   runtimeConfig: {
     public: {
       sanctumCookieURL: process.env.AUTH_BASE_URL,
       APP_URL: process.env.APP_URL,
       BASE_URL: process.env.BASE_URL,
+      CMS_BASE_URL: process.env.CMS_BASE_URL,
       APP_ENV: process.env.APP_ENV,
       MEDIA_ASSETS_URL: process.env.MEDIA_ASSETS_URL,
       PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
@@ -99,7 +113,7 @@ export default defineNuxtConfig({
     }
   },
   build: {
-    transpile: ["vuetify"],
+    transpile: ["vuetify", "nuxt-graphql-request", "lodash-es"],
   },
   vue: {
     compilerOptions: {
@@ -114,10 +128,10 @@ export default defineNuxtConfig({
     },
     css: {
       preprocessorOptions: {
-          scss: {
-              additionalData: '@import "@/assets/css/variables.scss";',
-          },
+        scss: {
+          additionalData: '@import "@/assets/css/variables.scss";',
+        },
       },
-  },
+    },
   },
 });

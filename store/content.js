@@ -1,13 +1,16 @@
 import { defineStore } from 'pinia';
+import testimonials from "~/utils/site-content/testimonials.json"
+import destinations from "~/utils/site-content/destinations.json"
+import siteMapItems from "~/utils/site-content/site-map.json"
 
 export const useContentStore = defineStore({
   id: 'content',
   state: () => ({
     countries: [],
     services: [],
-    testimonials: [],
-    destinations: [],
-    siteMapItems: [],
+    testimonials,
+    destinations,
+    siteMapItems,
     dontShowPersons: ["solo-trip-tour-holiday-packages", "trip-for-two-holiday-tour-packages"],
     advisoryServices: [
       'Exclusive expert travel advise and assistance',

@@ -6,17 +6,22 @@ const contentStore = useContentStore();
 
 const getSlug = (route) => {
   const arr = route.split("/");
-  const slug = arr[arr.length - 1];
+  const slug = route.endsWith("/") ? arr[arr.length - 2] : arr[arr.length - 1];
   return slug;
 };
 
-const slug = getSlug(route.path);
+const slug = getSlug(route.fullPath);
 const service = computed(() => {
   return contentStore.getServiceBySlug(slug);
 });
 
 onMounted(async () => {
   await contentStore.fetchServices();
+});
+
+definePageMeta({
+  layout: "services",
+  middleware: ["redirect"],
 });
 </script>
 

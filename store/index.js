@@ -38,7 +38,7 @@ export const useStore = defineStore({
       this.toast = true
       setTimeout(() => {
         this.toast = false
-      }, payload.duration ? payload.duration : 5000);
+      }, payload && payload.duration ? payload.duration : 25000);
     },
     async fetchRates() {
       try {
@@ -65,7 +65,7 @@ export const useStore = defineStore({
       };
       try {
         if (config.public.APP_ENV !== 'local') {
-          const res = await useAxiosFetch('/location');
+          res = await useAxiosFetch('/location');
         }
         const location = res.data.data.location;
         this.location = location;

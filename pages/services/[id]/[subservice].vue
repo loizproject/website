@@ -25,8 +25,8 @@ const valid = ref(true);
 const submitting = ref(true);
 const promo = ref(true);
 const canShowForm = ref(false); // hide form temporarily
-const slug = getSlug(route.path);
-const serviceSlug = getServiceSlug(route.path);
+const slug = getSlug(route.fullPath);
+const serviceSlug = getServiceSlug(route.fullPath);
 const country = ref(null);
 const visaType = ref(null);
 const destination = ref(null);
@@ -132,9 +132,13 @@ const goToCheckout = async () => {
 };
 
 onMounted(() => {
-  console.log("Mounted!");
   country.value = route.query.country;
   destination.value = destinations.value.find((item) => item.title === route.query.title);
+});
+
+definePageMeta({
+  layout: "services",
+  middleware: ["redirect"],
 });
 </script>
 

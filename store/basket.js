@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { useStore } from './';
 import { useAuthStore } from './auth';
+import { useConsultationStore } from "./consultation";
 
 export const useBasketStore = defineStore({
   id: 'basket',
@@ -9,13 +10,15 @@ export const useBasketStore = defineStore({
   }),
   getters: {
     getSubTotal(state) {
-      let total = 0;
       const store = useStore()
+      const consultationStore = useConsultationStore()
+
+      let total = 0;
       const rate = store.rate;
       const country = store.location.countryName;
       state.basket.forEach(item => {
         if (country === 'Nigeria') {
-          item.consultation ? total += rootState.consultation.priceNGN : total += (item.price * item.qty * rate);
+          item.consultation ? total += consultationStore.priceNGN : total += (item.price * item.qty * rate);
         } else {
           total += item.price * item.qty;
         }
@@ -23,13 +26,15 @@ export const useBasketStore = defineStore({
       return total;
     },
     getNgnSubTotal(state) {
-      let total = 0;
       const store = useStore()
+      const consultationStore = useConsultationStore()
+
+      let total = 0;
       const rate = store.rate;
       const country = store.location.countryName;
       state.basket.forEach(item => {
         if (country === 'Nigeria') {
-          item.consultation ? total += rootState.consultation.priceNGN : item.third_party ? total += (item.price * item.qty * rate) : total += (item.price * item.qty * 0.90 * rate);
+          item.consultation ? total += consultationStore.priceNGN : item.third_party ? total += (item.price * item.qty * rate) : total += (item.price * item.qty * 0.90 * rate);
         } else {
           total += item.price * item.qty;
         }
@@ -77,7 +82,7 @@ export const useBasketStore = defineStore({
       try {
         if (authStore.user) {
           await useAxiosPost("/user/basket", payload);
-          this.fetchBasket()
+          await this.fetchBasket()
           resp = true;
         } else {
           store.setToast("Please sign in to add item to basket", { type: "info" });

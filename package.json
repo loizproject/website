@@ -20,11 +20,16 @@
   "dependencies": {
     "@nuxt/image": "^1.1.0",
     "@nuxtjs/google-fonts": "^3.0.2",
+    "@paypal/paypal-js": "^8.0.5",
     "@pinia/nuxt": "^0.5.1",
     "aos": "^2.3.4",
     "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
+    "libphonenumber-js": "^1.10.60",
+    "maz-ui": "^3.41.1",
     "pinia": "^2.1.7",
     "sass": "^1.69.5",
+    "ulid": "^2.3.0",
     "vue-signature-pad": "^3.0.2",
     "vuetify": "^3.3.14"
   }

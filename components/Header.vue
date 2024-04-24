@@ -11,8 +11,6 @@ const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
 const basketStore = useBasketStore();
 
-// const { user, loggedIn, logout } = useAuth();
-
 const cartMenu = ref(false);
 const headerRoutes = ref([
   { name: "Home", route: "/", active: true },
@@ -24,11 +22,14 @@ const headerRoutes = ref([
 const loggedInUserMenu = ref([
   {
     title: "Logout",
+    icon: "mdi-power",
     action: () => {
       logout();
     },
   },
 ]);
+
+const user = computed(() => authStore.user);
 
 const services = computed(() => contentStore.services);
 const consultationServices = computed(() => consultationStore.services);
@@ -52,11 +53,9 @@ const basket = computed(() => {
 const logout = async () => {
   try {
     await authStore.logout();
-    this.$toast.success("Logged out succesfully", { type: "success" });
-    await basketStore.clearBasket();
-    authStore.user = null;
+    store.setToast("Logged out succesfully", { type: "success" });
   } catch (error) {
-    useHandleError(error);
+    useErrorHandler(error);
   }
 };
 
@@ -80,7 +79,7 @@ const setActiveRoute = (routeName) => {
             <nav class="d-flex justify-start justify-md-center align-center mx-auto">
               <v-menu
                 offset-y
-                content-class="services-menu"
+                content-class="services-menu no-scroll"
                 open-on-hover
                 :close-on-content-click="false"
                 transition="slide-y-transition"
@@ -117,7 +116,6 @@ const setActiveRoute = (routeName) => {
                     </v-col>
                   </v-row>
                 </v-list>
-                <div class="bg-white pt-5"></div>
               </v-menu>
             </nav>
           </div>
@@ -163,7 +161,7 @@ const setActiveRoute = (routeName) => {
         </nuxt-link>
       </div>
       <div class="d-none d-md-flex align-center justify-space-between">
-        <div v-if="authStore.user" class="logged-in d-flex align-center">
+        <div v-if="user" class="logged-in d-flex align-center">
           <div class="cart mx-4" @click="$router.push('/basket')">
             <div
               class="cart__img__wrapper mr-5"
@@ -191,9 +189,9 @@ const setActiveRoute = (routeName) => {
                     </p>
                   </div>
                   <p v-if="isNigerian" class="ml-2">
-                    ₦{{ $amtToString(consultationPriceNGN) }}
+                    ₦{{ useAmtToString(consultationPriceNGN) }}
                   </p>
-                  <p v-else class="ml-2">${{ $amtToString(consultationPrice) }}</p>
+                  <p v-else class="ml-2">${{ useAmtToString(consultationPrice) }}</p>
                 </div>
                 <div v-else class="d-flex items-center justify-space-between">
                   <div>
@@ -215,18 +213,23 @@ const setActiveRoute = (routeName) => {
             {{ `Hi, ${user.firstName} ${user.lastName}` }}
           </p>
           <v-menu min-width="180" offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn x-small plain v-bind="attrs" v-on="on" class="logged-in__menu px-1">
+            <template v-slot:activator="{ props }">
+              <v-btn x-small variant="plain" v-bind="props" class="logged-in__menu px-1">
                 <v-icon>mdi-menu-down</v-icon>
               </v-btn>
             </template>
-            <v-list>
+            <v-list class="tw-min-w-[200px]">
               <v-list-item
                 v-for="(item, index) in loggedInUserMenu"
                 :key="index"
                 @click="item.action"
               >
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item-title>
+                  <div class="tw-flex tw-items-center">
+                    <v-icon class="mr-2">{{ item.icon }}</v-icon>
+                    {{ item.title }}
+                  </div>
+                </v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>

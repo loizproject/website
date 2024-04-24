@@ -13,7 +13,7 @@ const props = defineProps(["meta"]);
         :type="meta.type ? meta.type : 'success'"
         :title="meta.title"
         :text="meta.text"
-        :icon="meta.icon ? meta.icon : '$success'"
+        :icon="meta.icon ? meta.icon : meta.type ? `$${meta.type}` : null"
         :color="meta.color"
       ></v-alert>
     </div>

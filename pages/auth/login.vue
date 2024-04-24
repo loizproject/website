@@ -1,0 +1,195 @@
+<script setup>
+import { useAuthStore } from "~/store/auth";
+
+const authStore = useAuthStore();
+const route = useRoute();
+const router = useRouter();
+const rules = useFormRules;
+
+// const { rdr } = route.query;
+const rdr = useCookie("loiz_redirect");
+
+const form = ref({});
+const formData = ref({});
+const showPassword = ref(false);
+const submitting = ref(false);
+
+const signin = async () => {
+  const { valid } = await form.value.validate();
+  if (valid) {
+    const data = formData.value;
+    submitting.value = true;
+    try {
+      await authStore.login(data);
+      await authStore.fetchUser();
+      submitting.value = false;
+      rdr.value ? router.push(rdr.value) : router.push("/");
+      rdr.value = null; // delete redirect path after action has been done
+    } catch (error) {
+      submitting.value = false;
+      useErrorHandler(error);
+    }
+  }
+};
+
+const googleLogin = async () => {
+  try {
+    const res = await this.$axios.get("/google/login/redirect");
+    const url = res.data;
+    window.location.replace(url);
+  } catch (error) {
+    useErrorHandler(error);
+  }
+};
+
+const facebookLogin = async () => {
+  try {
+    const res = await this.$axios.get("/facebook/login/redirect");
+    const url = res.data;
+    window.location.replace(url);
+  } catch (error) {
+    useErrorHandler(error);
+  }
+};
+</script>
+
+<template>
+  <section>
+    <div class="signin mx-auto">
+      <h3>Welcome Back!</h3>
+      <h4>Please Login to your account</h4>
+      <v-form ref="form" class="mt-8" @submit.prevent="signin">
+        <v-text-field
+          v-model="formData.email"
+          :rules="[rules.required, rules.email]"
+          label="Enter Email"
+          variant="outlined"
+          type="email"
+        ></v-text-field>
+        <v-text-field
+          v-model="formData.password"
+          :rules="[rules.required]"
+          label="Enter Password"
+          placeholder="Enter your password"
+          variant="outlined"
+          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="showPassword ? 'text' : 'password'"
+          @click:append-inner="showPassword = !showPassword"
+          class="mt-2"
+        ></v-text-field>
+        <div class="actions d-flex align-center justify-end">
+          <nuxt-link to="/auth/forgot-password" class="actions__link">
+            Forgot Password?
+          </nuxt-link>
+        </div>
+        <div class="d-flex align-center justify-center my-6">
+          <v-btn
+            type="submit"
+            class="submit"
+            :disabled="submitting"
+            :loading="submitting"
+          >
+            Sign In
+          </v-btn>
+        </div>
+        <div class="d-flex align-center justify-center">
+          <v-divider class="line line--reverse"></v-divider>
+          <p class="mb-0 mx-4 tw-w-3/4">Or Sign In with</p>
+          <v-divider class="line"></v-divider>
+        </div>
+        <div class="sign-in-options d-flex align-center justify-center text-center my-5">
+          <v-btn class="d-flex align-center" @click="googleLogin">
+            <iconify-icon icon="flat-color-icons:google" class="icon mr-2"></iconify-icon>
+            Google
+          </v-btn>
+          <!-- <v-btn class="d-flex align-center" @click="facebookLogin">
+            <iconify-icon icon="logos:facebook" class="icon mr-2"></iconify-icon>
+            Facebook
+          </v-btn> -->
+        </div>
+        <p class="no-acct text-center">
+          Don't have an account?
+          <nuxt-link to="/auth/register" class="actions__link">Create Account</nuxt-link>
+        </p>
+        <div class="footer text-center">
+          By signing in, you agree to Loiz Tours and Travels
+          <nuxt-link to="/">Terms & Conditions</nuxt-link> and
+          <nuxt-link to="/">Privacy Policy</nuxt-link>.
+        </div>
+      </v-form>
+    </div>
+  </section>
+</template>
+
+<style scoped lang="scss">
+.signin {
+  width: 52%;
+  padding: 2% 5%;
+  min-height: 70vh;
+  & h3 {
+    font-size: 2rem;
+  }
+  & h4 {
+    font-size: 1.2rem;
+  }
+}
+.actions {
+  &__checkbox {
+    font-size: 0.9rem;
+  }
+  &__link {
+    color: $loiz-pink;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+}
+.v-btn.submit {
+  width: 40%;
+}
+.line {
+  background-image: linear-gradient(269.97deg, #ffffff 4.18%, #00000080 77.28%);
+  width: 30%;
+  border: none;
+  height: 2px !important;
+  max-height: 2px !important;
+  &--reverse {
+    transform: rotate(180deg);
+  }
+}
+.sign-in-options {
+  & .v-btn {
+    font-size: 1rem;
+    min-width: 180px;
+    height: auto;
+    padding: 8px;
+    box-shadow: none;
+    border: 1px solid #55555570;
+    // border: 1px solid $normal-text;
+    background-color: #ffffff;
+    color: $normal-text !important;
+    & .icon {
+      font-size: 1.6rem;
+    }
+  }
+}
+.footer {
+  font-size: 0.85rem;
+  & a {
+    color: #13abd3;
+    text-decoration: none;
+    font-size: 0.85rem;
+    border-bottom: 0.1px solid #13abd3;
+  }
+}
+.no-acct {
+  font-size: 16px;
+  & a {
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .signin {
+    width: 85%;
+  }
+}
+</style>
