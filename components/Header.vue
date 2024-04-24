@@ -11,6 +11,12 @@ const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
 const basketStore = useBasketStore();
 
+const route = useRoute();
+const router = useRouter();
+const config = useRuntimeConfig();
+
+const emit = defineEmits(["toggleMenu"]);
+
 const cartMenu = ref(false);
 const headerRoutes = ref([
   { name: "Home", route: "/", active: true },
@@ -123,13 +129,13 @@ const setActiveRoute = (routeName) => {
             v-else
             :to="item.route"
             class="header__routes d-block mx-2 mx-md-3"
-            :class="$route.path === item.route ? 'header__routes--active' : ''"
+            :class="route.path === item.route ? 'header__routes--active' : ''"
           >
             <div @click="setActiveRoute(item.name)" class="">
               {{ item.name }}
             </div>
             <hr
-              v-if="$route.path === item.route"
+              v-if="route.path === item.route"
               class="header__line d-none d-md-block my-0 mx-auto"
             />
           </nuxt-link>
@@ -142,27 +148,27 @@ const setActiveRoute = (routeName) => {
         >
           <div class="">Booking Guide</div>
           <hr
-            v-if="$route.path === '/beta'"
+            v-if="route.path === '/beta'"
             class="header__line d-none d-md-block my-0 mx-auto"
           />
         </a>
         <!-- Beta testing Route Only show in UAT -->
         <nuxt-link
-          v-if="$config.APP_ENV === 'uat'"
+          v-if="config.public.APP_ENV === 'uat'"
           to="/beta"
           class="header__routes d-block mx-2 mx-md-3"
-          :class="$route.path === '/beta' ? 'header__routes--active' : ''"
+          :class="route.path === '/beta' ? 'header__routes--active' : ''"
         >
           <div class="">Beta</div>
           <hr
-            v-if="$route.path === '/beta'"
+            v-if="route.path === '/beta'"
             class="header__line d-none d-md-block my-0 mx-auto"
           />
         </nuxt-link>
       </div>
       <div class="d-none d-md-flex align-center justify-space-between">
         <div v-if="user" class="logged-in d-flex align-center">
-          <div class="cart mx-4" @click="$router.push('/basket')">
+          <div class="cart mx-4" @click="router.push('/basket')">
             <div
               class="cart__img__wrapper mr-5"
               @mouseover="cartMenu = true"
@@ -236,7 +242,7 @@ const setActiveRoute = (routeName) => {
         </div>
         <!-- Right aligned nav items -->
         <div v-else class="d-flex align-center">
-          <div class="cart ml-4" @click="$router.push('/basket')">
+          <div class="cart ml-4" @click="router.push('/basket')">
             <div class="cart__img__wrapper mr-5">
               <iconify-icon
                 @mouseover="cartMenu = true"
@@ -252,7 +258,7 @@ const setActiveRoute = (routeName) => {
           <div class="d-flex align-items-center">
             <button
               class="action__btn action__btn--signin mx-3 mx-md-2 mx-lg-6"
-              @click="$router.push('/auth/login')"
+              @click="router.push('/auth/login')"
             >
               Sign In
             </button>
@@ -260,7 +266,7 @@ const setActiveRoute = (routeName) => {
           <div class="d-flex align-items-center">
             <button
               class="action__btn action__btn--register"
-              @click="$router.push('/auth/register')"
+              @click="router.push('/auth/register')"
             >
               Register
             </button>
@@ -268,7 +274,7 @@ const setActiveRoute = (routeName) => {
         </div>
       </div>
       <div class="d-flex d-md-none align-center">
-        <div class="cart" @click="$router.push('/basket')">
+        <div class="cart" @click="router.push('/basket')">
           <div class="cart__img__wrapper">
             <iconify-icon
               @mouseover="cartMenu = true"
@@ -281,7 +287,7 @@ const setActiveRoute = (routeName) => {
             {{ basket.length }}
           </div>
         </div>
-        <v-btn elevation="0" class="header__btn" @click="$emit('toggleMenu')">
+        <v-btn elevation="0" class="header__btn" @click="emit('toggleMenu')">
           <iconify-icon icon="bx:menu-alt-right" class="header__btn__menu"></iconify-icon>
         </v-btn>
       </div>

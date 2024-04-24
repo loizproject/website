@@ -1,13 +1,11 @@
 <script setup>
 import { useStore } from "~/store";
 import { useAuthStore } from "~/store/auth";
-import { useBasketStore } from "~/store/basket";
 import { useContentStore } from "~/store/content";
 import { useConsultationStore } from "~/store/consultation";
 
 const store = useStore();
 const authStore = useAuthStore();
-const basketStore = useBasketStore();
 const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
 
@@ -21,19 +19,6 @@ const getSubservicesById = computed(() => contentStore.getSubservicesById);
 const consultationServices = computed(() => consultationStore.services);
 
 const user = computed(() => (authStore.user ? authStore.user : {}));
-
-const basket = computed(() => {
-  const bas = store.state.basket.basket;
-  bas.forEach((item) => {
-    if (!(item && item.options && item.options.booked_date)) {
-      item.parentService =
-        item && item.options
-          ? store.getters["content/getSubservicesById"](item.options.subservice_id)
-          : null;
-    }
-  });
-  return bas;
-});
 
 const scrollToTop = () => {
   document.body.scrollTop = 0;

@@ -38,7 +38,7 @@ export const useStore = defineStore({
       this.toast = true
       setTimeout(() => {
         this.toast = false
-      }, payload && payload.duration ? payload.duration : 25000);
+      }, payload && payload.duration ? payload.duration : 5000);
     },
     async fetchRates() {
       try {

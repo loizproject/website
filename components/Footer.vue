@@ -21,21 +21,21 @@ const manageCookiesModal = ref(false);
 const servicesCompKey = ref(1);
 const cookieForm = ref({});
 const cookieKey = ref(null);
-const newsletterForm = reactive({});
+const newsletterForm = ref({});
 
 const subscribeNewsletter = async () => {
   const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   try {
-    if (!newsletterForm.email) {
+    if (!newsletterForm.value.email) {
       store.setToast("Please enter your email", { type: "error" });
-    } else if (!pattern.test(newsletterForm.email)) {
+    } else if (!pattern.test(newsletterForm.value.email)) {
       store.setToast("Please enter a valid email", { type: "error" });
     } else {
-      await useAxiosPost("/newsletter/subscribe", newsletterForm);
+      await useAxiosPost("/newsletter/subscribe", newsletterForm.value);
       store.setToast("You have succesfully subscribed to our newsletter", {
         type: "success",
       });
-      newsletterForm = {};
+      newsletterForm.value = {};
     }
   } catch (error) {
     console.error(error);

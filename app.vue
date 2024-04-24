@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useStore } from "~/store";
 import { useAuthStore } from "~/store/auth";
 import { useBasketStore } from "~/store/basket";

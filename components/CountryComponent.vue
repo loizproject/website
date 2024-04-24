@@ -50,7 +50,8 @@ const addToBasket = async () => {
       country: props.country,
     },
   };
-  if ($refs.form.validate()) {
+  const { valid } = await formHtml.value.validate();
+  if (valid) {
     submitting.value = true;
     await store.dispatch("basket/addToBasket", data);
     submitting.value = false;
@@ -66,7 +67,7 @@ const goToCheckout = async () => {
       await addToBasket();
       router.push("/basket");
     } catch (error) {
-      $handleError(error);
+      useErrorHandler(error);
     }
   } else {
     store.setToast("Please fill all required fields", { type: "error" });
