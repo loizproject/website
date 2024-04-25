@@ -61,6 +61,9 @@ devDependencies:
   nuxt:
     specifier: ^3.7.0
     version: 3.8.2(eslint@8.57.0)(sass@1.69.5)(vite@4.5.0)
+  nuxt-lodash:
+    specifier: ^2.5.3
+    version: 2.5.3
   postcss:
     specifier: ^8.4.28
     version: 8.4.31
@@ -898,8 +901,8 @@ packages:
       - encoding
       - supports-color
 
-  /@mazui/cli@3.42.1:
-    resolution: {integrity: sha512-Fhs5C9vVU+nup0rgvhP78DfWd6cqGmVMJahZ79QwUGJpL6OsEZTwV+PUr0GXJXj9KjhCjaQNor9ncofHTgTGSA==}
+  /@mazui/cli@3.42.3:
+    resolution: {integrity: sha512-S6DXunrXSsnodoEljpSWoPzZifkyhLJtNtfHEc38k+ZE286sqi2nHP77HcnLd2/+UUFYhIqdpAXe6+ovifJPPA==}
     hasBin: true
     dependencies:
       '@clack/prompts': 0.7.0
@@ -1720,6 +1723,16 @@ packages:
     resolution: {integrity: sha512-SSrD0c1OQzlFX7pGu1eXxSEjemej64aaNPRhhVYUGqXh0BtldAAx37MG8btcumvpgKyZp1F5Gn3JkktdxiFv6w==}
     dependencies:
       '@types/node': 20.9.4
+
+  /@types/lodash-es@4.17.12:
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
+    dependencies:
+      '@types/lodash': 4.17.0
+    dev: true
+
+  /@types/lodash@4.17.0:
+    resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
+    dev: true
 
   /@types/node@20.9.4:
     resolution: {integrity: sha512-wmyg8HUhcn6ACjsn8oKYjkN/zUzQeNtMy44weTJSM6p4MMzEOuKbA3OjJ267uPCOW7Xex9dyrNTful8XTQYoDA==}
@@ -3959,6 +3972,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
 
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: true
+
   /lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
@@ -4080,7 +4097,7 @@ packages:
       vue-router:
         optional: true
     dependencies:
-      '@mazui/cli': 3.42.1
+      '@mazui/cli': 3.42.3
       eslint: 8.57.0
       libphonenumber-js: 1.10.60
       nuxt: 3.8.2(eslint@8.57.0)(sass@1.69.5)(vite@4.5.0)
@@ -4574,6 +4591,17 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.3
+
+  /nuxt-lodash@2.5.3:
+    resolution: {integrity: sha512-LCJ40tGQTHkfk8rQoGqtb0mFgRVt8U+pc3S352DsI39yF3olqgxlsm28wdJMIcWHuxLgf5X+DwxmZhrAHXNS5g==}
+    dependencies:
+      '@nuxt/kit': 3.8.2
+      '@types/lodash-es': 4.17.12
+      lodash-es: 4.17.21
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: true
 
   /nuxt@3.8.2(eslint@8.57.0)(sass@1.69.5)(vite@4.5.0):
     resolution: {integrity: sha512-HUAyifmqTs2zcQBGvcby3KNs2pBAk+l7ZbLjD1oCNqQQ+wBuZ1qgLC4Ebu++y4g3o3Y8WAWSvpafbKRLQZziPw==}
