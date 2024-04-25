@@ -95,7 +95,9 @@ function setSliderContentWidth() {
   setTimeout(() => {
     const doc = document.getElementsByClassName("v-slide-group__container")[0];
     sliderContentWidth.value =
-      width.value > 1000
+      width.value > 1360
+        ? doc.clientWidth / 4 - 16
+        : width.value > 1000
         ? doc.clientWidth / 3 - 16
         : width.value > 600
         ? doc.clientWidth / 2 - 16
@@ -321,32 +323,32 @@ onUnmounted(() => {
     <section id="awesome-destinations" class="my-8">
       <v-container>
         <h2>Awesome Destinations</h2>
-        <div
-          class="d-flex align-center justify-center flex-wrap overflow-x-scroll no-scroll"
-        >
-          <v-card
-            v-for="(item, index) in destinations"
-            :key="item.title"
-            class="slide-card slide-card--destination mx-2 my-2"
-            @mouseenter="toggleContent(item)"
-            @mouseleave="toggleContent(item)"
-          >
-            <div
-              data-aos="zoom-out"
-              class="slide-card__img slide-card--destination__img d-flex align-center"
-              cover
-              :style="slideImageStyle(item)"
+        <div class="tw-overflow-x-scroll no-scroll">
+          <div class="tw-flex tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap">
+            <v-card
+              v-for="(item, index) in destinations"
+              :key="item.title"
+              class="slide-card slide-card--destination mx-2 my-2"
+              @mouseenter="toggleContent(item)"
+              @mouseleave="toggleContent(item)"
             >
               <div
-                v-if="item.showContent"
-                data-aos="zoom-in"
-                class="slide-card--destination__content pa-4"
+                data-aos="zoom-out"
+                class="slide-card__img slide-card--destination__img d-flex align-center"
+                cover
+                :style="slideImageStyle(item)"
               >
-                <h4 class="mb-10">{{ item.title }}</h4>
-                <p class="mb-0">{{ item.text }}</p>
+                <div
+                  v-if="item.showContent"
+                  data-aos="zoom-in"
+                  class="slide-card--destination__content pa-4"
+                >
+                  <h4 class="mb-10">{{ item.title }}</h4>
+                  <p class="mb-0">{{ item.text }}</p>
+                </div>
               </div>
-            </div>
-          </v-card>
+            </v-card>
+          </div>
         </div>
       </v-container>
     </section>
@@ -399,8 +401,8 @@ onUnmounted(() => {
       <v-container>
         <h2>Gallery</h2>
         <p>We continue to do what we do best</p>
-        <div class="our-services__slider">
-          <div class="tw-flex tw-items-center overflow-x-scroll">
+        <div class="our-services__slider tw-overflow-x-scroll no-scroll">
+          <div class="tw-flex tw-items-center">
             <nuxt-img
               v-for="n in 14"
               :key="n"
