@@ -102,7 +102,7 @@ onMounted(async () => {
         <slot />
       </section>
       <Footer />
-
+      <NavDrawerMobile v-if="drawer" @closeMenu="drawer = $event" />
       <button
         v-if="showScrollToTop"
         class="scroll-to-top d-flex align-center"
@@ -129,23 +129,6 @@ onMounted(async () => {
       border: none;
       color: #fff;
     }
-  }
-}
-
-.drawer {
-  min-height: 100vh !important;
-  z-index: 9;
-
-  & .v-list {
-    padding: 8% 3%;
-
-    & .v-list-item__title {
-      font-size: 1rem;
-    }
-  }
-
-  & .v-expansion-panels {
-    border: 1px solid #55555510;
   }
 }
 
