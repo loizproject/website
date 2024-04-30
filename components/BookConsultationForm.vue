@@ -181,7 +181,7 @@ const save = () => {
 };
 
 const clearForm = () => {
-  const keyToRemove = storageKey;
+  const keyToRemove = storageKey.value;
   if (localStorage.getItem(keyToRemove) !== null) {
     localStorage.removeItem(keyToRemove);
   }
@@ -227,8 +227,6 @@ const bookConsultation = async () => {
     }
   } catch (error) {
     useErrorHandler(error);
-  } finally {
-    modal.value = false;
   }
 };
 

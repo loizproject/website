@@ -8,6 +8,7 @@ const store = useStore();
 const authStore = useAuthStore();
 const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
+const router = useRouter();
 
 const drawer = ref(false);
 const showScrollToTop = ref(false);
@@ -66,6 +67,7 @@ onMounted(async () => {
                     <iconify-icon
                       icon="mingcute:down-line"
                       rotate="270deg"
+                      class="tw-pt-[1.5px]"
                     ></iconify-icon>
                   </button>
                 </template>
@@ -75,13 +77,17 @@ onMounted(async () => {
                     :key="item.id"
                     :class="item.subservices && item.subservices.length > 0 ? 'px-0' : ''"
                   >
-                    <v-list-item-title
-                      @click="router.push(`/book-consultation/${useGetSlug(item.text)}`)"
-                    >
-                      {{ item.text }}
+                    <v-list-item-title>
+                      <p
+                        class="tw-text-base tw-w-full mb-0"
+                        @click="
+                          router.push(`/book-consultation/${useGetSlug(item.text)}`)
+                        "
+                      >
+                        {{ item.text }}
+                      </p>
                     </v-list-item-title>
                   </v-list-item>
-                  <!-- <div class="bg-white pt-5"></div> -->
                 </v-list>
               </v-menu>
               <nuxt-link

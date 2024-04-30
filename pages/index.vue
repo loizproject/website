@@ -401,14 +401,16 @@ onUnmounted(() => {
       <v-container>
         <h2>Gallery</h2>
         <p>We continue to do what we do best</p>
-        <div class="our-services__slider tw-overflow-x-scroll no-scroll">
-          <div class="tw-flex tw-items-center">
-            <nuxt-img
-              v-for="n in 14"
-              :key="n"
-              :src="`/img/gallery/${n}.png`"
-              class="mx-2 tw-w-[300px]"
-            ></nuxt-img>
+        <div class="our-services__slider">
+          <div class="tw-overflow-x-scroll no-scroll">
+            <div class="tw-flex tw-items-center">
+              <nuxt-img
+                v-for="n in 14"
+                :key="n"
+                :src="`/img/gallery/${n}.png`"
+                class="mx-2 tw-w-[300px]"
+              ></nuxt-img>
+            </div>
           </div>
         </div>
       </v-container>
@@ -482,7 +484,7 @@ onUnmounted(() => {
   &__actions {
     width: 100%;
     position: absolute;
-    bottom: -20px;
+    bottom: -40px;
     left: 0;
   }
 
