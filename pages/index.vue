@@ -323,7 +323,7 @@ onUnmounted(() => {
     <section id="awesome-destinations" class="my-8">
       <v-container>
         <h2>Awesome Destinations</h2>
-        <div class="tw-overflow-x-scroll no-scroll">
+        <div class="tw-overflow-x-scroll no-scroll tw-flex tw-justify-center">
           <div class="tw-flex tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap">
             <v-card
               v-for="(item, index) in destinations"
