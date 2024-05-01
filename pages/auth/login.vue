@@ -34,7 +34,7 @@ const signin = async () => {
 
 const googleLogin = async () => {
   try {
-    const res = await this.$axios.get("/google/login/redirect");
+    const res = await useAxiosFetch("/google/login/redirect");
     const url = res.data;
     window.location.replace(url);
   } catch (error) {
@@ -44,7 +44,7 @@ const googleLogin = async () => {
 
 const facebookLogin = async () => {
   try {
-    const res = await this.$axios.get("/facebook/login/redirect");
+    const res = await useAxiosFetch("/facebook/login/redirect");
     const url = res.data;
     window.location.replace(url);
   } catch (error) {
@@ -164,7 +164,6 @@ const facebookLogin = async () => {
     padding: 8px;
     box-shadow: none;
     border: 1px solid #55555570;
-    // border: 1px solid $normal-text;
     background-color: #ffffff;
     color: $normal-text !important;
     & .icon {

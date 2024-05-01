@@ -54,7 +54,6 @@ onMounted(async () => {
                 content-class="services-menu"
                 :close-on-content-click="false"
                 min-width="300"
-                open-on-hover
               >
                 <template v-slot:activator="{ props }">
                   <button
