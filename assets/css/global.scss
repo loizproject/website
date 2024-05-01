@@ -168,7 +168,7 @@ input[type="number"] {
 .services .v-text-field--enclosed .v-input__append-inner {
   margin-top: 25px !important;
 }
-.container {
+.v-container, .container {
   padding: 12px 18px !important;
   width: 95% !important;
   max-width: 95% !important;
@@ -217,12 +217,13 @@ div.maz-border-radius {
 
 /* hide horizontal scrollbars */
 .no-scroll,
-.sub-header .container {
+.sub-header .container,
+.sub-header .v-container {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
 }
-.no-scroll,
-.sub-header .container::-webkit-scrollbar {
+.sub-header .container::-webkit-scrollbar,
+.sub-header .v-container::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 

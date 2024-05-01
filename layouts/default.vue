@@ -8,6 +8,7 @@ const store = useStore();
 const authStore = useAuthStore();
 const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
+const router = useRouter();
 
 const drawer = ref(false);
 const showScrollToTop = ref(false);
@@ -53,7 +54,6 @@ onMounted(async () => {
                 content-class="services-menu"
                 :close-on-content-click="false"
                 min-width="300"
-                open-on-hover
               >
                 <template v-slot:activator="{ props }">
                   <button
@@ -66,6 +66,7 @@ onMounted(async () => {
                     <iconify-icon
                       icon="mingcute:down-line"
                       rotate="270deg"
+                      class="tw-pt-[1.5px]"
                     ></iconify-icon>
                   </button>
                 </template>
@@ -75,13 +76,17 @@ onMounted(async () => {
                     :key="item.id"
                     :class="item.subservices && item.subservices.length > 0 ? 'px-0' : ''"
                   >
-                    <v-list-item-title
-                      @click="router.push(`/book-consultation/${useGetSlug(item.text)}`)"
-                    >
-                      {{ item.text }}
+                    <v-list-item-title>
+                      <p
+                        class="tw-text-base tw-w-full mb-0"
+                        @click="
+                          router.push(`/book-consultation/${useGetSlug(item.text)}`)
+                        "
+                      >
+                        {{ item.text }}
+                      </p>
                     </v-list-item-title>
                   </v-list-item>
-                  <!-- <div class="bg-white pt-5"></div> -->
                 </v-list>
               </v-menu>
               <nuxt-link
@@ -102,7 +107,7 @@ onMounted(async () => {
         <slot />
       </section>
       <Footer />
-
+      <NavDrawerMobile v-if="drawer" @closeMenu="drawer = $event" />
       <button
         v-if="showScrollToTop"
         class="scroll-to-top d-flex align-center"
@@ -129,23 +134,6 @@ onMounted(async () => {
       border: none;
       color: #fff;
     }
-  }
-}
-
-.drawer {
-  min-height: 100vh !important;
-  z-index: 9;
-
-  & .v-list {
-    padding: 8% 3%;
-
-    & .v-list-item__title {
-      font-size: 1rem;
-    }
-  }
-
-  & .v-expansion-panels {
-    border: 1px solid #55555510;
   }
 }
 
