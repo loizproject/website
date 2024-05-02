@@ -323,12 +323,14 @@ onUnmounted(() => {
     <section id="awesome-destinations" class="my-8">
       <v-container>
         <h2>Awesome Destinations</h2>
-        <div class="tw-overflow-x-scroll no-scroll tw-flex tw-justify-center">
-          <div class="tw-flex tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap">
+        <div class="tw-overflow-x-scroll no-scroll">
+          <div
+            class="tw-flex tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap tw-justify-center"
+          >
             <v-card
               v-for="(item, index) in destinations"
               :key="item.title"
-              class="slide-card slide-card--destination mx-2 my-2"
+              class="slide-card slide-card--destination mx-2 my-2 tw-w-[300px] lg:tw-w-full"
               @mouseenter="toggleContent(item)"
               @mouseleave="toggleContent(item)"
             >
