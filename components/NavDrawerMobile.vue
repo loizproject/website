@@ -77,7 +77,12 @@ const setActiveRoute = (routeName) => {
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawer" class="drawer" @update:model-value="toggleModal">
+  <v-navigation-drawer
+    fixed
+    v-model="drawer"
+    class="drawer"
+    @update:model-value="toggleModal"
+  >
     <v-list nav dense>
       <nuxt-link to="/" class="logo">
         <nuxt-img src="/svg/logo.svg" width="140px" />
@@ -148,9 +153,10 @@ const setActiveRoute = (routeName) => {
 
 <style scoped lang="scss">
 .drawer {
-  min-height: 100vh !important;
+  height: 100vh !important;
   width: 80% !important;
   max-width: 350px;
+  position: fixed !important;
 
   & .v-list {
     padding: 8% 3%;
