@@ -1,7 +1,9 @@
 <script setup>
 import { useAuthStore } from "~/store/auth";
+import { useBasketStore } from "~/store/basket";
 
 const authStore = useAuthStore();
+const basketStore = useBasketStore();
 const route = useRoute();
 const router = useRouter();
 const rules = useFormRules;
@@ -22,6 +24,7 @@ const signin = async () => {
     try {
       await authStore.login(data);
       await authStore.fetchUser();
+      await basketStore.fetchBasket();
       submitting.value = false;
       rdr.value ? router.push(rdr.value) : router.push("/");
       rdr.value = null; // delete redirect path after action has been done
