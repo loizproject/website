@@ -8,9 +8,11 @@
 <script setup>
 import { useStore } from "~/store";
 import { useAuthStore } from "~/store/auth";
+import { useBasketStore } from "~/store/basket";
 
 const store = useStore();
 const authStore = useAuthStore();
+const basketStore = useBasketStore();
 const router = useRouter();
 
 const rdr = useCookie("loiz_redirect");
@@ -19,6 +21,7 @@ const googleAuth = async () => {
   try {
     await authStore.googleAuth();
     await authStore.fetchUser();
+    await basketStore.fetchBasket();
     rdr.value ? router.push(rdr.value) : router.push("/");
     rdr.value = null; // delete redirect path after action has been done
   } catch (error) {

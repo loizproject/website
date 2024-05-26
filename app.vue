@@ -37,13 +37,13 @@ onMounted(async () => {
 <template>
   <div>
     <div class="tw-animate-show tw-font-medium">
-      <div v-if="loading" class="loading">
+      <!-- <div v-if="loading" class="loading">
         <div class="">
           <nuxt-img src="/svg/logo.svg" class="tw-w-48" />
           <p>Loading...</p>
         </div>
-      </div>
-      <v-app v-else>
+      </div> -->
+      <v-app>
         <Toast v-if="store.toast" :meta="store.toastMeta" />
         <NuxtLayout>
           <NuxtPage />

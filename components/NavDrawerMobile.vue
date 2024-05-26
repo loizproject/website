@@ -28,6 +28,13 @@ const headerRoutes = ref([
   { name: "About Us", route: "/about", active: false },
   { name: "Contact Us", route: "/contact", active: false },
   { name: "FAQs", route: "/faqs", active: false },
+  { name: "Blog", route: "/blog", active: false },
+  {
+    name: "Booking Guide",
+    route: "https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view",
+    active: false,
+    target: "_blank",
+  },
 ]);
 const loggedInUserMenu = ref([
   {
@@ -69,6 +76,10 @@ const logout = async () => {
   }
 };
 
+const routeTo = (link) => {
+  link.target === "_blank" ? window.open(link.route, "_blank") : router.push(link.route);
+};
+
 const setActiveRoute = (routeName) => {
   headerRoutes.value.forEach((element) => {
     element.name === routeName ? (element.active = true) : (element.active = false);
@@ -99,22 +110,11 @@ const setActiveRoute = (routeName) => {
                 ? 'v-list-item--active pink--text text-primary'
                 : 'v-list-item--blank'
             "
-            @click="router.push(item.route)"
+            @click="routeTo(item)"
           >
             <v-list-item-title>{{ item.name }}</v-list-item-title>
           </v-list-item>
         </div>
-        <v-list-item class="v-list-item--blank">
-          <v-list-item-title>
-            <a
-              href="https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view"
-              target="_blank"
-              class="booking-guide"
-            >
-              Booking Guide
-            </a>
-          </v-list-item-title>
-        </v-list-item>
         <v-list-item
           v-if="config.public.APP_ENV === 'uat'"
           :class="
