@@ -2,7 +2,7 @@
 const config = useRuntimeConfig();
 const CMS_BASE_URL = config.public.CMS_BASE_URL;
 
-const loading = ref(true);
+const loading = ref(false);
 const search = ref("");
 
 const query = `
@@ -56,12 +56,6 @@ const currentShowingArticles = computed(() => {
     }
   });
   return search.value ? res : articles;
-});
-
-onMounted(() => {
-  setTimeout(async () => {
-    loading.value = false;
-  }, 300);
 });
 
 const meta = {
