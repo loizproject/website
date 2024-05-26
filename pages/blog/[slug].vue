@@ -43,7 +43,13 @@ const graphqlQuery = {
   query: query,
   variables: {},
 };
-const article = (await useAxiosPost(CMS_BASE_URL, graphqlQuery)).data.data.post;
+const { data } = await useAsyncData("articles", () =>
+  $fetch(CMS_BASE_URL, {
+    method: "POST",
+    body: graphqlQuery,
+  })
+);
+const article = data?.value.data.post;
 const { title, excerpt, categories, tags, date, content, featuredImage, author } =
   article || {};
 const link = `${config.public.APP_URL}/blog/${slug}`;
@@ -77,7 +83,9 @@ useSeoMeta({
       </div>
     </div>
     <div v-else class="lg:tw-w-[90%] tw-mx-auto">
-      <h1 class="tw-text-2xl md:text-3xl xl:tw-text-5xl tw-font-black active-header my-5">
+      <h1
+        class="tw-text-2xl md:tw-text-3xl lg:tw-text-4xl tw-font-black active-header my-5"
+      >
         {{ title }}
       </h1>
       <img
