@@ -46,7 +46,7 @@ const graphqlQuery = {
 const article = (await useAxiosPost(CMS_BASE_URL, graphqlQuery)).data.data.post;
 const { title, excerpt, categories, tags, date, content, featuredImage, author } =
   article || {};
-const link = `${config.public.APP_URL}/resources/articles/${slug}`;
+const link = `${config.public.APP_URL}/blog/${slug}`;
 
 const meta = ref({
   title: title,
