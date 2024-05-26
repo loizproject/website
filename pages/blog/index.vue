@@ -44,7 +44,14 @@ const graphqlQuery = {
   query: query,
   variables: {},
 };
-const articles = (await useAxiosPost(CMS_BASE_URL, graphqlQuery)).data.data.posts.edges;
+
+const { data } = await useAsyncData("articles", () =>
+  $fetch(CMS_BASE_URL, {
+    method: "POST",
+    body: graphqlQuery,
+  })
+);
+const articles = data.value ? data.value.data.posts.edges : [];
 const currentShowingArticles = computed(() => {
   let res = [];
   articles.forEach((item) => {

@@ -1,7 +1,6 @@
 <script setup>
 const error = useError();
 const config = useRuntimeConfig();
-
 const isProduction = config.public.APP_ENV === "production";
 </script>
 
@@ -12,7 +11,7 @@ const isProduction = config.public.APP_ENV === "production";
         <h1 class="tw-text-4xl">Oops! An error occoured</h1>
         <p>It looks like something broke. Sorry about that.</p>
         <p>
-          <strong>{{ error.message }}</strong>
+          <strong>({{ error.statusCode }}) {{ error.message }}</strong>
         </p>
         <nuxt-link to="/" class="action__btn action__btn--register">
           Back Home
@@ -43,6 +42,9 @@ const isProduction = config.public.APP_ENV === "production";
   background-color: #000;
   color: #fff;
   height: 500px;
+  width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
   overflow-x: scroll;
   overflow-y: scroll;
   padding: 10px;
