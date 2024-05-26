@@ -91,6 +91,30 @@ onMounted(() => {
 definePageMeta({
   layout: "services",
 });
+
+const meta = computed(() => {
+  return {
+    title: subservice?.title,
+    description: subservice.description,
+    image:
+      "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
+    keywords:
+      "visa fservices, visa renewals, travel, tours, vacations, domestic tours in nigeria, visa, visa services in nigeria, travel companies in nigeria",
+  };
+});
+useSeoMeta({
+  title: meta.title,
+  ogTitle: meta.title,
+  twitterTitle: meta.title,
+  description: meta.description,
+  ogDescription: meta.description,
+  twitterDescription: meta.description,
+  ogImage: meta.image,
+  twitterImage: meta.image,
+  twitterCard: "summary_large_image",
+  twitterSite: "@Loiztravels",
+  keywords: meta.keywords,
+});
 </script>
 
 <template>

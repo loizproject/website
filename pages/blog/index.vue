@@ -40,51 +40,63 @@ const query = `
   }
 }
 `;
-
-const articles = ref([]);
-async function fetchArticles() {
-  try {
-    const graphqlQuery = {
-      query: query,
-      variables: {},
-    };
-    const { data } = await useAxiosPost(CMS_BASE_URL, graphqlQuery);
-    articles.value = data.data.posts.edges;
-  } catch (error) {
-    console.warn("Failed to save library articles: An error occoured");
-    console.error(error);
-  }
-}
+const graphqlQuery = {
+  query: query,
+  variables: {},
+};
+const articles = (await useAxiosPost(CMS_BASE_URL, graphqlQuery)).data.data.posts.edges;
 const currentShowingArticles = computed(() => {
   let res = [];
-  articles.value.forEach((item) => {
+  articles.forEach((item) => {
     if (
-      item.node.title?.toUpperCase().includes(search.value.toUpperCase()) ||
-      item.node.excerpt?.toUpperCase().includes(search.value.toUpperCase())
+      item.node.title?.toUpperCase().includes(search.value?.toUpperCase()) ||
+      item.node.excerpt?.toUpperCase().includes(search.value?.toUpperCase())
     ) {
       res.push(item);
     }
   });
-  return res;
+  return search.value ? res : articles;
 });
 
 onMounted(() => {
   setTimeout(async () => {
-    await fetchArticles();
     loading.value = false;
-  }, 200);
+  }, 300);
+});
+
+const meta = {
+  title: "Loiz Blog.",
+  description:
+    "Whether you're planning your next adventure or seeking assistance with visa services, flights, or tours, trust Loiz Tours & Travels to make your travel experience unforgettable. Join us on our journey as we redefine the standards of excellence in the travel industry. Discover the world with Loiz Tours & Travels – Where Every Journey Begins with Excellence!",
+  image:
+    "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
+  keywords:
+    "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in nigeria",
+};
+useSeoMeta({
+  title: meta.title,
+  ogTitle: meta.title,
+  twitterTitle: meta.title,
+  description: meta.description,
+  ogDescription: meta.description,
+  twitterDescription: meta.description,
+  ogImage: meta.image,
+  twitterImage: meta.image,
+  twitterCard: "summary_large_image",
+  twitterSite: "@Loiztravels",
+  keywords: meta.keywords,
 });
 </script>
 
 <template>
   <div id="blog" class="container">
-    <div class="tw-flex tw-items-center">
+    <div class="lg:tw-flex tw-items-center">
       <div class="my-5">
         <h2 class="active-header">Loiz Blog</h2>
         <p>Take a look at our articles & publications</p>
       </div>
       <div class="tw-flex-grow"></div>
-      <div class="tw-w-1/4">
+      <div class="lg:tw-w-1/4">
         <v-text-field
           v-model="search"
           variant="outlined"

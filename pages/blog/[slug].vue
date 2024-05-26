@@ -51,7 +51,9 @@ const link = `${config.public.APP_URL}/blog/${slug}`;
 const meta = ref({
   title: title,
   description: convert(excerpt, { wordwrap: 120 }),
-  image: featuredImage?.node.sourceUrl,
+  image:
+    featuredImage?.node.sourceUrl ||
+    "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
 });
 
 useSeoMeta({
@@ -75,7 +77,7 @@ useSeoMeta({
       </div>
     </div>
     <div v-else class="lg:tw-w-[90%] tw-mx-auto">
-      <h1 class="tw-text-5xl tw-font-black active-header my-5">
+      <h1 class="tw-text-2xl md:text-3xl xl:tw-text-5xl tw-font-black active-header my-5">
         {{ title }}
       </h1>
       <img

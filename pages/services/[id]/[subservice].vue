@@ -140,6 +140,31 @@ definePageMeta({
   layout: "services",
   middleware: ["redirect"],
 });
+
+const meta = computed(() => {
+  return {
+    title: subservice.value.title || "Visa Facilitation: Loiz Tours & Travels Ltd",
+    description: subservice.value.description,
+    image:
+      subservice.value.image ||
+      "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
+    keywords:
+      "visa fservices, visa renewals, travel, tours, vacations, domestic tours in nigeria, visa, visa services in nigeria, travel companies in nigeria",
+  };
+});
+useSeoMeta({
+  title: meta.value.title,
+  ogTitle: meta.value.title,
+  twitterTitle: meta.value.title,
+  description: meta.value.description,
+  ogDescription: meta.value.description,
+  twitterDescription: meta.value.description,
+  ogImage: meta.value.image,
+  twitterImage: meta.value.image,
+  twitterCard: "summary_large_image",
+  twitterSite: "@Loiztravels",
+  keywords: meta.value.keywords,
+});
 </script>
 
 <template>
