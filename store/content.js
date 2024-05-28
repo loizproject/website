@@ -36,8 +36,8 @@ export const useContentStore = defineStore({
     getSubservicesById: (state) => (id) => {
       let response = {};
       state.services.forEach(service => {
-        response = service.subservices.find(subservice => subservice.id === id);
-        if (response) return;
+        const res = service.subservices.find(subservice => subservice.id == id);
+        res ? response = res : null
       });
       return response;
     },

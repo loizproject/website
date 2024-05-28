@@ -23,11 +23,24 @@ const availableDates = computed(() => consultationStore.availableDates);
 const basket = computed(() => basketStore.basket);
 const rate = computed(() => store.rate);
 const location = computed(() => store.location.countryName);
+const subservices = computed(() => {
+  const path = route.path;
+  const serviceSlug = path.split("/")[2];
+  const service = contentStore.getServiceBySlug(serviceSlug);
+  return service?.subservices || [];
+});
+
+const subserviceId = computed(() => route.query.subservice_id);
+const subservice = computed(() => {
+  const subServ = contentStore.getSubservicesById(subserviceId.value);
+  return subServ;
+});
 
 const form = ref({
   service: { fields: [] },
   booked_date: null,
   booked_time: null,
+  subservice: subservice.value?.id ? subservice.value : null,
 });
 const formHtml = ref(null);
 const modal = ref(false);
@@ -41,7 +54,6 @@ const saving = ref(false);
 const consultationServices = ref(_CloneDeep(consultationStore.services));
 const showConsultationSchedule = ref(false);
 
-const subserviceId = computed(() => route.query.subservice_id);
 const isNigerian = computed(() => store.location.countryName === "Nigeria");
 const filteredCountries = computed(() => {
   if (!searchTerm.value) {
@@ -316,6 +328,14 @@ onMounted(async () => {
           variant="outlined"
           label="Marital Status"
           :rules="[rules.required, rules.text]"
+          @change="save"
+        ></v-select>
+        <v-select
+          v-model="form.subservice"
+          :items="subservices"
+          item-text="title"
+          variant="outlined"
+          label="Subservice"
           @change="save"
         ></v-select>
         <v-text-field

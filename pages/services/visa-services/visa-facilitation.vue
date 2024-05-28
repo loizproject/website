@@ -143,6 +143,7 @@ useSeoMeta({
       <div v-if="countries.length > 0">
         <country-component
           :country="country"
+          :subservice="subservice"
           :serviceCategories="currentShowingServiceCategories"
           :serviceCategory="currentShowingServiceCategory"
           :key="countryKey"

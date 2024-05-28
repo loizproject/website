@@ -187,18 +187,6 @@ const setActiveRoute = (routeName) => {
             />
           </nuxt-link>
         </div>
-        <!-- Booking Guide -->
-        <a
-          href="https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view"
-          target="_blank"
-          class="header__routes d-block mx-2 mx-md-3"
-        >
-          <div class="">Booking Guide</div>
-          <hr
-            v-if="route.path === '/beta'"
-            class="header__line d-none d-md-block my-0 mx-auto"
-          />
-        </a>
         <!-- Beta testing Route Only show in UAT -->
         <nuxt-link
           v-if="config.public.APP_ENV === 'uat'"
