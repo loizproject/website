@@ -1,7 +1,12 @@
 <script setup>
 import { useStore } from "~/store";
 
-const props = defineProps(["country", "serviceCategories", "serviceCategory"]);
+const props = defineProps([
+  "country",
+  "subservice",
+  "serviceCategories",
+  "serviceCategory",
+]);
 
 const router = useRouter();
 const store = useStore();
@@ -36,7 +41,7 @@ const setService = () => {
 };
 
 const openConsultationForm = () => {
-  router.push("/book-consultation/visa-services");
+  router.push(`/book-consultation/visa-services?subservice_id=${props.subservice?.id}`);
 };
 
 const addToBasket = async () => {

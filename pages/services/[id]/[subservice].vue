@@ -190,7 +190,7 @@ useSeoMeta({
         elevation="0"
         class="submit px-8"
         @click="
-          $router.push(`/book-consultation/${serviceSlug}?subservice_id=${subservice.id}`)
+          router.push(`/book-consultation/${serviceSlug}?subservice_id=${subservice.id}`)
         "
       >
         Book Consultation
