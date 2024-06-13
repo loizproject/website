@@ -143,12 +143,6 @@ const openDisclaimer = async () => {
   }
 };
 
-const formatDate = (date) => {
-  if (!date) return null;
-  const [year, month, day] = date.split("-");
-  return `${day}-${month}-${year}`;
-};
-
 const setDateTime = (args) => {
   form.value.booked_date = args.date;
   form.value.booked_date_formatted = args.formattedDate;
@@ -490,7 +484,7 @@ onMounted(async () => {
             Select Intended Date of Trip
           </label>
           <p v-else>
-            {{ formatDate(form.intended_trip_date) }}
+            {{ useDateFns(form.intended_trip_date, "dd-MM-yyyy") }}
           </p>
           <v-icon class="ml-2"> mdi-calendar-month </v-icon>
         </div>
