@@ -1,52 +1,4 @@
 @ -1,145 +0,0 @@
-<template>
-  <section>
-    <div class="reschedule mx-auto">
-      <h3>Reschedule your consultation</h3>
-      <p>Please select the new date and time for your consultation</p>
-      <v-form ref="htmlForm" class="mt-8" @submit.prevent="submit">
-        <div
-          class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
-          @click="showConsultationSchedule = true"
-        >
-          <label
-            v-if="!form.booked_date"
-            style="color: rgba(0, 0, 0, 0.6)"
-            @click="showConsultationSchedule = true"
-          >
-            Select new consultation date and time
-          </label>
-          <p v-else>
-            {{ form.booked_date_formatted }} <i>({{ form.booked_time_formatted }})</i>
-          </p>
-          <v-icon class="ml-2"> mdi-calendar-month </v-icon>
-        </div>
-        <ConsultationSchedule
-          v-if="showConsultationSchedule"
-          @close="showConsultationSchedule = false"
-          @submit="setDateTime"
-        />
-        <v-text-field
-          v-model="form.reason"
-          label="Reason (optional)"
-          variant="outlined"
-        ></v-text-field>
-        <div class="d-flex align-center justify-center my-6">
-          <v-btn
-            type="submit"
-            class="submit"
-            :disabled="submitting"
-            :loading="submitting"
-          >
-            Submit
-          </v-btn>
-        </div>
-      </v-form>
-    </div>
-    <SuccessModal v-if="modal" @close="modal = !modal" :message="message" login />
-  </section>
-</template>
-
 <script setup>
 import { useConsultationStore } from "~/store/consultation";
 
@@ -127,6 +79,54 @@ definePageMeta({
   layout: "services",
 });
 </script>
+
+<template>
+  <section>
+    <div class="reschedule mx-auto">
+      <h3>Reschedule your consultation</h3>
+      <p>Please select the new date and time for your consultation</p>
+      <v-form ref="htmlForm" class="mt-8" @submit.prevent="submit">
+        <div
+          class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+          @click="showConsultationSchedule = true"
+        >
+          <label
+            v-if="!form.booked_date"
+            style="color: rgba(0, 0, 0, 0.6)"
+            @click="showConsultationSchedule = true"
+          >
+            Select new consultation date and time
+          </label>
+          <p v-else>
+            {{ form.booked_date_formatted }} <i>({{ form.booked_time_formatted }})</i>
+          </p>
+          <v-icon class="ml-2"> mdi-calendar-month </v-icon>
+        </div>
+        <ConsultationSchedule
+          v-if="showConsultationSchedule"
+          @close="showConsultationSchedule = false"
+          @submit="setDateTime"
+        />
+        <v-text-field
+          v-model="form.reason"
+          label="Reason (optional)"
+          variant="outlined"
+        ></v-text-field>
+        <div class="d-flex align-center justify-center my-6">
+          <v-btn
+            type="submit"
+            class="submit"
+            :disabled="submitting"
+            :loading="submitting"
+          >
+            Submit
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
+    <SuccessModal v-if="modal" @close="modal = !modal" :message="message" login />
+  </section>
+</template>
 
 <style scoped lang="scss">
 .reschedule {

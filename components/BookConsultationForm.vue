@@ -23,11 +23,24 @@ const availableDates = computed(() => consultationStore.availableDates);
 const basket = computed(() => basketStore.basket);
 const rate = computed(() => store.rate);
 const location = computed(() => store.location.countryName);
+const subservices = computed(() => {
+  const path = route.path;
+  const serviceSlug = path.split("/")[2];
+  const service = contentStore.getServiceBySlug(serviceSlug);
+  return service?.subservices || [];
+});
+
+const subserviceId = computed(() => route.query.subservice_id);
+const subservice = computed(() => {
+  const subServ = contentStore.getSubservicesById(subserviceId.value);
+  return subServ;
+});
 
 const form = ref({
   service: { fields: [] },
   booked_date: null,
   booked_time: null,
+  subservice: subservice.value?.id ? subservice.value : null,
 });
 const formHtml = ref(null);
 const modal = ref(false);
@@ -41,7 +54,11 @@ const saving = ref(false);
 const consultationServices = ref(_CloneDeep(consultationStore.services));
 const showConsultationSchedule = ref(false);
 
-const subserviceId = computed(() => route.query.subservice_id);
+const setSearchterm = () => {
+  searchTerm.value = "";
+  save();
+};
+
 const isNigerian = computed(() => store.location.countryName === "Nigeria");
 const filteredCountries = computed(() => {
   if (!searchTerm.value) {
@@ -129,12 +146,6 @@ const openDisclaimer = async () => {
   } else {
     store.setToast("Please fill all required fields.", { icon: "info", type: "info" });
   }
-};
-
-const formatDate = (date) => {
-  if (!date) return null;
-  const [year, month, day] = date.split("-");
-  return `${day}-${month}-${year}`;
 };
 
 const setDateTime = (args) => {
@@ -318,6 +329,14 @@ onMounted(async () => {
           :rules="[rules.required, rules.text]"
           @change="save"
         ></v-select>
+        <v-select
+          v-model="form.subservice"
+          :items="subservices"
+          item-text="title"
+          variant="outlined"
+          label="Subservice"
+          @change="save"
+        ></v-select>
         <v-text-field
           v-if="_Includes(form.service.fields, 'educational qualification')"
           v-model="form.qualification"
@@ -407,10 +426,7 @@ onMounted(async () => {
           item-title="name"
           variant="outlined"
           label="Country of Residence"
-          @change="
-            searchTerm = '';
-            save();
-          "
+          @update:model-value="setSearchterm"
           :rules="[rules.required]"
         >
           <template v-slot:prepend-item>
@@ -437,10 +453,7 @@ onMounted(async () => {
           label="Country of Interest"
           :rules="[rules.required]"
           :disabled="form.service.id === 5"
-          @change="
-            searchTerm = '';
-            save();
-          "
+          @update:model-value="setSearchterm"
         >
           <template v-slot:prepend-item>
             <div class="d-flex align-center justify-end">
@@ -470,7 +483,7 @@ onMounted(async () => {
             Select Intended Date of Trip
           </label>
           <p v-else>
-            {{ formatDate(form.intended_trip_date) }}
+            {{ useDateFns(form.intended_trip_date, "dd-MM-yyyy") }}
           </p>
           <v-icon class="ml-2"> mdi-calendar-month </v-icon>
         </div>

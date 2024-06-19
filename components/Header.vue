@@ -23,7 +23,21 @@ const headerRoutes = ref([
   { name: "Services", route: "#", active: true, service: true },
   { name: "About Us", route: "/about", active: false },
   { name: "Contact Us", route: "/contact", active: false },
-  { name: "FAQs", route: "/faqs", active: false },
+  {
+    name: "Resources",
+    route: "",
+    active: false,
+    children: [
+      { name: "Blog", route: "/blog", active: false },
+      { name: "FAQs", route: "/faqs", active: false },
+      {
+        name: "Booking Guide",
+        route: "https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view",
+        active: false,
+        target: "_blank",
+      },
+    ],
+  },
 ]);
 const loggedInUserMenu = ref([
   {
@@ -125,6 +139,39 @@ const setActiveRoute = (routeName) => {
               </v-menu>
             </nav>
           </div>
+          <div v-else-if="item.children" class="mx-2 mx-md-3">
+            <nav class="d-flex justify-start justify-md-center align-center mx-auto">
+              <v-menu
+                offset-y
+                content-class="services-menu no-scroll"
+                :close-on-content-click="false"
+                transition="slide-y-transition"
+                min-width="300"
+                max-width="900"
+              >
+                <template v-slot:activator="{ props }">
+                  <button
+                    class="header-var__title d-flex align-center"
+                    color="primary"
+                    dark
+                    v-bind="props"
+                  >
+                    {{ item.name }}
+                    <iconify-icon icon="mingcute:down-line"></iconify-icon>
+                  </button>
+                </template>
+                <v-list class="header-var__list px-5 py-6">
+                  <v-row>
+                    <v-col cols="12" v-for="n in item.children" :key="n.id">
+                      <nuxt-link :to="n.route" :target="n.target || ''">
+                        {{ n.name }}
+                      </nuxt-link>
+                    </v-col>
+                  </v-row>
+                </v-list>
+              </v-menu>
+            </nav>
+          </div>
           <nuxt-link
             v-else
             :to="item.route"
@@ -140,18 +187,6 @@ const setActiveRoute = (routeName) => {
             />
           </nuxt-link>
         </div>
-        <!-- Booking Guide -->
-        <a
-          href="https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view"
-          target="_blank"
-          class="header__routes d-block mx-2 mx-md-3"
-        >
-          <div class="">Booking Guide</div>
-          <hr
-            v-if="route.path === '/beta'"
-            class="header__line d-none d-md-block my-0 mx-auto"
-          />
-        </a>
         <!-- Beta testing Route Only show in UAT -->
         <nuxt-link
           v-if="config.public.APP_ENV === 'uat'"

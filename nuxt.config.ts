@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      ...getSiteHead({}),
+      // ...getSiteHead({}),
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       script: [
