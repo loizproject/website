@@ -65,6 +65,7 @@ const meta = {
   keywords:
     "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in nigeria",
 };
+
 useSeoMeta({
   title: meta.title,
   ogTitle: meta.title,
