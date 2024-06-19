@@ -131,7 +131,7 @@ const meta = {
   description:
     "Whether you're planning your next adventure or seeking assistance with visa services, flights, or tours, trust Loiz Tours & Travels to make your travel experience unforgettable. Join us on our journey as we redefine the standards of excellence in the travel industry. Discover the world with Loiz Tours & Travels – Where Every Journey Begins with Excellence!",
   image:
-  "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
+    "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
   keywords:
     "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in nigeria",
 };
@@ -349,7 +349,7 @@ useSeoMeta({
         <h2>Awesome Destinations</h2>
         <div class="tw-overflow-x-scroll no-scroll">
           <div
-            class="tw-flex tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap tw-justify-center"
+            class="tw-flex lg:tw-grid lg:tw-grid-cols-3 xl:tw-grid-cols-4 lg:tw-gap-6 tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap tw-justify-center"
           >
             <v-card
               v-for="(item, index) in destinations"
@@ -359,7 +359,6 @@ useSeoMeta({
               @mouseleave="toggleContent(item)"
             >
               <div
-                data-aos="zoom-out"
                 class="slide-card__img slide-card--destination__img d-flex align-center"
                 cover
                 :style="slideImageStyle(item)"
