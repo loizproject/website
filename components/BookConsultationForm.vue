@@ -54,6 +54,11 @@ const saving = ref(false);
 const consultationServices = ref(_CloneDeep(consultationStore.services));
 const showConsultationSchedule = ref(false);
 
+const setSearchterm = () => {
+  searchTerm.value = "";
+  save();
+};
+
 const isNigerian = computed(() => store.location.countryName === "Nigeria");
 const filteredCountries = computed(() => {
   if (!searchTerm.value) {
@@ -421,10 +426,7 @@ onMounted(async () => {
           item-title="name"
           variant="outlined"
           label="Country of Residence"
-          @change="
-            searchTerm = '';
-            save();
-          "
+          @update:model-value="setSearchterm"
           :rules="[rules.required]"
         >
           <template v-slot:prepend-item>
@@ -451,10 +453,7 @@ onMounted(async () => {
           label="Country of Interest"
           :rules="[rules.required]"
           :disabled="form.service.id === 5"
-          @change="
-            searchTerm = '';
-            save();
-          "
+          @update:model-value="setSearchterm"
         >
           <template v-slot:prepend-item>
             <div class="d-flex align-center justify-end">
