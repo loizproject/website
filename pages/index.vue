@@ -116,9 +116,11 @@ background-image: linear-gradient(to right, ${
 `;
 
 onMounted(() => {
-  setSliderContentWidth();
-  setWatchVideo();
-  setBookingVideo();
+  setTimeout(() => {
+    setSliderContentWidth();
+    setWatchVideo();
+    setBookingVideo();
+  }, 500);
 });
 
 onUnmounted(() => {
