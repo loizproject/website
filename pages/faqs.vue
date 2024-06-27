@@ -4,7 +4,7 @@ const config = useRuntimeConfig();
 
 const CMS_BASE_URL = config.public.CMS_BASE_URL;
 
-const { data: page, error } = await useAsyncData("about", async () => {
+const { data: page, error } = await useAsyncData("faqs", async () => {
   const query = `
     query {
       page(id: "/faqs", idType: URI) {
@@ -24,12 +24,19 @@ const { data: page, error } = await useAsyncData("about", async () => {
     query: query,
     variables: {},
   };
-  const resp = await useAxiosExtPost(CMS_BASE_URL, JSON.stringify(graphqlQuery));
-  const { page } = resp.data.data;
+  const resp = await $fetch(CMS_BASE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(graphqlQuery),
+  });
+  const { page } = resp.data;
   return page;
 });
 
 if (error.value) {
+  console.log(error.value);
   console.log(`Error occoured when fetching ${route.fullPath} page: ${error.value}`);
 }
 const { title, featuredImage, content } = page.value && !error.value ? page.value : {};
