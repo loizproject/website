@@ -24,8 +24,17 @@ const { data: page, error } = await useAsyncData("faqs", async () => {
     query: query,
     variables: {},
   };
-  const resp = await useAxiosExtPost(CMS_BASE_URL, JSON.stringify(graphqlQuery));
-  const { page } = resp.data.data;
+  // const resp = await useAxiosExtPost(CMS_BASE_URL, JSON.stringify(graphqlQuery));
+  const resp = await $fetch(CMS_BASE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // If you need authentication
+      // 'Authorization': `Bearer YOUR_AUTH_TOKEN`
+    },
+    body: JSON.stringify(graphqlQuery),
+  });
+  const { page } = resp.data;
   return page;
 });
 
