@@ -5,9 +5,8 @@ import { useStore } from "~/store";
 import { useContentStore } from "~/store/content";
 import { useConsultationStore } from "~/store/consultation";
 
-const { width, smAndDown, mdAndUp } = useDisplay();
+const { mdAndUp } = useDisplay();
 const router = useRouter();
-const rules = useFormRules;
 const config = useRuntimeConfig();
 
 const store = useStore();
@@ -20,9 +19,7 @@ const watchVideoModal = ref(false);
 const bookingVideoModal = ref(false);
 const videoType = ref("video/mp4");
 const form = ref({});
-const submitting = ref(false);
 const textLimit = ref(200);
-const sliderContentWidth = ref(260);
 const likeServiceKey = ref(0);
 const consultationService = ref(null);
 
@@ -34,7 +31,7 @@ const advisoryServices = computed(() => contentStore.advisoryServices);
 
 function startSearch() {
   if (search.value && search.value.length >= 3) {
-    const res = useSearch(services, search.value);
+    const res = useSearch(services.value, search.value);
     results.value = res;
   }
 }
@@ -91,20 +88,6 @@ function getStarted() {
   );
 }
 
-function setSliderContentWidth() {
-  setTimeout(() => {
-    const doc = document.getElementsByClassName("v-slide-group__container")[0];
-    sliderContentWidth.value =
-      width.value > 1360
-        ? doc.clientWidth / 4 - 16
-        : width.value > 1000
-        ? doc.clientWidth / 3 - 16
-        : width.value > 600
-        ? doc.clientWidth / 2 - 16
-        : doc.clientWidth - 16;
-  }, 200);
-}
-
 function toggleContent(item) {
   contentStore.toggleDestinationContent(item);
 }
@@ -117,7 +100,6 @@ background-image: linear-gradient(to right, ${
 
 onMounted(() => {
   setTimeout(() => {
-    setSliderContentWidth();
     setWatchVideo();
     setBookingVideo();
   }, 500);
@@ -283,10 +265,14 @@ useSeoMeta({
           show-arrows
           center-active
         >
-          <v-slide-group-item v-for="item in services" :key="item.title">
+          <v-slide-group-item
+            v-for="item in services"
+            :key="item.title"
+            v-slot="{ toggle }"
+          >
             <v-card
-              class="slide-card mx-2 my-2"
-              :style="`width: ${sliderContentWidth}px`"
+              class="slide-card mx-2 my-2 tw-w-[350px] 2xl:tw-w-[400px]"
+              @click="toggle"
             >
               <v-img
                 class="slide-card__img"
@@ -297,8 +283,9 @@ useSeoMeta({
                   <v-icon
                     :key="likeServiceKey"
                     :color="item.like ? 'orange !important' : '#fff'"
-                    >mdi-heart</v-icon
                   >
+                    mdi-heart
+                  </v-icon>
                 </v-btn>
               </v-img>
               <div class="pa-4">

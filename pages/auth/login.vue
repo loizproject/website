@@ -127,7 +127,12 @@ useSeoMeta({
         </div>
         <div class="sign-in-options d-flex align-center justify-center text-center my-5">
           <v-btn class="d-flex align-center" @click="googleLogin">
-            <iconify-icon icon="flat-color-icons:google" class="icon mr-2"></iconify-icon>
+            <client-only>
+              <iconify-icon
+                icon="flat-color-icons:google"
+                class="icon mr-2"
+              ></iconify-icon>
+            </client-only>
             Google
           </v-btn>
           <!-- <v-btn class="d-flex align-center" @click="facebookLogin">
