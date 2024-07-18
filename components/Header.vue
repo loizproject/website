@@ -21,8 +21,14 @@ const cartMenu = ref(false);
 const headerRoutes = ref([
   { name: "Home", route: "/", active: true },
   { name: "Services", route: "#", active: true, service: true },
-  { name: "About Us", route: "/about", active: false },
-  { name: "Contact Us", route: "/contact", active: false },
+  {
+    name: "Company",
+    active: false,
+    children: [
+      { name: "About Us", route: "/about", active: false },
+      { name: "Contact Us", route: "/contact", active: false },
+    ],
+  },
   {
     name: "Resources",
     route: "",
@@ -30,13 +36,14 @@ const headerRoutes = ref([
     children: [
       { name: "Blog", route: "/blog", active: false },
       { name: "FAQs", route: "/faqs", active: false },
-      {
-        name: "Booking Guide",
-        route: "https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view",
-        active: false,
-        target: "_blank",
-      },
     ],
+  },
+  {
+    name: "Booking Guide",
+    route:
+      "https://drive.google.com/file/d/1vdQ9dHMe7luKT2Kz24luBnryZVin6-gI/view?usp=sharing",
+    active: false,
+    target: "_blank",
   },
 ]);
 const loggedInUserMenu = ref([

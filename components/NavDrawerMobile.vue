@@ -31,7 +31,8 @@ const headerRoutes = ref([
   { name: "Blog", route: "/blog", active: false },
   {
     name: "Booking Guide",
-    route: "https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view",
+    route:
+      "https://drive.google.com/file/d/1vdQ9dHMe7luKT2Kz24luBnryZVin6-gI/view?usp=sharing",
     active: false,
     target: "_blank",
   },
