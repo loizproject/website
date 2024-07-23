@@ -12,7 +12,9 @@ const rules = useFormRules;
 const rdr = useCookie("loiz_redirect");
 
 const form = ref({});
-const formData = ref({});
+const formData = ref({
+  token: "",
+});
 const showPassword = ref(false);
 const submitting = ref(false);
 
@@ -83,33 +85,17 @@ useSeoMeta({
 
 <template>
   <section>
-    <div class="signin mx-auto">
-      <h3>Welcome Back!</h3>
-      <h4>Please Login to your account</h4>
+    <div class="signin mx-auto text-center">
+      <h3 class="tw-text-md">2FA Login</h3>
+      <p>An OTP has been emailed to your email. Kindly enter it below.</p>
       <v-form ref="form" class="mt-8" @submit.prevent="signin">
-        <v-text-field
-          v-model="formData.email"
-          :rules="[rules.required, rules.email]"
-          label="Enter Email"
+        <v-otp-input
+          v-model="formData.token"
+          :rules="[rules.required]"
+          label="Enter OTP"
           variant="outlined"
           type="email"
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.password"
-          :rules="[rules.required]"
-          label="Enter Password"
-          placeholder="Enter your password"
-          variant="outlined"
-          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-          :type="showPassword ? 'text' : 'password'"
-          @click:append-inner="showPassword = !showPassword"
-          class="mt-2"
-        ></v-text-field>
-        <div class="actions d-flex align-center justify-end">
-          <nuxt-link to="/auth/forgot-password" class="actions__link">
-            Forgot Password?
-          </nuxt-link>
-        </div>
+        ></v-otp-input>
         <div class="d-flex align-center justify-center my-6">
           <v-btn
             type="submit"
@@ -117,33 +103,9 @@ useSeoMeta({
             :disabled="submitting"
             :loading="submitting"
           >
-            Sign In
+            Proceed
           </v-btn>
         </div>
-        <div class="d-flex align-center justify-center">
-          <v-divider class="line line--reverse"></v-divider>
-          <p class="mb-0 mx-4 tw-w-3/4 text-center">Or Sign In with</p>
-          <v-divider class="line"></v-divider>
-        </div>
-        <div class="sign-in-options d-flex align-center justify-center text-center my-5">
-          <v-btn class="d-flex align-center" @click="googleLogin">
-            <client-only>
-              <iconify-icon
-                icon="flat-color-icons:google"
-                class="icon mr-2"
-              ></iconify-icon>
-            </client-only>
-            Google
-          </v-btn>
-          <!-- <v-btn class="d-flex align-center" @click="facebookLogin">
-            <iconify-icon icon="logos:facebook" class="icon mr-2"></iconify-icon>
-            Facebook
-          </v-btn> -->
-        </div>
-        <p class="no-acct text-center">
-          Don't have an account?
-          <nuxt-link to="/auth/register" class="actions__link">Create Account</nuxt-link>
-        </p>
         <div class="footer text-center">
           By signing in, you agree to Loiz Tours and Travels
           <nuxt-link to="/">Terms & Conditions</nuxt-link> and
@@ -160,10 +122,13 @@ useSeoMeta({
   padding: 2% 5%;
   min-height: 70vh;
   & h3 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   & h4 {
     font-size: 1.2rem;
+  }
+  p {
+    font-size: 16px;
   }
 }
 .actions {
@@ -222,6 +187,9 @@ useSeoMeta({
 @media screen and (max-width: 600px) {
   .signin {
     width: 85%;
+    & h3 {
+      font-size: 1.5rem;
+    }
   }
 }
 </style>
