@@ -182,7 +182,7 @@ useSeoMeta({
         </div>
         <div class="d-flex align-center justify-center">
           <v-divider class="line line--reverse"></v-divider>
-          <p class="mb-0 mx-4 tw-w-4/5">Or Sign Up with</p>
+          <p class="mb-0 mx-4 tw-w-4/5 text-center">Or Sign Up with</p>
           <v-divider class="line"></v-divider>
         </div>
         <div class="sign-in-options d-flex align-center justify-center my-5">
