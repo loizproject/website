@@ -137,7 +137,7 @@ onMounted(() => {
               </div>
               <div class="footer__list footer__list--var">
                 <a
-                  href="https://drive.google.com/file/d/1kTCTPMcyIfAq-EZ5YZYKoGHBDCf6UHQ6/view"
+                  href="https://drive.google.com/file/d/1vdQ9dHMe7luKT2Kz24luBnryZVin6-gI/view?usp=sharing"
                   target="_blank"
                 >
                   Booking Journey Guide
