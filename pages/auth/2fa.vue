@@ -94,7 +94,7 @@ useSeoMeta({
           :rules="[rules.required]"
           label="Enter OTP"
           variant="outlined"
-          type="email"
+          type="password"
         ></v-otp-input>
         <div class="d-flex align-center justify-center my-6">
           <v-btn
