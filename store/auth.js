@@ -8,7 +8,7 @@ export const useAuthStore = defineStore({
   }),
   actions: {
     async login(reqPayload) {
-      const res = await useAxiosPost("/login", reqPayload);
+      const res = await useAxiosPost("/verify-2fa", reqPayload);
       const { token: authToken } = res.data.authorization
       const token = await useCookie("loiz_auth_token", { maxAge: 60 * 60 })
       token.value = authToken // save auth token as cookie
