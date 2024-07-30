@@ -143,7 +143,7 @@ async function payWithPaystack(e) {
     basket: basket.value,
   };
   try {
-    await useAxiosPost("/user/payments/paystack-checkout", newTrx);
+    await useAxiosPost("/user/orders/checkout", newTrx);
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
@@ -187,7 +187,7 @@ async function payWithRave(e) {
     basket: basket.value,
   };
   try {
-    await useAxiosPost("/user/payments/flutterwave-checkout", newTrx);
+    await useAxiosPost("/user/orders/checkout", newTrx);
     FlutterwaveCheckout({
       public_key: config.public.FLW_PUBLIC_KEY,
       tx_ref,
@@ -208,7 +208,7 @@ async function payWithRave(e) {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
         await basketStore.clearBasket();
-        await useAxiosPost(`/payments/update-transaction/${payment.tx_ref}`, {
+        await useAxiosPost(`/user/orders/${payment.tx_ref}/payment`, {
           status: "success",
         });
         await consultationStore.fetchAvailableDates();
