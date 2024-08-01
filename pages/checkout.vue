@@ -154,7 +154,7 @@ async function payWithPaystack(e) {
         msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
         success.value = true;
         await basketStore.clearBasket();
-        await useAxiosPost(`/payments/update-transaction/${transaction.reference}`, {
+        await useAxiosPost(`/user/orders/${transaction.reference}/payment`, {
           status: "success",
         });
         await consultationStore.fetchAvailableDates();
