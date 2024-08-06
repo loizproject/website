@@ -31,8 +31,8 @@ export const useConsultationStore = defineStore({
         const nextMonthIndx = date.getMonth() === 11 ? 0 : date.getMonth() + 1; // if December, set to January
         const nextMonth = monthNames[nextMonthIndx];
 
-        const res = await useAxiosFetch(`/consultations/available-dates?month=${month}`);
-        const nextMonthRes = month === "December" ? null : await useAxiosFetch(`/consultations/available-dates?month=${nextMonth}`);
+        const res = await useAxiosFetch(`/consultation/available-dates?month=${month}`);
+        const nextMonthRes = month === "December" ? null : await useAxiosFetch(`/consultation/available-dates?month=${nextMonth}`);
         const { available_dates } = res.data.data.schedule;
         const nextMonthAvailableDates = nextMonthRes ? nextMonthRes.data.data.schedule.available_dates : {};
         const result = {
