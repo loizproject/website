@@ -117,7 +117,7 @@ const meta = {
   image:
     "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
   keywords:
-    "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in nigeria",
+    "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in Nigeria",
 };
 useSeoMeta({
   title: meta.title,
