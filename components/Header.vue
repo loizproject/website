@@ -27,6 +27,7 @@ const headerRoutes = ref([
     children: [
       { name: "About Us", route: "/about", active: false },
       { name: "Contact Us", route: "/contact", active: false },
+      { name: "Careers", route: "/careers", active: false },
     ],
   },
   {
