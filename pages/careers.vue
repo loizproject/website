@@ -11,17 +11,17 @@ console.log(careers);
 
             <div>
                
-                <h1 class=" tw-text-6xl tw-text-white">
+                <h1 class=" tw-text-[36px]  md:tw-text-6xl tw-text-white">
                     Join The <span class=" blue-text">Loiz Team</span> 
                 </h1>
     
-                <p class=" tw-text-[20px] tw-text-white tw-my-4 lg:tw-w-2/3 tw-mx-auto">
+                <p class=" tw-text-[16px] md:tw-text-[20px] tw-text-white tw-my-4 tw-w-[80%] lg:tw-w-2/3 tw-mx-auto">
                     Be part of something big. At Loiz, we value passion, innovation, and growth. Ready to make an impact?
                 </p>
 
                 <div class=" tw-flex tw-justify-center tw-mt-4">
 
-                    <v-btn size="x-large" class="submit tw-font-semibold  d-flex align-center py-4">
+                    <v-btn to="/careers#open-positions" size="x-large" class="submit tw-font-semibold flex align-center py-4">
                         View Open Positions
                         <iconify-icon icon="ion:enter-outline" class=" tw-text-2xl tw-ml-1"></iconify-icon>
                     </v-btn>
@@ -33,7 +33,7 @@ console.log(careers);
         </section>
 
 
-        <section>
+        <section id="open-positions">
 
             <v-container>
 
@@ -41,17 +41,17 @@ console.log(careers);
                     Open Positions
                 </h2>
                 
-                <v-card v-for="(item, index) in careers" :key="index" class=" tw-my-10 tw-p-8">
+                <v-card v-for="(item, index) in careers" :key="index" elevation="0" class=" tw-my-10 tw-p-5 md:tw-p-8">
 
-                    <h1 class=" tw-text-3xl">
+                    <h1 class=" tw-text-xl md:tw-text-3xl">
                         {{ item.title }}
                     </h1>
 
-                    <p class="tw-text-[20px] tw-my-4">
+                    <p class=" tw-text-[180] md:tw-text-[20px] tw-my-4">
                         {{ item.desc }}
                     </p>
 
-                    <i>
+                    <i class=" tw-font-semibold">
                         {{ item.department }} | {{ item.work_mode }} | {{ item.country }}
                     </i>
  

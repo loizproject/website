@@ -9,6 +9,10 @@
       "route": "/faqs"
     },
     {
+      "name": "Careers",
+      "route": "/careers"
+    },
+    {
       "name": "Data Privacy Notice",
       "route": "/data-privacy"
     },
