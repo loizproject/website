@@ -131,6 +131,19 @@ const goToCheckout = async () => {
   }
 };
 
+const bookConsultation = () => {
+  router.push(`/book-consultation/${serviceSlug}?subservice_id=${subservice.value.id}`);
+};
+
+const chat = () => {
+  const text = `Hi admin, I want more information about your 3rd party services.`;
+  const phone = "2347046178336";
+  const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(
+    text
+  )}`;
+  window.open(url, "_blank");
+};
+
 onMounted(() => {
   country.value = route.query.country;
   destination.value = destinations.value.find((item) => item.title === route.query.title);
@@ -185,15 +198,17 @@ useSeoMeta({
       </p>
       <v-divider class="line my-8"></v-divider>
       <v-btn
+        v-if="serviceSlug !== 'third-party-services'"
         large
         type="submit"
         elevation="0"
         class="submit px-8"
-        @click="
-          router.push(`/book-consultation/${serviceSlug}?subservice_id=${subservice.id}`)
-        "
+        @click="bookConsultation()"
       >
         Book Consultation
+      </v-btn>
+      <v-btn v-else large class="submit px-8" elevation="0" @click="chat">
+        Chat with us
       </v-btn>
     </v-container>
     <div v-if="canShowForm">

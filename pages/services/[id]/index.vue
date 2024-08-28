@@ -15,6 +15,15 @@ const service = computed(() => {
   return contentStore.getServiceBySlug(slug);
 });
 
+const chat = () => {
+  const text = `Hi admin, I want more information about your 3rd party services.`;
+  const phone = "2347046178336";
+  const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(
+    text
+  )}`;
+  window.open(url, "_blank");
+};
+
 onMounted(async () => {
   await contentStore.fetchServices();
 });
@@ -65,6 +74,7 @@ useSeoMeta({
       </div>
       <div class="d-flex align-center justify-start mt-8">
         <v-btn
+          v-if="service?.slug !== 'third-party-services'"
           large
           type="submit"
           class="submit"
@@ -72,6 +82,9 @@ useSeoMeta({
           @click="$router.push(`/book-consultation/${service.slug}`)"
         >
           Book Consultation
+        </v-btn>
+        <v-btn v-else large class="submit px-8" elevation="0" @click="chat">
+          Chat with us
         </v-btn>
       </div>
     </v-container>

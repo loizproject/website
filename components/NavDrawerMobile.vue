@@ -26,16 +26,17 @@ const headerRoutes = ref([
   { name: "Home", route: "/", active: true },
   { name: "Services", route: "#", active: true, service: true },
   { name: "About Us", route: "/about", active: false },
-  { name: "Contact Us", route: "/contact", active: false },
   { name: "FAQs", route: "/faqs", active: false },
   { name: "Blog", route: "/blog", active: false },
   {
     name: "Booking Guide",
     route:
-      "https://drive.google.com/file/d/1vdQ9dHMe7luKT2Kz24luBnryZVin6-gI/view?usp=sharing",
+    "https://drive.google.com/file/d/1vdQ9dHMe7luKT2Kz24luBnryZVin6-gI/view?usp=sharing",
     active: false,
     target: "_blank",
   },
+  { name: "Contact Us", route: "/contact", active: false },
+  { name: "Careers", route: "/careers", active: false },
 ]);
 const loggedInUserMenu = ref([
   {

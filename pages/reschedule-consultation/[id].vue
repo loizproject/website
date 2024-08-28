@@ -50,7 +50,7 @@ async function submit() {
   if (valid) {
     submitting.value = true;
     try {
-      await useAxiosPut(`/user/consultations/${id}/edit`, {
+      await useAxiosPut(`/user/consultations/${id}/reschedule`, {
         form: form.value,
       });
       message.value = {
