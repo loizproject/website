@@ -323,7 +323,7 @@ onMounted(async () => {
         <v-select
           v-if="_Includes(form.service.fields, 'marital status') && subserviceId != 8"
           v-model="form.marital_status"
-          :items="['Single', 'Married', 'Divorced', 'Widowed']"
+          :items="['Single', 'Married', 'Divorced', 'Widowed', 'Others']"
           variant="outlined"
           label="Marital Status"
           :rules="[rules.required, rules.text]"
