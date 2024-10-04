@@ -33,15 +33,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: [
-    // ...
-    '@pinia/nuxt',
-    '@nuxt/image',
-    '@nuxtjs/google-fonts',
-    "nuxt-lodash",
-    "maz-ui/nuxt",
-    // "nuxt-graphql-request",
-  ],
+  modules: [// ...
+  '@pinia/nuxt', '@nuxt/image', '@nuxtjs/google-fonts', "nuxt-lodash", // "nuxt-graphql-request",
+  "maz-ui/nuxt", '@nuxt/ui'],
   mazUi: {
     injectComponents: true,
     injectCss: true,
