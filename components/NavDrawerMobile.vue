@@ -35,6 +35,7 @@ const headerRoutes = ref([
     active: false,
     target: "_blank",
   },
+  { name: "Trips", route: "/trips", active: false },
   { name: "Contact Us", route: "/contact", active: false },
   { name: "Careers", route: "/careers", active: false },
 ]);

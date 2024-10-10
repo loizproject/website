@@ -1,27 +1,34 @@
 [
     {
-      "title": "Abeokuta Bi-monthly Daycation (Every Two Months)",
-      "image": "/Campaign3.png",
-      "text": "Experience the timeless charm of Madrid. Book your journey..",
-      "location": "Abeokuta City"
+      "title": "Abeokuta Daycation (Every Two Months)",
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312764/Campaign3.png",
+      "text": "Experience the timeless charm of Madrid. Book your journey.",
+      "location": "Abeokuta City",
+      "date": "Oct 21st - Dec 10th"
     },
     {
       "title": "London Family Group Getaways",
-      "image":"/Campaign5.png",
+      "image":"https://res.cloudinary.com/loiztours/image/upload/v1728312765/campaign5.png",
       "text": "A 'fun-tastic' Winter Holiday for your family to relax and unwind.",
-      "location": "Spain" 
+      "location": "Spain",
+      "date": "Oct 21st - Dec 10th" 
     },
     {
       "title": "Quarterly Solo Trip, United Kingdom",
-      "image": "/Campaign4.png",
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312764/campaign4.png",
       "text": "Dive into the Ultimate Adventure at Blackpool and enjoy memorable and awesome thrills and seaside delights.",
-      "location": "United Kingdom"
+      "location": "United Kingdom",
+      "date": "Oct 21st - Dec 10th"
+
     },
+    
     {
       "title": "Quarterly Solo Trip, United Kingdom",
-      "image": "/Campaign4.png",
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312764/campaign4.png",
       "text": "Dive into the Ultimate Adventure at Blackpool and enjoy memorable and awesome thrills and seaside delights.",
-      "location": "United Kingdom"
+      "location": "United Kingdom",
+      "date": "Oct 21st - Dec 10th"
+
     }
   ]
   
