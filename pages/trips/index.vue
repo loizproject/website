@@ -46,7 +46,7 @@ const currentShowingCards = computed(() => {
             <Slider />
         </div>
 
-        <section class=" tw-mx- max-w-[80%] tw-items-center tw-bg-[F9DAED] tw-flex tw-flex-col tw-justify-center">
+        <section class=" max-w-[90%] tw-items-center tw-bg-[F9DAED] tw-flex tw-flex-col tw-justify-center">
 
             <div class=" tw-flex tw-flex-col pt-10 ">
                 <h3 class=" tw-text-4xl tw-flex">Our Latest Trips</h3>
@@ -55,7 +55,7 @@ const currentShowingCards = computed(() => {
 
            
             
-            <div class=" tw-bg-white tw-p-8 tw-rounded-md tw-w-4/5">
+            <div class=" tw-bg-white tw-p-8 tw-rounded-md tw-w-[90%]">
 
                 <div class="tw-flex tw-items-center tw-justify-between tw-w-full"> 
                     <div class=" filter">
@@ -76,23 +76,32 @@ const currentShowingCards = computed(() => {
                       </div>
                 </div>
                 
+
+
                 <div class="  card-container tw-grid tw-grid-cols-1 md:tw-grid-cols-2">
+                  
                     <div v-for="(card, index) in currentShowingCards" :key="index" class="card">
                         <img :src="card.image" :alt="card.title" class="card-image" />
-                        <h4 class="card-title tw-text-left tw-font-semibold ">{{ card.title }}</h4>
+                        <div class=" tw-flex tw-justify-between tw-items-center ">
+                          <h4 class="card-title tw-text-left tw-font-semibold ">{{ card.title }}</h4>
+                          <h4 class=" card-title tw-text-sm">{{card.date}}</h4>
+                        </div>
                         <p class="card-text tw-font-normal tw-text-left">{{ card.text }}</p>
                         <div class=" tw-flex tw-flex-row tw-justify-between tw-text-left">
                             <div class=" tw-flex tw-items-center tw-gap-3">
-                              <iconify-icon icon="bxs:plane-alt" class=" plane tw-text-lg tw-text-[#EB0C8F]"></iconify-icon>
+                              <client-only>
+                                <iconify-icon icon="bxs:plane-alt" class=" plane tw-text-lg tw-text-[#EB0C8F]"></iconify-icon>
+                              </client-only>
                               <p class=" tw-m-0">{{card.location}}</p>
                             </div>
                             <div>
-                              <nuxt-link to="">
+                              <nuxt-link to="" class=" tw-border-black tw-p-4">
                                 See details
                               </nuxt-link> 
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
@@ -110,7 +119,7 @@ const currentShowingCards = computed(() => {
 .horizontal-line {
   width: 100%; /* Full-width line */
   height: 2px; /* Line thickness */
-  background-color: #EB0C8F; /* Line color */
+  background-color: #CCCCCC; /* Line color */
   margin: 20px 0; /* Optional spacing */
 }
 
@@ -126,7 +135,7 @@ const currentShowingCards = computed(() => {
     border-radius: 10px;
     padding: 20px;
     text-align: center;
-    border: 1px solid #CCCCCC; ;
+    border: 1px solid #CCCCCC; 
 
   }
   
@@ -134,12 +143,12 @@ const currentShowingCards = computed(() => {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 8px 8px 8px 8px;
-    
+    border-radius: 8px 8px 8px 8px;  
   }
   
+  
   .card-title {
-    font-size: 20px;
+    font-size: 18px;
     margin: 15px 0;
   }
   
@@ -148,12 +157,20 @@ const currentShowingCards = computed(() => {
     color: #1A1A1A;
   }
 .plane{
-  border: 1px solid #EB0C8F;
+  border: 1px solid;
+  border-image: linear-gradient(to right, #EB0C8F, blue) 5;
   background-color: #fff;
   border-radius: 999px;
   padding: 6px;
   text-align: center;
 }
+
+.see-details{
+  border: 1px solid black;
+  padding: 6px;
+  border-radius: 10px
+}
+
 </style>
 
 

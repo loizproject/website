@@ -170,8 +170,8 @@ useSeoMeta({
           </p>
           <div class="footer text-center">
             By signing in, you agree to Loiz Tours and Travels
-            <nuxt-link to="/">Terms & Conditions</nuxt-link> and
-            <nuxt-link to="/">Privacy Policy</nuxt-link>.
+            <nuxt-link to="/terms">Terms & Conditions</nuxt-link> and
+            <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>.
           </div>
         </v-form>
       </div>
