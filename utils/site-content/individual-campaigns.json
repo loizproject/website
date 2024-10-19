@@ -1,0 +1,113 @@
+[
+    {
+        "index": "1",
+        "id": "1",
+        "slug": "abeokuta-daycation",
+        "title": "Abeokuta Daycation (Every Two Months)",
+        "image": "https://res.cloudinary.com/loiztours/image/upload/v1728879859/Olumo-Rock-3.jpg",
+        "icon": "train-line",
+        "text": "Experience the timeless charm of Madrid. Book your journey.",
+        "location": "Abeokuta City",
+        "date": "Oct 21st - Dec 10th",
+        "desc": "Join us for a thrilling and unforgettable day trip to Abeokuta once every two months, where history unfolds in the most adventurous manner you can imagine. Don't miss the chance to capture memorable photos at key landmarks and scenic viewpoints.",
+        "cost": 50000,
+        "card_details": [
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728554060/Image10.png",
+                "title": "A large white church in Abeokuta" 
+            },
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728554059/Image-12.png",
+                "title": "Olusegun Obasanjo Presidential Library"
+            },
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728554059/Image11.png",
+                "title": "Abeokuta Train Station"
+            }
+            
+        ],
+        "itenary": [
+            "A scenic train ride from Lagos to Abeokuta offering a unique blend of urban charm and natural beauty.",
+            "Guided panoramic view of Olumo Rock and learn about its historical significance.",
+            "Take a break and enjoy a delicious lunch.",
+            "Visit the Adire International Market for sightseeing and to pick up unique souvenirs (Adire, Kampala Batik, or ready-made Boubous materials).",
+            "Add a layer of excitement to the journey with a train ride back to Lagos."
+        ],
+        "tips": [
+            "Wear comfortable walking shoes and light clothing suitable for outdoor activities.",
+            "Bring sunscreen, a hat, and sunglasses for protection against the sun.",
+            "Take a break and enjoy a delicious lunch.",
+            "Carry a bottle of water to stay hydrated throughout the tour.",
+            "Don’t forget your camera to capture the beautiful moments and scenery."
+        ]
+        ,
+        "cost_includes": "Cost includes - Total package - Return transportation, Feeding, Gift items, Admin and Tour fees = N49,000 per person. You may have the option of climbing the rock through the stairs or the elevator.",
+        "includes": "Inclusive: A balanced meal of lunch with, Fruit, Water/Soft Drink, Small chops, and branded gift items.",
+        "image2": "https://res.cloudinary.com/loiztours/image/upload/v1728533238/Image2.png",
+        "payment" : [
+            "Pay Over Time with 2 instalments of 49,000 and 0% Interest",
+            "Save 10% when you make an early bed payment 2 months ahead of your trip.",
+            "No additional fees."
+        ]
+        
+    },
+    
+    {
+        "index": "2",
+        "id": "2",
+        "slug": "london",
+        "title": "London December Family Getaway",
+        "image": "https://res.cloudinary.com/loiztours/image/upload/v1728930489/london-a.jpg",
+        "text": "A fun-tastic' Winter Holiday for your family to relax.",
+        "location": "London" ,
+        "date": "Oct 21st - Dec 10th",
+        "desc": "Explore the Wonders of London in the company of your family, from the London Eye, the world’s tallest cantilevered observation wheel to the British Museum, offering breathtaking views that can’t be experienced anywhere else.",
+        "cost": 50000,
+        "card_details": [
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728932762/Tower_of_London_White_Tower.jpg",
+                "title": "London Eye" 
+            },
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728932762/St-Pauls-Cathedral-1024x685.jpg",
+                "title": "St. Paul's Cathedral"
+            },
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728932762/download.jpg",
+                "title": "The British Museum"
+            }
+            
+        ],
+        "link": "",
+        "image1": "https://res.cloudinary.com/loiztours/image/upload/v1728533389/Image.png",
+        "itenary": [
+            "Arrive in Blackpool and check into your hotel.",
+            "Visit Blackpool Tower and experience the Blackpool Tower Eye for stunning views of the city and coastline",
+            "Visit key attractions, enjoy leisure activities, and entertainment in the city’s iconic tourist resort",
+            "Shopping and sightseeing",
+            "7 days & 6 nights 3 Star Hotel Accommodation",
+            "Daily Sumptuous breakfast",
+            "Local transportation",
+            "Tours & entrance fees to attractions"
+        ],
+        "tips": [
+            "Wear comfortable walking shoes and light clothing suitable for outdoor activities.",
+            "Bring sunscreen, a hat, and sunglasses for protection against the sun.",
+            "Take a break and enjoy a delicious lunch.",
+            "Carry a bottle of water to stay hydrated throughout the tour.",
+            "Don’t forget your camera to capture the beautiful moments and scenery."
+        ]
+        ,
+        "cost_includes": "Cost includes- Visa fees, Administration, Processing, Conference fees, and Local transportation: =  per applicant.",
+        "Inclusive": "Inclusive: A balanced meal of lunch with, Fruit, Water/Soft Drink, Small chops, and branded gift items.",
+        "image2": "https://res.cloudinary.com/loiztours/image/upload/v1728533238/Image2.png",
+        "payment" : [
+            "Pay Over time with 2 instalments of  0% Interest",
+            "Save 10% when you make an early bed payment 6 months ahead of your trip",
+            "No additional fees."
+        ]
+        
+    }
+
+
+]

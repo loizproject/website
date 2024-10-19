@@ -2,7 +2,7 @@
 
 //Script for the cards
 import { ref, onMounted } from 'vue'
-import cardsJson from "~/utils/site-content/card.json"
+import cardsJson from "~/utils/site-content/individual-campaigns.json"
 
   const cardsData = ref([])
   
@@ -28,7 +28,8 @@ const currentShowingCards = computed(() => {
     if (
       item.title?.toUpperCase().includes(search.value?.toUpperCase()) ||
       item.text?.toUpperCase().includes(search.value?.toUpperCase())||
-      item.location?.toUpperCase().includes(search.value?.toUpperCase())
+      item.location?.toUpperCase().includes(search.value?.toUpperCase())||
+      item.date?.toUpperCase().includes(search.value?.toUpperCase())
     ) {
       res.push(item);
     }
@@ -81,7 +82,9 @@ const currentShowingCards = computed(() => {
                 <div class="  card-container tw-grid tw-grid-cols-1 md:tw-grid-cols-2">
                   
                     <div v-for="(card, index) in currentShowingCards" :key="index" class="card">
+                      <div class="image-hover-effect">
                         <img :src="card.image" :alt="card.title" class="card-image" />
+                      </div>
                         <div class=" tw-flex tw-justify-between tw-items-center ">
                           <h4 class="card-title tw-text-left tw-font-semibold ">{{ card.title }}</h4>
                           <h4 class=" card-title tw-text-sm">{{card.date}}</h4>
@@ -90,14 +93,15 @@ const currentShowingCards = computed(() => {
                         <div class=" tw-flex tw-flex-row tw-justify-between tw-text-left">
                             <div class=" tw-flex tw-items-center tw-gap-3">
                               <client-only>
-                                <iconify-icon icon="bxs:plane-alt" class=" plane tw-text-lg tw-text-[#EB0C8F]"></iconify-icon>
+                                <iconify-icon icon="mdi:plane-train" class=" plane tw-text-2xl tw-text-black"></iconify-icon>
                               </client-only>
                               <p class=" tw-m-0">{{card.location}}</p>
                             </div>
                             <div>
-                              <nuxt-link to="" class=" tw-border-black tw-p-4">
+                              <v-btn :to="`/trips/${card.slug}`" class=" submit" elevation="0">
                                 See details
-                              </nuxt-link> 
+                              </v-btn>
+                               
                             </div>
                         </div>
                     </div>
@@ -169,6 +173,20 @@ const currentShowingCards = computed(() => {
   border: 1px solid black;
   padding: 6px;
   border-radius: 10px
+}
+
+.image-hover-effect {
+  overflow: hidden; /* Ensures that scaling doesn't overflow the container */
+}
+
+.image-hover-effect img {
+  display: block; /* Ensures no extra space at the bottom */
+  width: 100%; /* Ensure image takes up the width of its container */
+  transition: transform 0.3s ease; /* Smooth hover transition */
+}
+
+.image-hover-effect img:hover {
+  transform: scale(1.1); /* Scales the image slightly on hover */
 }
 
 </style>
