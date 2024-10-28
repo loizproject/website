@@ -154,7 +154,7 @@ async function payWithPaystack(e) {
         msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
         success.value = true;
         await basketStore.clearBasket();
-        await useAxiosPost(`/user/orders/${transaction.reference}/payment`, {
+        await useAxiosPost(`/user/orders/paystack/payments/${transaction.reference}/verify`, {
           status: "success",
         });
         await consultationStore.fetchAvailableDates();
@@ -207,10 +207,11 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        await basketStore.clearBasket();
-        await useAxiosPost(`/user/orders/${payment.tx_ref}/payment`, {
+        await useAxiosPost(`/user/orders/flutterwave/payments/${payment.tx_ref}/verify`, {
           status: "success",
+          payment_id: payment.transaction_id
         });
+        await basketStore.clearBasket();
         await consultationStore.fetchAvailableDates();
       },
       onclose: async function (incomplete) {
