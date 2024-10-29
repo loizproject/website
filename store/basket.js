@@ -18,7 +18,8 @@ export const useBasketStore = defineStore({
       const country = store.location.countryName;
       state.basket.forEach(item => {
         if (country === 'Nigeria') {
-          item.consultation ? total += consultationStore.priceNGN : total += (item.price * item.qty * rate);
+          const type = item.type;
+          type === 'consultation' ? total += consultationStore.priceNGN : type=== 'trip' ? total += item.price : total += (item.price * item.qty);
         } else {
           total += item.price * item.qty;
         }
@@ -34,7 +35,8 @@ export const useBasketStore = defineStore({
       const country = store.location.countryName;
       state.basket.forEach(item => {
         if (country === 'Nigeria') {
-          item.consultation ? total += consultationStore.priceNGN : item.third_party ? total += (item.price * item.qty * rate) : total += (item.price * item.qty * 0.90 * rate);
+          const type = item.type;
+          type === 'consultation' ? total += consultationStore.priceNGN : type === 'third_party' ? total += (item.price * item.qty): type === 'trip' ? total += (item.price* item.qty) : total += (item.price * item.qty * 0.90 );
         } else {
           total += item.price * item.qty;
         }

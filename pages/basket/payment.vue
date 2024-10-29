@@ -5,6 +5,15 @@ import { useContentStore } from "~/store/content";
 import { useConsultationStore } from "~/store/consultation";
 import { useBasketStore } from "~/store/basket";
 
+let installment = ref(false)
+const toggleDropdown = (state) => {
+  installment.value = state
+  console.log("the value of state is ",installment);
+  
+};
+
+
+
 const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
 const route = useRoute();
 const router = useRouter();
@@ -26,18 +35,39 @@ const rate = computed(() => store.rate);
 
 const basket = computed(() => {
   basketStore.basket.map((item) => {
-    if (!item.consultation) {
-      item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
+    switch (item.type) {
+      case "consultation":
+        return item;
+
+      case "trip":
+        return item;
+
+      default:
+        item.parentService = contentStore.getSubservicesById(
+          item.options.subservice_id
+        );
     }
+
     return item;
   });
   return basketStore.basket;
 });
+console.log(typeof basket);
+
+const items = ref([]);
+
+for(item of basket){
+  items.value.push({
+    paymentPlan: item.type === "trip" ? {type: "", initialamount: ""} : "onetime",
+    ...item 
+  })
+}
 
 const isNigerian = computed(() => store.location.countryName === "Nigeria");
 const totalPrice = computed(() => basketStore.getSubTotal);
 const totalPriceNgn = computed(() => basketStore.getNgnSubTotal);
 const paths = computed(() => route.path.split("/"));
+console.log(totalPrice, "total price");
 
 function consultationExpired(consltn) {
   const dates = availableDates.value;
@@ -66,7 +96,7 @@ function consultationExpired(consltn) {
 const expiredConsultationInBasket = computed(() => {
   let resp = [];
   basket.value.forEach((item) => {
-    if (item.consultation && consultationExpired(item)) {
+    if (item.type === "consultation" && consultationExpired(item)) {
       resp.push(true);
     } else {
       resp.push(false);
@@ -136,7 +166,9 @@ function formatTime(time24) {
   const period = hours >= 12 ? "PM" : "AM";
 
   // Convert to 12-hour format
-  const hours12 = (hours % 12 === 0 ? 12 : hours % 12).toString().padStart(2, "0");
+  const hours12 = (hours % 12 === 0 ? 12 : hours % 12)
+    .toString()
+    .padStart(2, "0");
   const minutesPadded = minutes.toString().padStart(2, "0");
 
   // Construct the formatted time string
@@ -198,9 +230,12 @@ useSeoMeta({
           <v-icon color="#e7028e" class="mr-2"> mdi-chevron-left</v-icon>
           Back
         </button>
+
         <v-spacer></v-spacer>
+
         <div class="navigation d-flex align-center">
           <nuxt-link to="/">Home</nuxt-link>
+
           <v-icon color="#555" class="mx-2 mt-1">mdi-chevron-right</v-icon>
           <div v-for="(item, index) in paths" :key="index">
             <nuxt-link
@@ -222,6 +257,7 @@ useSeoMeta({
             >
           </div>
         </div>
+
         <v-spacer></v-spacer>
         <button
           v-if="mdAndUp"
@@ -233,6 +269,7 @@ useSeoMeta({
         </button>
       </v-container>
     </div>
+
     <v-container class="d-md-flex align-start justify-center">
       <div id="billing-details" class="billing tile pa-5 mx-auto">
         <div class="d-flex align-center justify-space-between">
@@ -242,44 +279,116 @@ useSeoMeta({
             <v-icon class="ml-1">mdi-delete</v-icon>
           </button>
         </div>
+
         <div class="details mt-8">
-          <v-card v-for="(item, index) in basket" :key="index" flat class="pa-6 my-2">
-            <div v-if="!item.consultation" class="w-full">
-              <div class="details__head d-flex align-center justify-space-between">
+          <v-card
+            v-for="(item, index) in items"
+            :key="index"
+            flat
+            class="pa-6 my-2"
+          >
+            <div v-if="item.type === 'trip'" class="w-full">
+              <div
+                class="details__head d-flex align-center justify-space-between"
+              >
                 <h4>{{ item.name }}</h4>
                 <p v-if="isNigerian" class="ml-2 d-none d-md-block">
-                  ₦{{ useAmtToString(item.price * item.qty * rate) }}
+                  ₦{{ useAmtToString(item.price * item.qty) }}
                 </p>
-                <p v-else class="ml-2 d-none d-md-block">${{ item.price * item.qty }}</p>
+                <p v-else class="ml-2 d-none d-md-block">
+                  ${{ item.price * item.qty }}
+                </p>
               </div>
+
               <div
                 class="details__body d-md-flex flex-wrap align-center justify-space-between"
               >
-                <div>
-                  <p v-if="item && item.parentService">{{ item.parentService.title }}</p>
-                  <p v-if="item && item.third_party">Third Party Service</p>
-                  <p>{{ item.country }}</p>
-                  <p>{{ item.qty }} Person(s)</p>
+                <div class="tw-w-full">
+                  <p v-if="item && item.parentService">
+                    {{ item.parentService.title }}
+                  </p>
+
+                  <div class="tw-flex tw-flex-col tw-gap-4 tw-bg-[#FEF3F9] tw-p-4 tw-rounded-2xl tw-justify-between">
+                    <div v-if="installment" class=" tw-gap-4 tw-flex tw-flex-col">
+                      <div class="tw-flex tw-justify-between">
+                        <div class="">
+                          <p class="tw-font-bold tw-text-lg">2 Installment payment available</p>
+                        </div>
+                        <client-only
+                          ><iconify-icon
+                            icon="iconamoon:arrow-up-6-circle-light"
+                            class="tw-text-2xl"
+                            @click="()=>toggleDropdown(false)" 
+                          ></iconify-icon
+                        ></client-only>
+                      </div>
+
+                      <div>
+                        <p class="tw-font-light tw-text-lg">Pick a payment plan</p>
+                        <p class=" tw-font-thin tw-text-[16px]">Choose the best way to pay for this tripovertime</p>
+                        <div class="horizontal-line tw-mt-2"></div>
+                      </div>
+
+                      <div class="prices tw-flex tw-flex-col tw-gap-6">
+                        <div class="tw-w-full tw-flex tw-justify-between">
+                          <div class="tw-flex tw-flex-col">
+                            <p class="tw-font-bold tw-text-lg">₦30000 first, then ₦19000</p>
+                            <p class=" tw-font-light tw-text-[#404040] tw-text-lg">Over the first month</p>
+                          </div>
+                          <input type="radio" id="installation" value="₦19000"/>
+                        </div>
+
+                        <div class="tw-w-full tw-flex tw-justify-between">
+                          <div class="tw-flex tw-flex-col">
+                            <p class="tw-font-bold tw-text-lg">₦30000 first, then ₦19000</p>
+                            <p class=" tw-font-light tw-text-[#404040] tw-text-lg">Over the first month</p>
+                          </div>
+                          <input type="radio" id="installation" value="₦19000"/>
+                        </div>
+                      </div>
+
+                      <div class="horizontal-line"></div>
+
+                      <p class="tw-font-light tw-text-lg">*Payment plans cover only the transportation cost (BaseFare+Taxes+Fees) any additional cost will be charged separately when your booking is confirmed.</p>
+
+                      <div class=" tw-flex tw-gap-4 tw-items-center tw-justify-end tw-text-[#EB0C8F]  ">
+                        <div  class="">
+                          <button @click="()=>toggleDropdown(false)">
+                            Cancel
+                          </button>
+                        </div>
+                        <div class="tw-border-2 tw-border-pink-300 tw-rounded-2xl tw-p-2" >
+                          <button>
+                            Save
+                          </button>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div v-if="!installment" class="tw-justify-between tw-flex tw-items-center">
+                      <p class="tw-font-bold tw-text-lg ">2 Installments payment available</p>
+
+                      <div @click="()=>toggleDropdown(!installment)" class="tw-border tw-border-pink-500 tw-p-2 tw-relative tw-inline-block tw-rounded-xl hover:tw-bg-black hover:tw-text-white hover:tw-border-none hover:tw-border-b">
+                        <button>Select Installment Payment Plan</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <div class="d-flex align-center justify-space-between">
                   <p v-if="isNigerian" class="details__price mr-2 d-md-none">
-                    ₦{{ useAmtToString(item.price * item.qty * rate) }}
+                    ₦{{ useAmtToString(item.price * item.qty) }}
                   </p>
                   <p v-else class="details__price mr-2 d-md-none">
                     ${{ item.price * item.qty }}
                   </p>
-                  <button
-                    class="clear-basket d-flex align-center"
-                    @click="removeItem(item)"
-                  >
-                    Remove
-                    <v-icon class="ml-2">mdi-close</v-icon>
-                  </button>
                 </div>
               </div>
             </div>
             <div v-else>
-              <div class="details__head d-flex align-center justify-space-between">
+              <div
+                class="details__head d-flex align-center justify-space-between"
+              >
                 <h4>
                   Consultation session
                   <v-tooltip
@@ -294,8 +403,8 @@ useSeoMeta({
                       </v-icon>
                     </template>
                     <span>
-                      The selected date or time for this consultation has expired. Please
-                      select another date/time.
+                      The selected date or time for this consultation has
+                      expired. Please select another date/time.
                     </span>
                   </v-tooltip>
                 </h4>
@@ -310,33 +419,37 @@ useSeoMeta({
                 <p v-if="isNigerian" class="d-none d-md-block ml-2">
                   ₦{{ useAmtToString(consultationPriceNGN) }}
                 </p>
-                <p v-else class="d-none d-md-block ml-2">${{ consultationPrice }}</p>
+                <p v-else class="d-none d-md-block ml-2">
+                  ${{ consultationPrice }}
+                </p>
               </div>
               <div
-                class="details__body d-md-flex flex-wrap align-center justify-space-between"
+                class="details__body d-md-flex flex-wrap justify-space-between"
               >
-                <div>
+                <div class="tw-flex tw-flex-col tw-gap-4">
                   <p>{{ item.name }}</p>
                   <p>
-                    {{ formatDate(item.options.booked_date) }},
-                    <i>{{ formatTime(item.options.booked_time) }}</i>
+                    {{ formatDate(item.options.booked_date) }},<i>{{
+                      formatTime(item.options.booked_time)
+                    }}</i>
                   </p>
-                </div>
-                <!-- <p>1 Person</p> -->
-                <div class="d-flex align-center justify-space-between">
-                  <p v-if="isNigerian" class="details__price mr-2 d-md-none">
-                    ₦{{ useAmtToString(consultationPriceNGN) }}
-                  </p>
-                  <p v-else class="details__price mr-2 d-md-none">
-                    ${{ item.price * item.qty }}
-                  </p>
-                  <button
-                    class="clear-basket d-flex align-center"
-                    @click="removeItem(item)"
-                  >
-                    Remove
-                    <v-icon class="ml-2">mdi-close</v-icon>
-                  </button>
+                  <!-- <p>1 Person</p> -->
+
+                  <div class="d-flex justify-space-between">
+                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">
+                      ₦{{ useAmtToString(consultationPriceNGN) }}
+                    </p>
+                    <p v-else class="details__price mr-2 d-md-none">
+                      ${{ item.price * item.qty }}
+                    </p>
+                    <button
+                      class="clear-basket d-flex align-center"
+                      @click="removeItem(item)"
+                    >
+                      Remove
+                      <v-icon class="ml-2">mdi-close</v-icon>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -387,6 +500,13 @@ useSeoMeta({
 </template>
 
 <style scoped lang="scss">
+.menu {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 100%;
+}
+
 .header {
   & a {
     color: $loiz-default;
@@ -606,5 +726,10 @@ useSeoMeta({
   .clear-basket {
     font-size: 0.8rem;
   }
+}
+.horizontal-line {
+  width: 100%;
+  height: 1px;
+  background-color: #AAAAAA;
 }
 </style>

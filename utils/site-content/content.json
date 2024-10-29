@@ -1,0 +1,52 @@
+[
+    {
+      "title": "Abeokuta Bi-Monthly Daycation",
+      "slug": "abeokuta-daycation",
+      "caption": "Experience an exhilarating and unforgettable day trip to Abeokuta, available every two months!",
+      "desc": "Join us for a thrilling and unforgettable day trip to Abeokuta once every two months, where history unfolds in the most adventurous manner you can imagine. Don't miss the chance to capture memorable photos at key landmarks and scenic viewpoints.",
+      "images":[
+        {
+            "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728554060/Image10.png",
+            "title": "A large white church in Abeokuta" 
+        },
+        {
+            "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728554059/Image-12.png",
+            "title": "Olusegun Obasanjo Presidential Library"
+        },
+        {
+            "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728554059/Image11.png",
+            "title": "Abeokuta Train Station"
+        }
+      ],
+      "url": "https://res.cloudinary.com/loiztours/image/upload/v1728879859/Olumo-Rock-3.jpg",
+      "featured": "true"
+       }
+
+,
+
+    {
+        "title": "London December Family Getaway",
+        "slug": "london",
+        "caption": "A fun-tastic' Winter Holiday for your family to relax.",
+        "desc": "Explore the Wonders of London in the company of your family, from the London Eye, the world’s tallest cantilevered observation wheel to the British Museum, offering breathtaking views that can’t be experienced anywhere else.",
+        "images":[
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728932762/Tower_of_London_White_Tower.jpg",
+                "title": "London Eye" 
+            },
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728932762/St-Pauls-Cathedral-1024x685.jpg",
+                "title": "St. Paul's Cathedral"
+            },
+            {
+                "imageurl": "https://res.cloudinary.com/loiztours/image/upload/v1728932762/download.jpg",
+                "title": "The British Museum"
+            }
+            
+        ],
+        "url": "https://res.cloudinary.com/loiztours/image/upload/v1728533389/Image.png",
+        "featured": "true"
+         }
+
+  ]
+  

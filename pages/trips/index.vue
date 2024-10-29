@@ -1,30 +1,29 @@
 <script setup>
 
-//Script for the cards
+//Script for the cnpards
 import { ref, onMounted } from 'vue'
-import cardsJson from "~/utils/site-content/individual-campaigns.json"
-
-  const cardsData = ref([])
-  
-  // Fetch card data from the JSON file  
-  const fetchCardData = async () => {
+import { formatDate } from '~/utils/lib';
+// Fetch card data from the JSON file  
+const fetchCardData = async () => {
   try {
-    cardsData.value = cardsJson
+    cardsData = trips
   } catch (error) {
     console.error('Failed to load slider data', error)
   }
 }
-  // Fetch the data when the component is mounted
-  onMounted(fetchCardData)
 
 
-
+// Fetch the data when the component is mounted
+onMounted(fetchCardData)
+//Fetching the api
+const {data: apires} = await useAxiosFetch(`/trips`)
+const trips = apires.data.trips
+console.log(trips);
 //for the search
 const search = ref("");
-
 const currentShowingCards = computed(() => {
   let res = [];
-  cardsJson.forEach((item) => {
+  trips.forEach((item) => {
     if (
       item.title?.toUpperCase().includes(search.value?.toUpperCase()) ||
       item.text?.toUpperCase().includes(search.value?.toUpperCase())||
@@ -34,8 +33,13 @@ const currentShowingCards = computed(() => {
       res.push(item);
     }
   });
-  return search.value ? res : cardsJson;
+  return search.value ? res : trips;
 });
+
+const banner = (images) => images.find((image) => image.type === "banner")
+
+
+
 
 </script>
 
@@ -83,26 +87,35 @@ const currentShowingCards = computed(() => {
                   
                     <div v-for="(card, index) in currentShowingCards" :key="index" class="card">
                       <div class="image-hover-effect">
-                        <img :src="card.image" :alt="card.title" class="card-image" />
+                        <img :src="banner(card.images).url" :alt="card.title" class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%] " />
                       </div>
-                        <div class=" tw-flex tw-justify-between tw-items-center ">
-                          <h4 class="card-title tw-text-left tw-font-semibold ">{{ card.title }}</h4>
-                          <h4 class=" card-title tw-text-sm">{{card.date}}</h4>
+                        <div class=" tw-flex tw-justify-between tw-items-center">
+                          <h4 class="card-title tw-text-left tw-font-semibold tw-max-w-[70%] ">{{ card.title }}</h4>
+                          <div class=" tw-gap-2 tw-flex tw-items-center">
+                            <client-only>
+                                <iconify-icon icon="oui:token-date" class="tw-text-2xl tw-text-black"></iconify-icon>
+                              </client-only>
+                            <span class=" card-title tw-text-sm">{{formatDate(new Date(card.startDate))}} - {{formatDate(new Date(card.endDate))}}</span>
+                          </div>
                         </div>
-                        <p class="card-text tw-font-normal tw-text-left">{{ card.text }}</p>
+                        <p class="card-text tw-font-normal tw-text-left">{{ card.caption }}</p>
                         <div class=" tw-flex tw-flex-row tw-justify-between tw-text-left">
                             <div class=" tw-flex tw-items-center tw-gap-3">
                               <client-only>
-                                <iconify-icon icon="mdi:plane-train" class=" plane tw-text-2xl tw-text-black"></iconify-icon>
+                                <iconify-icon v-show="card.type==='domestic' " icon="bxs:train" class=" tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"></iconify-icon>
+                                <iconify-icon v-show="card.type==='foreign' " icon="bxs:plane-alt" class=" tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"></iconify-icon>
                               </client-only>
-                              <p class=" tw-m-0">{{card.location}}</p>
+                              <div class=" tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#D0EEF5] tw-rounded-2xl">
+                                <span v-for="location in card.locations" class=" tw-m-0">{{location.city}}</span>
+                              </div>
                             </div>
+
                             <div>
                               <v-btn :to="`/trips/${card.slug}`" class=" submit" elevation="0">
                                 See details
                               </v-btn>
-                               
                             </div>
+                            
                         </div>
                     </div>
 
@@ -113,6 +126,7 @@ const currentShowingCards = computed(() => {
 
         </section>
         
+      
 
     </main>
                  
@@ -144,8 +158,6 @@ const currentShowingCards = computed(() => {
   }
   
   .card-image {
-    width: 100%;
-    height: 200px;
     object-fit: cover;
     border-radius: 8px 8px 8px 8px;  
   }
@@ -162,9 +174,7 @@ const currentShowingCards = computed(() => {
   }
 .plane{
   border: 1px solid;
-  border-image: linear-gradient(to right, #EB0C8F, blue) 5;
-  background-color: #fff;
-  border-radius: 999px;
+  border-radius: 50%;
   padding: 6px;
   text-align: center;
 }
@@ -188,6 +198,7 @@ const currentShowingCards = computed(() => {
 .image-hover-effect img:hover {
   transform: scale(1.1); /* Scales the image slightly on hover */
 }
+ 
 
 </style>
 
