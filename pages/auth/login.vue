@@ -181,6 +181,7 @@ useSeoMeta({
         <h3 class="tw-text-md">2FA Login</h3>
         <p>An OTP has been emailed to your email. Kindly enter it below.</p>
         <v-form ref="form" class="mt-8" @submit.prevent="signin">
+          
           <v-otp-input
             v-model="formData.code"
             :rules="[rules.required]"

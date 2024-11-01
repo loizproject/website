@@ -9,6 +9,18 @@ const { mdAndUp } = useDisplay();
 const router = useRouter();
 const config = useRuntimeConfig();
 
+
+import { onMounted, ref } from 'vue';
+import Modal from '~/components/Modal.vue';
+
+// Reference to the modal component
+const modal = ref(null);
+
+onMounted(() => {
+  // Show the modal when the page is loaded
+  modal.value.showModal();
+});
+
 const store = useStore();
 const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
@@ -136,6 +148,9 @@ useSeoMeta({
 
 <template>
   <div>
+
+    <Modal ref="modal" />
+
     <section id="home-banner" class="home-banner d-flex align-center">
       <v-container class="home-banner__main" data-aos="zoom-in">
         <h1 class="home-banner__title">

@@ -403,7 +403,7 @@ useHead({
               <div v-else class="d-flex align-start justify-space-between mb-3">
                 <p>{{ n.name }}</p>
                 <p v-if="isNigerian" class="ml-5">
-                  <strong> ₦{{ useAmtToString(n.price * n.qty * rate) }} </strong>
+                  <strong> ₦{{ useAmtToString(n.price * n.qty) }} </strong>
                 </p>
                 <p v-else class="ml-5">${{ n.price * n.qty }}</p>
               </div>
