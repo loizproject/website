@@ -4,27 +4,33 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { useBasketStore } from "~/store/basket";
 import { ulid } from "ulid";
-
+const basketStore = useBasketStore()
 const router = useRouter();
-const basketStore = useBasketStore();
-const basket = computed(() => basketStore.basket);
+import { useStore } from "~/store";
+import { useContentStore } from "~/store/content";
+const store = useStore();
+const contentStore = useContentStore();
+const countries = computed(() => contentStore.countries);
+const hello = countries.value
 
-const filteredCountries = computed(() => {
-  if (!searchTerm.value) {
-    return countries.value;
-  } else {
-    const result = countries.value.filter((country) => {
-      return country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1;
-    });
-    return result;
-  }
-});
-const searchTerm = ref("");
-const setSearchterm = () => {
-  searchTerm.value = "";
-  save();
-};
 
+// const filteredCountries = computed(() => {
+//   if (!searchTerm.value) {
+//     return countries.value;
+//   } else {
+//     const result = countries.value.filter((country) => {
+//       return country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1;
+//     });
+//     return result;
+//   }
+// });
+
+
+// const searchTerm = ref("");
+// const setSearchterm = () => {
+//   searchTerm.value = "";
+//   save();
+// };
 
 // Form reference
 const formHtml = ref(null);
@@ -51,7 +57,7 @@ definePageMeta({
 const submitForm = async () => {
   const { valid } = await formHtml.value.validate(); // Validate form
 
-const {country, vacationDate, ...customer} = formData.value;
+  const { country, vacationDate, ...customer } = formData.value;
 
   if (valid) {
     const reqData = {
@@ -67,8 +73,8 @@ const {country, vacationDate, ...customer} = formData.value;
           trip: {
             id: props.trip.id,
             title: props.trip.title,
-          }
-        }
+          },
+        },
       },
     };
     console.log(reqData);
@@ -139,6 +145,7 @@ const closeModal = () => {
               :items="['Mr', 'Mrs', 'Master', 'Miss', 'Others']"
               :rules="[(v) => !!v || 'Title is required']"
               required
+              variant="outlined"
             ></v-select>
 
             <v-text-field
@@ -146,6 +153,7 @@ const closeModal = () => {
               v-model="formData.middleName"
               :rules="[(v) => !!v || 'Middle name is required']"
               required
+              variant="outlined"
             ></v-text-field>
 
             <v-text-field
@@ -154,6 +162,7 @@ const closeModal = () => {
               type="number"
               :rules="[(v) => !!v || 'Age is required']"
               required
+              variant="outlined"
             ></v-text-field>
 
             <v-text-field
@@ -165,19 +174,20 @@ const closeModal = () => {
                 (v) => /.+@.+\..+/.test(v) || 'Email must be valid',
               ]"
               required
+              variant="outlined"
             ></v-text-field>
 
             <v-select
-              label="Country of Residence"
-              :items="['Mr', 'Mrs', 'Master', 'Miss', 'Hlelo']"
-              v-model="formData.country"
-              :rules="[(v) => !!v || 'Country is required']"
+            v-model="formData.country"
+          :items="hello"
+          item-title="name"
+          variant="outlined"
+          label="Country of Residence"
+    
+          
             ></v-select>
-            
           </v-col>
 
-          
-      
           <!-- Right Column -->
           <v-col cols="12" md="6">
             <v-text-field
@@ -185,6 +195,7 @@ const closeModal = () => {
               v-model="formData.firstName"
               :rules="[(v) => !!v || 'First name is required']"
               required
+              variant="outlined"
             ></v-text-field>
 
             <v-text-field
@@ -192,17 +203,18 @@ const closeModal = () => {
               v-model="formData.surname"
               :rules="[(v) => !!v || 'Surname is required']"
               required
+              variant="outlined"
             ></v-text-field>
-            
-          
-           <div class="tw-max-w-[100px] tw-w-full">
-            <MazPhoneNumberInput
-            label="Phone Number"
-            v-model="formData.phone"
-            class="tw-mb-7 tw-max-w-[10px] tw-w-full" 
-           default-country-code="NG"
-                />
-          </div>
+
+            <div class="tw-w-full tw-max-w-auto tw-flex tw-pb-8">
+              <MazPhoneNumberInput
+                label="Phone Number"
+                v-model="formData.phone"
+                class="tw-w-full"
+                default-country-code="NG"
+                variant="outlined"
+              />
+            </div>
 
             <v-select
               label="Gender"
@@ -210,6 +222,7 @@ const closeModal = () => {
               :items="['Male', 'Female', 'Others']"
               :rules="[(v) => !!v || 'Gender is required']"
               required
+              variant="outlined"
             ></v-select>
 
             <v-text-field
@@ -218,6 +231,7 @@ const closeModal = () => {
               type="date"
               :rules="[(v) => !!v || 'Date is required']"
               required
+              variant="outlined"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -250,8 +264,9 @@ const closeModal = () => {
   z-index: 10;
 }
 
-.v-select .v-text-field {
+.v-select  {
   border: none;
+  outline: none;
 }
 
 .modal {
@@ -262,7 +277,7 @@ const closeModal = () => {
   background: white;
   border-radius: 8px;
   z-index: 20;
-  width: 60%;
+  width: 70%;
 }
 
 .m-phone-number-input {
@@ -272,16 +287,14 @@ const closeModal = () => {
   width: 250px !important; /* Fixed width */
   height: 40px !important; /* Fixed height */
 }
-.v-text-field{
+.v-text-field {
   outline: none;
   border: none;
-}
-::v-deep .maz-input__field {
-  width: 250px; /* Set specific width */
-  height: 40px; /* Set specific height */
 }
 
 .maz-border {
   border-width: 40px !important;
 }
+
+
 </style>

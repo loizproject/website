@@ -12,7 +12,6 @@ const fetchCardData = async () => {
   }
 }
 
-
 // Fetch the data when the component is mounted
 onMounted(fetchCardData)
 //Fetching the api
@@ -110,11 +109,11 @@ const banner = (images) => images.find((image) => image.type === "banner")
                               </div>
                             </div>
 
-                            <div>
-                              <v-btn :to="`/trips/${card.slug}`" class=" submit" elevation="0">
+                            
+                              <v-btn :to="`/trips/${card.slug}`" class=" submit tw-text-red" elevation="0">
                                 See details
                               </v-btn>
-                            </div>
+                            
                             
                         </div>
                     </div>

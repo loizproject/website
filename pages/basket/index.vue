@@ -266,28 +266,31 @@ useSeoMeta({
                 <div class=" tw-flex tw-justify-between">
                   <div>
                     <p v-if="item && item.parentService">{{ item.parentService.title }}</p>
-                    <div class=" tw-flex tw-gap-4 ">
+                    <div class=" tw-flex tw-flex-col">
                       <p v-if="item && item.type === 'third_party'">Third Party Service</p>
                       <p v-if="item && item.type === 'trip'"> {{ item.name }}</p>
-                      <p>{{ item.country || item.options.country }}</p>
+                      <div class="tw-flex tw-gap-4 tw-mt-4">
+                        <p>{{ item.country || item.options.country }}</p>
                       <p>{{ item.qty }} Person(s)</p>
+                      </div>
+                      
                     </div>
                     <div class=" tw-flex tw-gap-4 tw-mt-4">
-                      <button class="clear-basket d-flex align-center" @click="removeItem(item)">
-                        <v-icon class="ml-2">mdi-close</v-icon>
+                      <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)">
+                        <client-only><iconify-icon icon="mdi:cancel-circle-outline" class="tw-text-xl tw-text-[#EB5757]" ></iconify-icon></client-only>
                         Remove
                       </button>
-                      <button class="clear-basket d-flex align-center">
-                        <client-only><iconify-icon icon="fluent:eye-28-regular" class="tw-text-2xl tw-text-black" ></iconify-icon></client-only>
+                      <button :to="`${item.slug}`"  class="clear-basket d-flex tw-align-center tw-gap-1">
+                        <client-only><iconify-icon icon="iconoir:eye-solid" class="tw-text-xl tw-text-[#EB5757]" ></iconify-icon></client-only>
                         View
                       </button>
                     </div>
                   </div>
 
                   <div class="align-center justify-space-between">
-                  <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(item.price * item.qty) }}</p>
-                  <p v-else class="details__price mr-2 d-md-none"> ${{ item.price * item.qty }}</p>
-                </div>
+                     <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(item.price * item.qty) }}</p>
+                      <p v-else class="details__price mr-2 d-md-none"> ${{ item.price * item.qty }}</p>
+                  </div>
 
                 </div>
 
@@ -338,9 +341,9 @@ useSeoMeta({
                 <div class="d-flex  justify-space-between">
                   <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(consultationPriceNGN) }}</p>
                   <p v-else class="details__price mr-2 d-md-none">${{ item.price * item.qty }}</p>
-                  <button class="clear-basket d-flex align-center" @click="removeItem(item)">
+                  <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)" >
+                    <client-only><iconify-icon icon="mdi:cancel-circle-outline" class="tw-text-xl tw-text-[#EB5757]" ></iconify-icon></client-only>
                     Remove
-                    <v-icon class="ml-2">mdi-close</v-icon>
                   </button>
                 </div>
                 

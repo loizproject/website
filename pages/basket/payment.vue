@@ -5,14 +5,14 @@ import { useContentStore } from "~/store/content";
 import { useConsultationStore } from "~/store/consultation";
 import { useBasketStore } from "~/store/basket";
 
-let installment = ref(false)
+let installment = ref(false);
 const toggleDropdown = (state) => {
-  installment.value = state
-  console.log("the value of state is ",installment);
-  
+  installment.value = state;
 };
 
 
+
+const activeInstallment= ref(null)
 
 const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
 const route = useRoute();
@@ -33,41 +33,77 @@ const consultationPriceNGN = computed(() => consultationStore.priceNGN);
 const availableDates = computed(() => consultationStore.availableDates);
 const rate = computed(() => store.rate);
 
-const basket = computed(() => {
+const basket = computed(() => 
   basketStore.basket.map((item) => {
     switch (item.type) {
       case "consultation":
         return item;
 
       case "trip":
-        return item;
+        return {
+          paymentOption:
+            item.type === "trip" && { type: "", firstTranch: "", period: "" }, 
+            installments:{
+              first: {
+                price:0.35 * item.price,
+                isSelected: false
+              },
+              second: {
+                price: 0.5 * item.price,
+              isSelected: false}
+            },
+          ...item,
+        };
 
       default:
         item.parentService = contentStore.getSubservicesById(
           item.options.subservice_id
         );
     }
-
-    return item;
-  });
-  return basketStore.basket;
-});
-console.log(typeof basket);
-
-const items = ref([]);
-
-for(item of basket){
-  items.value.push({
-    paymentPlan: item.type === "trip" ? {type: "", initialamount: ""} : "onetime",
-    ...item 
+    // items.value.push()
+    // return item;
   })
-}
+  
+);
+
+
+
+// const transformedBasket = ref([]);
+
+// watchEffect(() => {
+//   transformedBasket.value = basketStore.basket.map((item) => {
+//     const paymentPlan = item.type === 'trip' ? { type: '', initialamount: '' } : 'onetime';
+
+//     if (item.type !== 'consultation' && item.type !== 'trip') {
+//       item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
+//     }
+
+//     return { ...item, paymentPlan };
+//   });
+// });
+
+// const basket = computed(() => {
+//   return basketStore.basket.map((item) => {
+//     // Initialize paymentPlan based on the type of item
+//     const paymentPlan = item.type === 'trip' ? { type: '', initialamount: '' } : 'onetime';
+
+//     // Handle each item type, add parentService if applicable
+//     if (item.type !== 'consultation' && item.type !== 'trip') {
+//       item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
+//     }
+
+//     // Return a new object with added paymentPlan and other properties
+//     return {
+//       ...item,
+//       paymentPlan,
+//     };
+//   });
+// });
 
 const isNigerian = computed(() => store.location.countryName === "Nigeria");
 const totalPrice = computed(() => basketStore.getSubTotal);
 const totalPriceNgn = computed(() => basketStore.getNgnSubTotal);
 const paths = computed(() => route.path.split("/"));
-console.log(totalPrice, "total price");
 
 function consultationExpired(consltn) {
   const dates = availableDates.value;
@@ -94,6 +130,7 @@ function consultationExpired(consltn) {
 }
 
 const expiredConsultationInBasket = computed(() => {
+
   let resp = [];
   basket.value.forEach((item) => {
     if (item.type === "consultation" && consultationExpired(item)) {
@@ -151,6 +188,8 @@ async function updateConsultationDetails(args) {
   }
 }
 
+
+
 function formatDate(date) {
   if (!date) return null;
   const [year, month, day] = date.split("-");
@@ -178,7 +217,9 @@ function formatTime(time24) {
 
 function proceedCheckout() {
   if (basket.value && basket.value.length > 0) {
-    router.push("/checkout");
+    // console.log(basket.value, activeInstallment.value);
+    
+    // router.push("/checkout");
   } else {
     store.setToast("You have no item in your basket!", { type: "info" });
   }
@@ -282,7 +323,7 @@ useSeoMeta({
 
         <div class="details mt-8">
           <v-card
-            v-for="(item, index) in items"
+            v-for="(item, index) in basket"
             :key="index"
             flat
             class="pa-6 my-2"
@@ -308,67 +349,103 @@ useSeoMeta({
                     {{ item.parentService.title }}
                   </p>
 
-                  <div class="tw-flex tw-flex-col tw-gap-4 tw-bg-[#FEF3F9] tw-p-4 tw-rounded-2xl tw-justify-between">
-                    <div v-if="installment" class=" tw-gap-4 tw-flex tw-flex-col">
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-4 tw-bg-[#FEF3F9] tw-p-4 tw-rounded-2xl tw-justify-between"
+                  >
+                    <div
+                      v-if="installment"
+                      class="tw-gap-4 tw-flex tw-flex-col"
+                    >
                       <div class="tw-flex tw-justify-between">
                         <div class="">
-                          <p class="tw-font-bold tw-text-lg">2 Installment payment available</p>
+                          <p class="tw-font-bold tw-text-lg">
+                            2 Installment payment available
+                          </p>
                         </div>
                         <client-only
                           ><iconify-icon
                             icon="iconamoon:arrow-up-6-circle-light"
                             class="tw-text-2xl"
-                            @click="()=>toggleDropdown(false)" 
+                            @click="() => toggleDropdown(false)"
                           ></iconify-icon
                         ></client-only>
                       </div>
 
                       <div>
-                        <p class="tw-font-light tw-text-lg">Pick a payment plan</p>
-                        <p class=" tw-font-thin tw-text-[16px]">Choose the best way to pay for this tripovertime</p>
+                        <p class="tw-font-light tw-text-lg">
+                          Pick a payment plan
+                        </p>
+                        <p class="tw-font-thin tw-text-[16px]">
+                          Choose the best way to pay for this tripovertime
+                        </p>
                         <div class="horizontal-line tw-mt-2"></div>
                       </div>
 
                       <div class="prices tw-flex tw-flex-col tw-gap-6">
-                        <div class="tw-w-full tw-flex tw-justify-between">
+                        <div class="tw-w-full tw-flex tw-justify-between tw-items-center">
                           <div class="tw-flex tw-flex-col">
-                            <p class="tw-font-bold tw-text-lg">₦30000 first, then ₦19000</p>
-                            <p class=" tw-font-light tw-text-[#404040] tw-text-lg">Over the first month</p>
+                            <p class="tw-font-bold tw-text-lg">
+                              {{item.installments.first.price}} first, then {{ item.price-item.installments.first.price }} 
+                            </p>
+                            <p class="tw-font-light tw-text-[#404040] tw-text-lg">
+                              Over the first month
+                            </p>
                           </div>
-                          <input type="radio" id="installation" value="₦19000"/>
+                          <div :class="item.installments.first.isSelected ? 'tw-bg-green-500 tw-border-green-500' : ''" @click="() =>{item.installments.first.isSelected=true ; item.installments.second.isSelected=false}" class="tw-w-7 tw-h-7 tw-border tw-border-zinc-600 tw-rounded-full"></div>
                         </div>
 
-                        <div class="tw-w-full tw-flex tw-justify-between">
+                        
+                        <div class="tw-w-full tw-flex tw-justify-between tw-items-center">
                           <div class="tw-flex tw-flex-col">
-                            <p class="tw-font-bold tw-text-lg">₦30000 first, then ₦19000</p>
-                            <p class=" tw-font-light tw-text-[#404040] tw-text-lg">Over the first month</p>
+                            <p class="tw-font-bold tw-text-lg">
+                              {{item.installments.second.price}} first, then {{ item.price-item.installments.second.price }} 
+                            </p>
+                            <p class="tw-font-light tw-text-[#404040] tw-text-lg">
+                              Over the first month
+                            </p>
                           </div>
-                          <input type="radio" id="installation" value="₦19000"/>
+                          <div :class="item.installments.second.isSelected ? 'tw-bg-green-500 tw-border-green-500' : ''" @click="() => {item.installments.second.isSelected=true ;console.log(basket);
+                           ; item.installments.first.isSelected=false}" class="tw-w-7 tw-h-7 tw-border tw-border-zinc-600 tw-rounded-full"></div>
                         </div>
+
                       </div>
 
                       <div class="horizontal-line"></div>
 
-                      <p class="tw-font-light tw-text-lg">*Payment plans cover only the transportation cost (BaseFare+Taxes+Fees) any additional cost will be charged separately when your booking is confirmed.</p>
+                      <p class="tw-font-light tw-text-lg">
+                        *Payment plans cover only the transportation cost
+                        (BaseFare+Taxes+Fees) any additional cost will be
+                        charged separately when your booking is confirmed.
+                      </p>
 
-                      <div class=" tw-flex tw-gap-4 tw-items-center tw-justify-end tw-text-[#EB0C8F]  ">
-                        <div  class="">
-                          <button @click="()=>toggleDropdown(false)">
+                      <div
+                        class="tw-flex tw-gap-4 tw-items-center tw-justify-end tw-text-[#EB0C8F]"
+                      >
+                        <div class="">
+                          <button @click="() => toggleDropdown(false)">
                             Cancel
                           </button>
                         </div>
-                        <div class="tw-border-2 tw-border-pink-300 tw-rounded-2xl tw-p-2" >
-                          <button>
-                            Save
-                          </button>
+                        <div
+                          class="tw-border-2 tw-border-pink-300 tw-rounded-2xl tw-p-2"
+                        >
+                          <button>Save</button>
                         </div>
-                        </div>
+                      </div>
                     </div>
 
-                    <div v-if="!installment" class="tw-justify-between tw-flex tw-items-center">
-                      <p class="tw-font-bold tw-text-lg ">2 Installments payment available</p>
+                    <div
+                      v-if="!installment"
+                      class="tw-justify-between tw-flex tw-items-center"
+                    >
+                      <p class="tw-font-bold tw-text-lg">
+                        2 Installments payment available
+                      </p>
 
-                      <div @click="()=>toggleDropdown(!installment)" class="tw-border tw-border-pink-500 tw-p-2 tw-relative tw-inline-block tw-rounded-xl hover:tw-bg-black hover:tw-text-white hover:tw-border-none hover:tw-border-b">
+                      <div
+                        @click="() => toggleDropdown(!installment)"
+                        class="tw-border tw-border-pink-500 tw-p-2 tw-relative tw-inline-block tw-rounded-xl hover:tw-bg-black hover:tw-text-white hover:tw-border-none hover:tw-border-b"
+                      >
                         <button>Select Installment Payment Plan</button>
                       </div>
                     </div>
@@ -576,7 +653,6 @@ useSeoMeta({
 }
 
 .clear-basket {
-  // border: 0.6px solid $loiz-default;
   box-shadow: 0 0 4px 1px #b5b1b1;
   padding: 5px 10px;
   border-radius: 6px;
@@ -730,6 +806,6 @@ useSeoMeta({
 .horizontal-line {
   width: 100%;
   height: 1px;
-  background-color: #AAAAAA;
+  background-color: #aaaaaa;
 }
 </style>
