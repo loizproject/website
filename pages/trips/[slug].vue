@@ -54,7 +54,7 @@ const closeModal = () => {
                 <div class=" tw-flex tw-flex-col tw-mt-8">
                     <h3 class=" tw-text-4xl">{{trip.title}}</h3>
                     <p class="tw-my-4">{{trip.description}}</p>
-                    <v-btn class="submit tw-w-[100px]">
+                    <v-btn class="submit tw-flex  tw-w-[100px] tw-mt-2 tw-justify-center open-modal-btn">
                         Book Trip
                     </v-btn>
                     
@@ -108,7 +108,7 @@ const closeModal = () => {
 
 
                 <div class=" tw-mx-auto tw-mt-4">
-                    <v-btn class="submit tw-w-[100px]">
+                    <v-btn class="submit tw-p-5 tw-flex tw-w-[100px] tw-mt-2 tw-justify-center open-modal-btn">
                         Book Trip
                     </v-btn>
                     <p>{{trip.icon}}</p>
@@ -149,7 +149,7 @@ const closeModal = () => {
 
             
 
-                <v-btn class="submit tw-w-[100px] tw-mt-2 open-modal-btn" @click="openModal">
+                <v-btn class="submit tw-flex tw-p-5 tw-w-[100px] tw-mt-2 tw-justify-center open-modal-btn" @click="openModal">
                     Book Trip
                 </v-btn>
                 

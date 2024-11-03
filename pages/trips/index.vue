@@ -110,7 +110,7 @@ const banner = (images) => images.find((image) => image.type === "banner")
                             </div>
 
                             
-                              <v-btn :to="`/trips/${card.slug}`" class=" submit tw-text-red" elevation="0">
+                              <v-btn :to="`/trips/${card.slug}`" class=" submit" elevation="0">
                                 See details
                               </v-btn>
                             

@@ -4,7 +4,6 @@ module.exports = {
   prefix: 'tw-',
   important: true,
   content: [
-    `node_modules/@nuxt/ui/**/*.{js,vue,ts}`,
     `components/**/*.{vue,js}`,
     `layouts/**/*.vue`,
     `pages/**/*.vue`,
@@ -36,9 +35,6 @@ module.exports = {
       extend: {
         fontSize: {
           'xxs': '0.65rem'
-        },
-        colors: {
-          primary: colors.blue
         }
       },
       fontFamily: {
