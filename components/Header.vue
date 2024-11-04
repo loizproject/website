@@ -46,7 +46,7 @@ const headerRoutes = ref([
     active: false,
     target: "_blank",
   },
-  { name: "Trips", route: "/trips", active: true }
+  { name: "Trips", route: "/trips", active: false }
 
 ]);
 const loggedInUserMenu = ref([

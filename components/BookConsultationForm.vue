@@ -316,17 +316,16 @@ onMounted(async () => {
           :rules="[rules.required]"
           @change="save"
         ></v-text-field>
-        <v-text-field
+        <v-select
           v-if="_Includes(form.service.fields, 'age')"
           v-model="form.age"
+         :items="['0-6', '7-12', '13-18', '19-30', '31-40', '41-50','51-65','65+']"
           type="number"
-          maxlength=3
-          min="18"
           variant="outlined"
           label="Age"
           :rules="[rules.required, rules.number, rules.age]"
           @change="save"
-        ></v-text-field>
+        ></v-select>
         <v-select
           v-if="_Includes(form.service.fields, 'marital status') && subserviceId != 8"
           v-model="form.marital_status"

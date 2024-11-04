@@ -113,10 +113,10 @@ const closeModal = () => {
 <template>
   <div v-if="isModalOpen" class="modal-overlay" @click="closeModal"></div>
 
-  <div v-if="isModalOpen" class="modal">
-    <div>
+  <div v-if="isModalOpen" class="modal modal-content">
+    <div class=" tw-rounded-lg">
       <div class="tw-bg-[#131313] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center">
-        <h4>Book Abeokuta Bi-monthly Daycation (Every Two Months)</h4>
+        <h4>{{props.trip.title}}</h4>
         <button>
           <client-only>
             <iconify-icon
@@ -129,24 +129,36 @@ const closeModal = () => {
       </div>
 
       <v-form
-        ref="formHtml"
-        @submit.prevent="submitForm"
-        lazy-validation
-        class="tw-p-10"
-      >
+        ref="formHtml" @submit.prevent="submitForm" lazy-validation class="tw-p-10">
         <p>Please fill out the form</p>
 
-        <v-row>
+        <v-row class="tw-grid md:tw-grid-cols-2 tw-grid-cols-1  tw-items-center">
           <!-- Left Column -->
-          <v-col cols="12" md="6">
-            <v-select
+          <v-col>
+            <v-text-field
               label="Title"
               v-model="formData.title"
               :items="['Mr', 'Mrs', 'Master', 'Miss', 'Others']"
               :rules="[(v) => !!v || 'Title is required']"
               required
               variant="outlined"
-            ></v-select>
+            ></v-text-field>
+
+            <v-text-field
+              label="Surname"
+              v-model="formData.surname"
+              :rules="[(v) => !!v || 'Surname is required']"
+              required
+              variant="outlined"
+            ></v-text-field>
+
+            <v-text-field
+              label="First Name"
+              v-model="formData.firstName"
+              :rules="[(v) => !!v || 'First name is required']"
+              required
+              variant="outlined"
+            ></v-text-field>
 
             <v-text-field
               label="Middle Name"
@@ -155,15 +167,7 @@ const closeModal = () => {
               required
               variant="outlined"
             ></v-text-field>
-
-            <v-text-field
-              label="Age"
-              v-model="formData.age"
-              type="number"
-              :rules="[(v) => !!v || 'Age is required']"
-              required
-              variant="outlined"
-            ></v-text-field>
+            
 
             <v-text-field
               label="Email Address"
@@ -177,34 +181,21 @@ const closeModal = () => {
               variant="outlined"
             ></v-text-field>
 
-            <v-select
-            v-model="formData.country"
-          :items="hello"
-          item-title="name"
-          variant="outlined"
-          label="Country of Residence"
-    
-          
-            ></v-select>
+
           </v-col>
 
           <!-- Right Column -->
-          <v-col cols="12" md="6">
-            <v-text-field
-              label="First Name"
-              v-model="formData.firstName"
-              :rules="[(v) => !!v || 'First name is required']"
+          <v-col>
+         
+            <v-select
+              label="Age"
+              v-model="formData.age"
+               :items="['0-6', '7-12', '13-18', '19-30', '31-40', '41-50','51-65','65+']"
+              type="number"
+              :rules="[(v) => !!v || 'Age is required']"
               required
               variant="outlined"
-            ></v-text-field>
-
-            <v-text-field
-              label="Surname"
-              v-model="formData.surname"
-              :rules="[(v) => !!v || 'Surname is required']"
-              required
-              variant="outlined"
-            ></v-text-field>
+            ></v-select>
 
             <div class="tw-w-full tw-max-w-auto tw-flex tw-pb-8">
               <MazPhoneNumberInput
@@ -225,6 +216,14 @@ const closeModal = () => {
               variant="outlined"
             ></v-select>
 
+            <v-select
+            v-model="formData.country"
+          :items="hello"
+          item-title="name"
+          variant="outlined"
+          label="Country of Residence"        
+            ></v-select>
+
             <v-text-field
               label="Preferred Date of Vacation"
               v-model="formData.vacationDate"
@@ -234,6 +233,9 @@ const closeModal = () => {
               variant="outlined"
             ></v-text-field>
           </v-col>
+
+
+          
         </v-row>
 
         <!-- Form actions -->
@@ -268,6 +270,10 @@ const closeModal = () => {
   border: none;
   outline: none;
 }
+.modal-content{
+  overflow-y: auto;
+  flex-grow: 1;
+}
 
 .modal {
   position: fixed;
@@ -277,16 +283,18 @@ const closeModal = () => {
   background: white;
   border-radius: 8px;
   z-index: 20;
-  width: 70%;
+  width: 60%; 
+  max-height: 90vh;
+  max-width: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .m-phone-number-input {
   width: 100%;
 }
-.maz-input__field {
-  width: 250px !important; /* Fixed width */
-  height: 40px !important; /* Fixed height */
-}
+
 .v-text-field {
   outline: none;
   border: none;
