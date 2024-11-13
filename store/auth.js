@@ -1,48 +1,52 @@
-import { defineStore } from 'pinia';
-import { useBasketStore } from './basket';
+import { defineStore } from "pinia";
+import { useBasketStore } from "./basket";
 
 export const useAuthStore = defineStore({
-  id: 'authStore',
+  id: "authStore",
   state: () => ({
-    user: null
+    user: null,
   }),
   actions: {
-    async login(reqPayload) {
+    async loginWith2FA(reqPayload) {
       const res = await useAxiosPost("/verify-2fa", reqPayload);
-      const { token: authToken } = res.data.authorization
-      const token = await useCookie("loiz_auth_token", { maxAge: 60 * 60 })
-      token.value = authToken // save auth token as cookie
+      const { token: authToken } = res.data.authorization;
+      const token = await useCookie("loiz_auth_token", { maxAge: 60 * 60 });
+      token.value = authToken; // save auth token as cookie
+    },
+    async login(authToken) {
+      const token = await useCookie("loiz_auth_token", { maxAge: 60 * 60 });
+      token.value = authToken; // save auth token as cookie
     },
     async googleAuth() {
-      const config = useRuntimeConfig()
-      const route = useRoute()
+      const config = useRuntimeConfig();
+      const route = useRoute();
       try {
         const url = _CloneDeep(route.fullPath);
         const newUrl = url.replace("auth/google", "google/login");
         const res = await useAxiosFetch(`${config.public.BASE_URL}${newUrl}`);
         // set token
-        const { token: authToken } = res.data.authorization
+        const { token: authToken } = res.data.authorization;
         const token = await useCookie("loiz_auth_token", { maxAge: 60 * 60 });
         token.value = authToken; // save auth token as cookie)
       } catch (error) {
         useErrorHandler(error);
-        throw new Error(error)
+        throw new Error(error);
       }
     },
     async facebookAuth() {
-      const config = useRuntimeConfig()
-      const route = useRoute()
+      const config = useRuntimeConfig();
+      const route = useRoute();
       try {
         const url = _CloneDeep(route.fullPath);
         const newUrl = url.replace("auth/facebook", "facebook/login");
         const res = await useAxiosFetch(`${config.public.BASE_URL}${newUrl}`);
         // set token
-        const { token: authToken } = res.data.authorization
+        const { token: authToken } = res.data.authorization;
         const token = await useCookie("loiz_auth_token", { maxAge: 60 * 60 });
         token.value = authToken; // save auth token as cookie)
       } catch (error) {
         useErrorHandler(error);
-        throw new Error(error)
+        throw new Error(error);
       }
     },
     async fetchUser() {
@@ -54,20 +58,20 @@ export const useAuthStore = defineStore({
         }
       } catch (error) {
         console.error(error);
-        this.logout()
+        this.logout();
       }
     },
     async logout() {
-      const basketStore = useBasketStore()
+      const basketStore = useBasketStore();
       try {
         useAxiosPost("/logout");
-        const token = useCookie("loiz_auth_token")
-        token.value = null // destroy auth token
-        basketStore.basket = []
-        this.user = null
+        const token = useCookie("loiz_auth_token");
+        token.value = null; // destroy auth token
+        basketStore.basket = [];
+        this.user = null;
       } catch (error) {
         console.log(error);
       }
-    }
+    },
   },
 });

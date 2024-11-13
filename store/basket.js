@@ -59,7 +59,7 @@ export const useBasketStore = defineStore({
       const authStore = useAuthStore()
       try {
         if (authStore.user) {
-          const res = await useAxiosFetch("/user/basket");
+          const res = await useAxiosFetch("/basket");
           let { items } = res.data.data.basket;
           if (Array.isArray(items)) {
             this.setBasket(items)
@@ -83,7 +83,7 @@ export const useBasketStore = defineStore({
       const store = useStore()
       try {
         if (authStore.user) {
-          await useAxiosPost("/user/basket", payload);
+          await useAxiosPost("/basket", payload);
           await this.fetchBasket()
           resp = true;
         } else {
@@ -99,7 +99,7 @@ export const useBasketStore = defineStore({
       let authStore = useAuthStore()
       try {
         if (authStore.user) {
-          await useAxiosDel(`/user/basket/${payload.id}`);
+          await useAxiosDel(`/basket/${payload.id}`);
           this.removeItemFromBasket(payload)
         }
       } catch (error) {
@@ -110,7 +110,7 @@ export const useBasketStore = defineStore({
       let authStore = useAuthStore()
       try {
         if (authStore.user) {
-          await useAxiosDel("/user/basket");
+          await useAxiosDel("/basket");
           this.basket = []
         }
       } catch (error) {

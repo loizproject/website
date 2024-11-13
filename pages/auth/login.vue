@@ -17,7 +17,7 @@ const formData = ref({
 });
 const showPassword = ref(false);
 const submitting = ref(false);
-const otpSent = ref(false);
+const otpSent = ref( false );
 
 const getOtp = async () => {
   const { valid } = await form.value.validate();
@@ -25,8 +25,14 @@ const getOtp = async () => {
     const data = formData.value;
     submitting.value = true;
     try {
-      await useAxiosPost("/login", data);
-      otpSent.value = true;
+       const res = await useAxiosPost("/login", data);
+      if ( res.data.twoFAEnabled )
+      {
+        otpSent.value = true;
+      } else
+      {
+        signIn(res.data.authorization.token);
+      }
     } catch (error) {
       useErrorHandler(error);
     } finally {
@@ -35,13 +41,13 @@ const getOtp = async () => {
   }
 };
 
-const signin = async () => {
+const signInWith2FA = async () => {
   const { valid } = await form.value.validate();
   if (valid) {
     const data = formData.value;
     submitting.value = true;
     try {
-      await authStore.login(data);
+      await authStore.loginWith2FA(data);
       await authStore.fetchUser();
       await basketStore.fetchBasket();
       submitting.value = false;
@@ -53,6 +59,22 @@ const signin = async () => {
     }
   }
 };
+
+const signIn = async (token) =>
+{
+  try
+  {
+      await authStore.login(token);
+      await authStore.fetchUser();
+      await basketStore.fetchBasket();
+      submitting.value = false;
+      rdr.value ? router.push(rdr.value) : router.push("/");
+      rdr.value = null; // delete redirect path after action has been done
+    } catch (error) {
+      submitting.value = false;
+      useErrorHandler(error);
+    }
+}
 
 const googleLogin = async () => {
   try {
@@ -180,8 +202,7 @@ useSeoMeta({
       <div class="signin mx-auto text-center">
         <h3 class="tw-text-md">2FA Login</h3>
         <p>An OTP has been emailed to your email. Kindly enter it below.</p>
-        <v-form ref="form" class="mt-8" @submit.prevent="signin">
-          
+        <v-form ref="form" class="mt-8" @submit.prevent="signInWith2FA">
           <v-otp-input
             v-model="formData.code"
             :rules="[rules.required]"
