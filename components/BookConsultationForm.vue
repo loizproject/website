@@ -323,7 +323,7 @@ onMounted(async () => {
           type="number"
           variant="outlined"
           label="Age"
-          :rules="[rules.required, rules.number, rules.age]"
+          :rules="[rules.required, rules.string]"
           @change="save"
         ></v-select>
         <v-select

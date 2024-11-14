@@ -18,6 +18,7 @@ const formData = ref({
 const showPassword = ref(false);
 const submitting = ref(false);
 const otpSent = ref( false );
+const twoFAMethod = ref( null );
 
 const getOtp = async () => {
   const { valid } = await form.value.validate();
@@ -29,6 +30,7 @@ const getOtp = async () => {
       if ( res.data.twoFAEnabled )
       {
         otpSent.value = true;
+        twoFAMethod.value = res.data.selectedAuthMethod
       } else
       {
         signIn(res.data.authorization.token);
@@ -47,7 +49,10 @@ const signInWith2FA = async () => {
     const data = formData.value;
     submitting.value = true;
     try {
-      await authStore.loginWith2FA(data);
+      await authStore.loginWith2FA( {
+        ...data,
+        selected_authentication_method: twoFAMethod.value
+      } );
       await authStore.fetchUser();
       await basketStore.fetchBasket();
       submitting.value = false;
