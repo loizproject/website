@@ -9,6 +9,18 @@ const { mdAndUp } = useDisplay();
 const router = useRouter();
 const config = useRuntimeConfig();
 
+
+import { onMounted, ref } from 'vue';
+import Modal from '~/components/Modal.vue';
+
+// Reference to the modal component
+const modal = ref(null);
+
+onMounted(() => {
+  // Show the modal when the page is loaded
+  modal.value.showModal();
+});
+
 const store = useStore();
 const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
@@ -136,6 +148,9 @@ useSeoMeta({
 
 <template>
   <div>
+
+    <Modal ref="modal" />
+
     <section id="home-banner" class="home-banner d-flex align-center">
       <v-container class="home-banner__main" data-aos="zoom-in">
         <h1 class="home-banner__title">
@@ -235,6 +250,7 @@ useSeoMeta({
         </v-container>
       </div>
     </section>
+
     <section id="our-style" class="our-style py-4">
       <v-container>
         <div data-aos="fade-up">
@@ -253,10 +269,13 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
+
     <section id="our-services" class="our-services">
+
       <v-container>
         <h2>Our Services</h2>
       </v-container>
+      
       <div class="our-services__slider">
         <v-slide-group
           ref="ourServicesSlider"
@@ -303,6 +322,7 @@ useSeoMeta({
         </v-slide-group>
       </div>
     </section>
+
     <section
       id="book-consultation"
       class="book-consultation d-flex align-center justify-center my-4"
@@ -333,6 +353,7 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
+
     <section id="awesome-destinations" class="my-8">
       <v-container>
         <h2>Awesome Destinations</h2>
@@ -366,6 +387,7 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
+    
     <section id="our-history" class="our-history">
       <v-container>
         <div data-aos="fade-right">
@@ -385,6 +407,11 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
+      
+    <!-- <Footer /> -->
+  
+    <HomeSlider />
+
     <section id="advisory-services" class="advisory-services">
       <v-container>
         <h2>Advisory Services</h2>
@@ -411,6 +438,7 @@ useSeoMeta({
         </v-row>
       </v-container>
     </section>
+
     <section id="gallery" class="gallery">
       <v-container>
         <h2>Gallery</h2>
@@ -429,6 +457,7 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
+
     <section id="testimonials" class="testimonials my-10">
       <v-container>
         <div class="d-flex align-center justify-space-between">
@@ -470,6 +499,7 @@ useSeoMeta({
         </v-row>
       </v-container>
     </section>
+    
   </div>
 </template>
 

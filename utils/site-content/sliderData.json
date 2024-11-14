@@ -1,0 +1,40 @@
+[
+    {
+      "id": 1,
+      "title": "Are you ready to embark on an unforgettable journey of self-discovery, adventure and freedom?",
+      "desc": " Our Solo Travel Adventure Package is designed for the intrepid explorer who thrives on independence and seeks to experience the world uniquely, personally.",
+      "text": "Solo Trip",
+      "country": "" ,
+      "image": "/Campaign1.png",
+      "desc2": "Discover the World on Your Terms With Loiz Tours & Solo Trip Package",
+      "link": ""
+    },
+
+
+    {
+      "id": 2,
+      "title": "Embark on an unforgettable journey to Spain and Barcelona with our exclusive travel package.",
+      "desc": "Get ready to experience the trip of a lifetime, filled with luxury, discovery, and unparalleled memories!",
+      "text": " Trip for Two",
+      "country": "",
+      "image": "/Campaign2.png",
+      "desc2": "Experience the timeless charm of Madrid. Book your journey.",
+      "link": ""
+    },
+  
+
+    {
+      "id": 3,
+      "title": "Explore the ancient lands of Abeokuta with our Bi-Monthly Daycation package.",
+      "desc": "Don't miss the chance to watch history unfold in the most adventurous manner you can imagine, and capture memorable photos at key landmarks and scenic viewpoints.",
+      "text": " Trip for Two",
+      "country": "",
+      "image": "/Campaign3.png",
+      "desc2": " Abeokuta Bi-monthly Daycation (Every Two Months).",
+      "link": ""
+      }
+  ]
+  
+  
+  
+  

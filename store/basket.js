@@ -18,7 +18,8 @@ export const useBasketStore = defineStore({
       const country = store.location.countryName;
       state.basket.forEach(item => {
         if (country === 'Nigeria') {
-          item.consultation ? total += consultationStore.priceNGN : total += (item.price * item.qty * rate);
+          const type = item.type;
+          type === 'consultation' ? total += consultationStore.priceNGN : type=== 'trip' ? total += item.price : total += (item.price * item.qty);
         } else {
           total += item.price * item.qty;
         }
@@ -34,7 +35,8 @@ export const useBasketStore = defineStore({
       const country = store.location.countryName;
       state.basket.forEach(item => {
         if (country === 'Nigeria') {
-          item.consultation ? total += consultationStore.priceNGN : item.third_party ? total += (item.price * item.qty * rate) : total += (item.price * item.qty * 0.90 * rate);
+          const type = item.type;
+          type === 'consultation' ? total += consultationStore.priceNGN : type === 'third_party' ? total += (item.price * item.qty): type === 'trip' ? total += (item.price* item.qty) : total += (item.price * item.qty * 0.90 );
         } else {
           total += item.price * item.qty;
         }
@@ -57,7 +59,7 @@ export const useBasketStore = defineStore({
       const authStore = useAuthStore()
       try {
         if (authStore.user) {
-          const res = await useAxiosFetch("/user/basket");
+          const res = await useAxiosFetch("/basket");
           let { items } = res.data.data.basket;
           if (Array.isArray(items)) {
             this.setBasket(items)
@@ -81,7 +83,7 @@ export const useBasketStore = defineStore({
       const store = useStore()
       try {
         if (authStore.user) {
-          await useAxiosPost("/user/basket", payload);
+          await useAxiosPost("/basket", payload);
           await this.fetchBasket()
           resp = true;
         } else {
@@ -97,7 +99,7 @@ export const useBasketStore = defineStore({
       let authStore = useAuthStore()
       try {
         if (authStore.user) {
-          await useAxiosDel(`/user/basket/${payload.id}`);
+          await useAxiosDel(`/basket/${payload.id}`);
           this.removeItemFromBasket(payload)
         }
       } catch (error) {
@@ -108,7 +110,7 @@ export const useBasketStore = defineStore({
       let authStore = useAuthStore()
       try {
         if (authStore.user) {
-          await useAxiosDel("/user/basket");
+          await useAxiosDel("/basket");
           this.basket = []
         }
       } catch (error) {

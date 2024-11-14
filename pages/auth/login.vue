@@ -17,7 +17,8 @@ const formData = ref({
 });
 const showPassword = ref(false);
 const submitting = ref(false);
-const otpSent = ref(false);
+const otpSent = ref( false );
+const twoFAMethod = ref( null );
 
 const getOtp = async () => {
   const { valid } = await form.value.validate();
@@ -25,8 +26,15 @@ const getOtp = async () => {
     const data = formData.value;
     submitting.value = true;
     try {
-      await useAxiosPost("/login", data);
-      otpSent.value = true;
+       const res = await useAxiosPost("/login", data);
+      if ( res.data.twoFAEnabled )
+      {
+        otpSent.value = true;
+        twoFAMethod.value = res.data.selectedAuthMethod
+      } else
+      {
+        signIn(res.data.authorization.token);
+      }
     } catch (error) {
       useErrorHandler(error);
     } finally {
@@ -35,13 +43,16 @@ const getOtp = async () => {
   }
 };
 
-const signin = async () => {
+const signInWith2FA = async () => {
   const { valid } = await form.value.validate();
   if (valid) {
     const data = formData.value;
     submitting.value = true;
     try {
-      await authStore.login(data);
+      await authStore.loginWith2FA( {
+        ...data,
+        selected_authentication_method: twoFAMethod.value
+      } );
       await authStore.fetchUser();
       await basketStore.fetchBasket();
       submitting.value = false;
@@ -53,6 +64,22 @@ const signin = async () => {
     }
   }
 };
+
+const signIn = async (token) =>
+{
+  try
+  {
+      await authStore.login(token);
+      await authStore.fetchUser();
+      await basketStore.fetchBasket();
+      submitting.value = false;
+      rdr.value ? router.push(rdr.value) : router.push("/");
+      rdr.value = null; // delete redirect path after action has been done
+    } catch (error) {
+      submitting.value = false;
+      useErrorHandler(error);
+    }
+}
 
 const googleLogin = async () => {
   try {
@@ -170,8 +197,8 @@ useSeoMeta({
           </p>
           <div class="footer text-center">
             By signing in, you agree to Loiz Tours and Travels
-            <nuxt-link to="/">Terms & Conditions</nuxt-link> and
-            <nuxt-link to="/">Privacy Policy</nuxt-link>.
+            <nuxt-link to="/terms">Terms & Conditions</nuxt-link> and
+            <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>.
           </div>
         </v-form>
       </div>
@@ -180,7 +207,7 @@ useSeoMeta({
       <div class="signin mx-auto text-center">
         <h3 class="tw-text-md">2FA Login</h3>
         <p>An OTP has been emailed to your email. Kindly enter it below.</p>
-        <v-form ref="form" class="mt-8" @submit.prevent="signin">
+        <v-form ref="form" class="mt-8" @submit.prevent="signInWith2FA">
           <v-otp-input
             v-model="formData.code"
             :rules="[rules.required]"

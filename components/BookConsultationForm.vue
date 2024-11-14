@@ -215,9 +215,9 @@ const bookConsultation = async () => {
             location.value === "Nigeria"
               ? Math.ceil(_CloneDeep(priceNGN.value) / rate.value)
               : _CloneDeep(price.value),
+          type: "consultation",
           attributes: {
             id: ulid(),
-            consultation: true,
             requestDetails: form.value,
           },
         };
@@ -259,6 +259,7 @@ onMounted(async () => {
           v-model="form.title"
           variant="outlined"
           label="Title"
+          maxlength="10"
           :rules="[rules.required]"
           @change="save"
         ></v-text-field>
@@ -266,6 +267,7 @@ onMounted(async () => {
           v-if="_Includes(form.service.fields, 'first name')"
           v-model="form.fName"
           variant="outlined"
+          maxlength="20"
           label="First Name"
           :rules="[rules.required, rules.text]"
           @change="save"
@@ -274,6 +276,7 @@ onMounted(async () => {
           v-if="_Includes(form.service.fields, 'middle name')"
           v-model="form.mName"
           variant="outlined"
+          maxlength="20"
           label="Middle Name"
           @change="save"
         ></v-text-field>
@@ -282,6 +285,7 @@ onMounted(async () => {
           v-model="form.lName"
           variant="outlined"
           label="Surname"
+          maxlength="20"
           :rules="[rules.required, rules.text]"
           @change="save"
         ></v-text-field>
@@ -290,6 +294,7 @@ onMounted(async () => {
           v-model="form.email"
           variant="outlined"
           label="Email Address"
+          maxlength="30"
           type="email"
           :rules="[rules.required, rules.email]"
           @change="save"
@@ -299,6 +304,7 @@ onMounted(async () => {
           v-model="form.phone"
           default-country-code="NG"
           class="mb-6"
+          maxlength="20"
           @update="phoneResult = $event"
           @change="save"
         />
@@ -310,16 +316,16 @@ onMounted(async () => {
           :rules="[rules.required]"
           @change="save"
         ></v-text-field>
-        <v-text-field
+        <v-select
           v-if="_Includes(form.service.fields, 'age')"
           v-model="form.age"
+         :items="['0-6', '7-12', '13-18', '19-30', '31-40', '41-50','51-65','65+']"
           type="number"
-          min="18"
           variant="outlined"
           label="Age"
-          :rules="[rules.required, rules.number, rules.age]"
+          :rules="[rules.required, rules.string]"
           @change="save"
-        ></v-text-field>
+        ></v-select>
         <v-select
           v-if="_Includes(form.service.fields, 'marital status') && subserviceId != 8"
           v-model="form.marital_status"

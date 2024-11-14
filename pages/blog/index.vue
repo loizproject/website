@@ -41,7 +41,7 @@ const query = `
 }
 `;
 const graphqlQuery = {
-  query: query,
+  query,
   variables: {},
 };
 

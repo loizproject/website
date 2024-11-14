@@ -1,0 +1,31 @@
+[
+    {
+    "index": 1,
+    "title": "ABEOKUTA BI-MONTHLY DAYCATION",
+    "desc": "Our Abeokuta Bi-Monthly Trip",
+    "desc2": "The best offer you can get for the most affordable price, because we take into account your budget, without cutting on the memorable experience you and your partner can get",
+    "link": "",
+    "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312765/Slide1.png"
+  },
+
+    {
+      "index": 2,
+      "title": "SOLO TRIP",
+      "desc": "Lone Vacation? Let’s make it happen!",
+      "desc2": "The best offer you can get for the most affordable price, because we take into account your budget, without cutting on the memorable experience you and your partner can get",
+      "link": "",
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312764/Slide2.png"
+    }
+    ,
+    {
+        "index": 3,
+      "title": "LONDON FAMILY GROUP GETAWAYS",
+      "desc": "Planning a Trip With Your Family? We got you!",
+      "desc2": "The best offer you can get for the most affordable price, because we take into account your budget, without cutting on the memorable experience you and your partner can get",
+      "link": "",
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312764/Slide3.png"
+    }
+    
+
+    
+]

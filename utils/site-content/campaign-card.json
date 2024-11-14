@@ -1,0 +1,36 @@
+[
+    {
+        "index": 1,
+      "title": "Abeokuta Bi-monthly Daycation (Every Two Months)",
+      "desc": "Experience the timeless charm of Madrid. Book your journey.",
+      "image": "/Slide1.png",
+      "location": [
+
+      ]
+    },
+    
+    {
+      "index": 2,
+    "title": "London Family Group Getaways",
+    "desc": "A 'fun-static' winter holiday for your family to relax and unwind",
+    "image": "",
+    "location": [
+
+    ]
+  },
+
+   
+  {
+    "index": 3,
+  "title": "Quarterly Solo Trip, United Kingdom",
+  "desc": "Dive into the Ultimate Adventure at Blackpool and enjoy memorable and awesome thrills and seaside delights.",
+  "image": "",
+  "location": [
+
+  ]
+}
+
+
+    
+    
+]

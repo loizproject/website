@@ -46,6 +46,8 @@ const headerRoutes = ref([
     active: false,
     target: "_blank",
   },
+  { name: "Trips", route: "/trips", active: false }
+
 ]);
 const loggedInUserMenu = ref([
   {
@@ -72,7 +74,7 @@ const basket = computed(() => {
   bas.forEach((item) => {
     if (!(item && item.options && item.options.booked_date)) {
       item.parentService =
-        item && item.options ? getSubservicesById(item.options.subservice_id) : null;
+        item && item.options ? contentStore.getSubservicesById(item.options.subservice_id) : null;
     }
   });
   return bas;
