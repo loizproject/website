@@ -47,7 +47,7 @@ onMounted(() => {
             <p class=" tw-text-l">{{ slide.title }}</p>
             <p class=" tw-text-3xl">{{ slide.desc }}</p>
             <p class=" tw-text-sm">{{ slide.desc2}}</p>
-            <v-btn to="" class=" submit tw-rounded-xl">
+            <v-btn to=" " class=" submit tw-rounded-xl">
               Book Now
             </v-btn>
           </div>

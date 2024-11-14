@@ -4,15 +4,14 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { useBasketStore } from "~/store/basket";
 import { ulid } from "ulid";
-const basketStore = useBasketStore()
+const basketStore = useBasketStore();
 const router = useRouter();
 import { useStore } from "~/store";
 import { useContentStore } from "~/store/content";
 const store = useStore();
 const contentStore = useContentStore();
 const countries = computed(() => contentStore.countries);
-const hello = countries.value
-
+const hello = countries.value;
 
 // const filteredCountries = computed(() => {
 //   if (!searchTerm.value) {
@@ -24,7 +23,6 @@ const hello = countries.value
 //     return result;
 //   }
 // });
-
 
 // const searchTerm = ref("");
 // const setSearchterm = () => {
@@ -114,9 +112,11 @@ const closeModal = () => {
   <div v-if="isModalOpen" class="modal-overlay" @click="closeModal"></div>
 
   <div v-if="isModalOpen" class="modal modal-content">
-    <div class=" tw-rounded-lg">
-      <div class="tw-bg-[#131313] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center">
-        <h4>{{props.trip.title}}</h4>
+    <div class="tw-rounded-lg">
+      <div
+        class="tw-bg-[#131313] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center"
+      >
+        <h4>{{ props.trip.title }}</h4>
         <button>
           <client-only>
             <iconify-icon
@@ -129,45 +129,64 @@ const closeModal = () => {
       </div>
 
       <v-form
-        ref="formHtml" @submit.prevent="submitForm" lazy-validation class="tw-p-10">
+        ref="formHtml"
+        @submit.prevent="submitForm"
+        lazy-validation
+        class="tw-p-10"
+      >
         <p>Please fill out the form</p>
 
-        <v-row class="tw-grid md:tw-grid-cols-2 tw-grid-cols-1  tw-items-center">
+        <v-row class="tw-grid md:tw-grid-cols-2 tw-grid-cols-1 tw-items-center">
           <!-- Left Column -->
           <v-col>
             <v-text-field
               label="Title"
               v-model="formData.title"
-              :items="['Mr', 'Mrs', 'Master', 'Miss', 'Others']"
-              :rules="[(v) => !!v || 'Title is required']"
+              :rules="[
+                (v) => !!v || 'Title is required',
+                (v) => /^[A-Za-z]+$/.test(v) || 'Title must only contain letters',
+              ]"
               required
               variant="outlined"
+              maxlength="10"
             ></v-text-field>
 
             <v-text-field
               label="Surname"
               v-model="formData.surname"
-              :rules="[(v) => !!v || 'Surname is required']"
+              :rules="[
+                (v) => !!v || 'Surname is required',
+                (v) =>
+                  /^[A-Za-z]+$/.test(v) || 'Surname must only contain letters',
+              ]"
               required
               variant="outlined"
+              maxlength="20"
             ></v-text-field>
 
             <v-text-field
               label="First Name"
               v-model="formData.firstName"
-              :rules="[(v) => !!v || 'First name is required']"
+              :rules="[
+                (v) => !!v || 'Firstname is required',
+                (v) => /^[A-Za-z]+$/.test(v) || 'Firstname must only contain letters',
+              ]"
               required
               variant="outlined"
+              maxlength="20"
             ></v-text-field>
 
             <v-text-field
               label="Middle Name"
               v-model="formData.middleName"
-              :rules="[(v) => !!v || 'Middle name is required']"
+              :rules="[
+                (v) => !!v || 'Middlename is required',
+                (v) => /^[A-Za-z]+$/.test(v) || 'Middlename must only contain letters',
+              ]"
               required
               variant="outlined"
+              maxlength="20"
             ></v-text-field>
-            
 
             <v-text-field
               label="Email Address"
@@ -180,17 +199,23 @@ const closeModal = () => {
               required
               variant="outlined"
             ></v-text-field>
-
-
           </v-col>
 
           <!-- Right Column -->
           <v-col>
-         
             <v-select
               label="Age"
               v-model="formData.age"
-               :items="['0-6', '7-12', '13-18', '19-30', '31-40', '41-50','51-65','65+']"
+              :items="[
+                '0-6',
+                '7-12',
+                '13-18',
+                '19-30',
+                '31-40',
+                '41-50',
+                '51-65',
+                '65+',
+              ]"
               type="number"
               :rules="[(v) => !!v || 'Age is required']"
               required
@@ -217,11 +242,11 @@ const closeModal = () => {
             ></v-select>
 
             <v-select
-            v-model="formData.country"
-          :items="hello"
-          item-title="name"
-          variant="outlined"
-          label="Country of Residence"        
+              v-model="formData.country"
+              :items="hello"
+              item-title="name"
+              variant="outlined"
+              label="Country of Residence"
             ></v-select>
 
             <v-text-field
@@ -233,9 +258,6 @@ const closeModal = () => {
               variant="outlined"
             ></v-text-field>
           </v-col>
-
-
-          
         </v-row>
 
         <!-- Form actions -->
@@ -266,11 +288,11 @@ const closeModal = () => {
   z-index: 10;
 }
 
-.v-select  {
+.v-select {
   border: none;
   outline: none;
 }
-.modal-content{
+.modal-content {
   overflow-y: auto;
   flex-grow: 1;
 }
@@ -283,7 +305,7 @@ const closeModal = () => {
   background: white;
   border-radius: 8px;
   z-index: 20;
-  width: 60%; 
+  width: 55%;
   max-height: 90vh;
   max-width: auto;
   overflow: hidden;
@@ -303,6 +325,4 @@ const closeModal = () => {
 .maz-border {
   border-width: 40px !important;
 }
-
-
 </style>

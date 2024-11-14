@@ -45,11 +45,11 @@ const basket = computed(() =>
             item.type === "trip" && { type: "", firstTranch: "", period: "" }, 
             installments:{
               first: {
-                price:0.35 * item.price,
+                price:0.7 * item.price,
                 isSelected: false
               },
               second: {
-                price: 0.5 * item.price,
+                price: 0.3 * item.price,
               isSelected: false}
             },
           ...item,
@@ -392,20 +392,6 @@ useSeoMeta({
                             </p>
                           </div>
                           <div :class="item.installments.first.isSelected ? 'tw-bg-green-500 tw-border-green-500' : ''" @click="() =>{item.installments.first.isSelected=true ; item.installments.second.isSelected=false}" class="tw-w-7 tw-h-7 tw-border tw-border-zinc-600 tw-rounded-full"></div>
-                        </div>
-
-                        
-                        <div class="tw-w-full tw-flex tw-justify-between tw-items-center">
-                          <div class="tw-flex tw-flex-col">
-                            <p class="tw-font-bold tw-text-lg">
-                              {{item.installments.second.price}} first, then {{ item.price-item.installments.second.price }} 
-                            </p>
-                            <p class="tw-font-light tw-text-[#404040] tw-text-lg">
-                              Over the first month
-                            </p>
-                          </div>
-                          <div :class="item.installments.second.isSelected ? 'tw-bg-green-500 tw-border-green-500' : ''" @click="() => {item.installments.second.isSelected=true ;console.log(basket);
-                           ; item.installments.first.isSelected=false}" class="tw-w-7 tw-h-7 tw-border tw-border-zinc-600 tw-rounded-full"></div>
                         </div>
 
                       </div>

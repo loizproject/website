@@ -268,8 +268,7 @@ useSeoMeta({
                     <p v-if="item && item.parentService">{{ item.parentService.title }}</p>
                     <div class=" tw-flex tw-flex-col">
                       <p v-if="item && item.type === 'third_party'">Third Party Service</p>
-                      <p v-if="item && item.type === 'trip'"> {{ item.name }}</p>
-                      <div class="tw-flex tw-gap-4 tw-mt-4">
+                      <div class="tw-flex tw-gap-4">
                         <p>{{ item.country || item.options.country }}</p>
                       <p>{{ item.qty }} Person(s)</p>
                       </div>
