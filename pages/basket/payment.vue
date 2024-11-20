@@ -11,7 +11,6 @@ const toggleDropdown = (state) => {
 };
 
 
-
 const activeInstallment= ref(null)
 
 const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
@@ -34,7 +33,15 @@ const availableDates = computed(() => consultationStore.availableDates);
 const rate = computed(() => store.rate);
 
 const basket = computed(() => 
-  basketStore.basket.map((item) => {
+
+  basketStore.basket  
+);
+
+const basketRef = ref({})
+
+watch(basket, async (newBasket, oldBasket) => {
+  if (newBasket) {
+    const res = basketStore.basket.map((item) => {
     switch (item.type) {
       case "consultation":
         return item;
@@ -43,6 +50,7 @@ const basket = computed(() =>
         return {
           paymentOption:
             item.type === "trip" && { type: "", firstTranch: "", period: "" }, 
+            
             installments:{
               first: {
                 price:0.7 * item.price,
@@ -63,9 +71,60 @@ const basket = computed(() =>
     // items.value.push()
     // return item;
   })
+  basketRef.value = res
+  console.log(basketRef.value);
   
-);
+  }
+})
 
+
+// const basket = computed(() => 
+//   basketStore.basket.map((item) => {
+//     switch (item.type) {
+//       case "consultation":
+        
+//         return item;
+
+//       case "trip":
+//         const hasInstallments = item.paymentOption && item.paymentOption.type === "installments";
+        
+//         const paymentDetails = hasInstallments
+//           ? {
+//               paymentOption: item.paymentOption,
+//               installments: {
+//                 first: {
+//                   price: item.paymentOption.firstTranch,
+//                   isSelected: false,
+//                 },
+//                 second: {
+//                   price: item.price - item.paymentOption.firstTranch,
+//                   isSelected: false,
+//                 }
+//               }
+//             }
+//           : {
+//               paymentOption: item.paymentOption || { type: "onetime" },
+//               installments: null 
+//             };
+        
+//         return {
+//           ...item,  
+//           ...paymentDetails 
+//         };
+
+//       default:
+        
+//         const parentService = item.options && item.options.subservice_id 
+//           ? contentStore.getSubservicesById(item.options.subservice_id) 
+//           : null;
+
+//         return {
+//           ...item,
+//           parentService: parentService
+//         };
+//     }
+//   })
+// );
 
 
 // const transformedBasket = ref([]);
@@ -217,9 +276,9 @@ function formatTime(time24) {
 
 function proceedCheckout() {
   if (basket.value && basket.value.length > 0) {
-    // console.log(basket.value, activeInstallment.value);
+    console.log(basket.value);
     
-    // router.push("/checkout");
+    router.push("/checkout");
   } else {
     store.setToast("You have no item in your basket!", { type: "info" });
   }
@@ -323,7 +382,7 @@ useSeoMeta({
 
         <div class="details mt-8">
           <v-card
-            v-for="(item, index) in basket"
+            v-for="(item, index) in basketRef"
             :key="index"
             flat
             class="pa-6 my-2"
@@ -382,11 +441,12 @@ useSeoMeta({
                       </div>
 
                       <div class="prices tw-flex tw-flex-col tw-gap-6">
-                        <div class="tw-w-full tw-flex tw-justify-between tw-items-center">
+                        <div class="tw-w-full tw-flex tw-justify-between tw-items-center" @click="item.installments.isSelected = true">
                           <div class="tw-flex tw-flex-col">
                             <p class="tw-font-bold tw-text-lg">
-                              {{item.installments.first.price}} first, then {{ item.price-item.installments.first.price }} 
+                              {{item.installments.first?.price}} first, then {{ item.installments.second?.price }} 
                             </p>
+                            
                             <p class="tw-font-light tw-text-[#404040] tw-text-lg">
                               Over the first month
                             </p>
@@ -399,9 +459,9 @@ useSeoMeta({
                       <div class="horizontal-line"></div>
 
                       <p class="tw-font-light tw-text-lg">
-                        *Payment plans cover only the transportation cost
+                        Payment plans cover only the transportation cost
                         (BaseFare+Taxes+Fees) any additional cost will be
-                        charged separately when your booking is confirmed.
+                        charged separately when your booking is confirmed. Note fees aren't refunded.
                       </p>
 
                       <div
@@ -414,6 +474,7 @@ useSeoMeta({
                         </div>
                         <div
                           class="tw-border-2 tw-border-pink-300 tw-rounded-2xl tw-p-2"
+
                         >
                           <button>Save</button>
                         </div>

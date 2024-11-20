@@ -207,13 +207,13 @@ const closeModal = () => {
               label="Age"
               v-model="formData.age"
               :items="[
-                '0-6',
-                '7-12',
-                '13-18',
-                '19-30',
-                '31-40',
-                '41-50',
-                '51-65',
+                '0 - 6',
+                '7 - 12',
+                '13 - 18',
+                '19 - 30',
+                '31 - 40',
+                '41 - 50',
+                '51 - 65',
                 '65+',
               ]"
               type="number"
@@ -305,7 +305,7 @@ const closeModal = () => {
   background: white;
   border-radius: 8px;
   z-index: 20;
-  width: 55%;
+  width: 65%;
   max-height: 90vh;
   max-width: auto;
   overflow: hidden;
