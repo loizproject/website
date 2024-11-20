@@ -156,9 +156,9 @@ const banner = (images) => images.find((image) => image.type === "banner");
                 >
                   <span
                     v-for="location in card.locations"
-                    :key="location.city"
+                    :key="location.state"
                     class="tw-m-0"
-                    >{{ location.city }}</span
+                    >{{ location.state }}</span
                   >
                 </div>
               </div>

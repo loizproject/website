@@ -260,7 +260,7 @@ onMounted(async () => {
           variant="outlined"
           label="Title"
           maxlength="10"
-          :rules="[rules.required]"
+          :rules="[rules.required, (v) => /^[A-Za-z]+$/.test(v) || 'Title must only contain letters',]"
           @change="save"
         ></v-text-field>
         <v-text-field
@@ -269,7 +269,7 @@ onMounted(async () => {
           variant="outlined"
           maxlength="20"
           label="First Name"
-          :rules="[rules.required, rules.text]"
+          :rules="[rules.required, rules.text, (v) => /^[A-Za-z]+$/.test(v) || 'Firstname must only contain letters']"
           @change="save"
         ></v-text-field>
         <v-text-field

@@ -6,7 +6,6 @@ import { useConsultationStore } from "~/store/consultation";
 import { useBasketStore } from "~/store/basket";
 
 
-
 const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
 const route = useRoute();
 const router = useRouter();
@@ -28,14 +27,14 @@ const rate = computed(() => store.rate);
 
 const basket = computed(() => {
   basketStore.basket.map((item) => {
-    switch(item.type){
+    switch (item.type) {
       case 'consultation':
         return item;
 
       case 'trip':
         return item;
 
-      default: 
+      default:
         item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
     }
 
@@ -212,25 +211,28 @@ useSeoMeta({
         <v-spacer></v-spacer>
 
         <div class="navigation d-flex align-center">
-          
+
           <nuxt-link to="/">Home</nuxt-link>
-          
+
           <v-icon color="#555" class="mx-2 mt-1">mdi-chevron-right</v-icon>
           <div v-for="(item, index) in paths" :key="index">
-            <nuxt-link v-if="item !== 'services'" :to="getPageRoute(item, index)" :style="index === paths.length - 1 ? 'color: #e7028e' : ''">
+            <nuxt-link v-if="item !== 'services'" :to="getPageRoute(item, index)"
+              :style="index === paths.length - 1 ? 'color: #e7028e' : ''">
               {{
                 item && item.length > textLimit
                   ? `${_StartCase(_ToLower(item.substring(0, textLimit)))}...`
                   : _StartCase(_ToLower(item))
               }}
             </nuxt-link>
-            <v-icon v-if="item !== 'services' && showHeaderIcon(index)" color="#555" class="mx-2" >mdi-chevron-right</v-icon>
+            <v-icon v-if="item !== 'services' && showHeaderIcon(index)" color="#555"
+              class="mx-2">mdi-chevron-right</v-icon>
           </div>
 
         </div>
 
         <v-spacer></v-spacer>
-        <button v-if="mdAndUp" class="d-flex align-center action__btn" @click="basket.length > 0 ? router.go(+1) : null">
+        <button v-if="mdAndUp" class="d-flex align-center action__btn"
+          @click="basket.length > 0 ? router.go(+1) : null">
           Next
           <v-icon color="#e7028e" class="ml-2"> mdi-chevron-right</v-icon>
         </button>
@@ -259,7 +261,7 @@ useSeoMeta({
                 <p v-if="isNigerian" class="ml-2 d-none d-md-block">
                   ₦{{ useAmtToString(item.price * item.qty) }}
                 </p>
-                <p v-else class="ml-2 d-none d-md-block">${{ item.price * item.qty}}</p>
+                <p v-else class="ml-2 d-none d-md-block">${{ item.price * item.qty }}</p>
               </div>
 
               <div class="details__body d-md-flex tw-flex align-center justify-space-between">
@@ -270,43 +272,41 @@ useSeoMeta({
                       <p v-if="item && item.type === 'third_party'">Third Party Service</p>
                       <div class="tw-flex tw-gap-4">
                         <p>{{ item.country || item.options.country }}</p>
-                      <p>{{ item.qty }} Person(s)</p>
+                        <p>{{ item.qty }} Person(s)</p>
                       </div>
-                      
+
                     </div>
                     <div class=" tw-flex tw-gap-4 tw-mt-4">
                       <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)">
-                        <client-only><iconify-icon icon="mdi:cancel-circle-outline" class="tw-text-xl tw-text-[#EB5757]" ></iconify-icon></client-only>
+                        <client-only><iconify-icon icon="mdi:cancel-circle-outline"
+                            class="tw-text-xl tw-text-[#EB5757]"></iconify-icon></client-only>
                         Remove
                       </button>
-                      <button :to="`${item.slug}`"  class="clear-basket d-flex tw-align-center tw-gap-1">
-                        <client-only><iconify-icon icon="iconoir:eye-solid" class="tw-text-xl tw-text-[#EB5757]" ></iconify-icon></client-only>
+                      <button :to="`${item.slug}`" class="clear-basket d-flex tw-align-center tw-gap-1">
+                        <client-only><iconify-icon icon="iconoir:eye-solid"
+                            class="tw-text-xl tw-text-[#EB5757]"></iconify-icon></client-only>
                         View
                       </button>
                     </div>
                   </div>
 
                   <div class="align-center justify-space-between">
-                     <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(item.price * item.qty) }}</p>
-                      <p v-else class="details__price mr-2 d-md-none"> ${{ item.price * item.qty }}</p>
+                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(item.price * item.qty)
+                      }}</p>
+                    <p v-else class="details__price mr-2 d-md-none"> ${{ item.price * item.qty }}</p>
                   </div>
 
                 </div>
 
               </div>
 
-              
+
             </div>
             <div v-else>
               <div class="details__head d-flex align-center justify-space-between">
                 <h4>
                   Consultation session
-                  <v-tooltip
-                    v-if="consultationExpired(item)"
-                    right
-                    max-width="400px"
-                    content-class="tooltip"
-                  >
+                  <v-tooltip v-if="consultationExpired(item)" right max-width="400px" content-class="tooltip">
                     <template v-slot:activator="{ props }">
                       <v-icon color="red" dark v-bind="props">
                         mdi-alert-circle-outline
@@ -318,11 +318,7 @@ useSeoMeta({
                     </span>
                   </v-tooltip>
                 </h4>
-                <v-btn
-                  small
-                  class="consultation-date elevation-0"
-                  @click="updateConsultationDate(item)"
-                >
+                <v-btn small class="consultation-date elevation-0" @click="updateConsultationDate(item)">
                   <v-icon class="mr-lg-2">mdi-calendar-edit</v-icon>
                   <span v-if="lgAndUp"> Change Date/Time </span>
                 </v-btn>
@@ -335,19 +331,21 @@ useSeoMeta({
                 <div class=" tw-flex tw-flex-col tw-gap-4">
                   <p>{{ item.name }}</p>
                   <p>{{ formatDate(item.options.booked_date) }},<i>{{ formatTime(item.options.booked_time) }}</i></p>
-                   <!-- <p>1 Person</p> -->
+                  <!-- <p>1 Person</p> -->
 
-                <div class="d-flex  justify-space-between">
-                  <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(consultationPriceNGN) }}</p>
-                  <p v-else class="details__price mr-2 d-md-none">${{ item.price * item.qty }}</p>
-                  <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)" >
-                    <client-only><iconify-icon icon="mdi:cancel-circle-outline" class="tw-text-xl tw-text-[#EB5757]" ></iconify-icon></client-only>
-                    Remove
-                  </button>
+                  <div class="d-flex  justify-space-between">
+                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(consultationPriceNGN)
+                      }}</p>
+                    <p v-else class="details__price mr-2 d-md-none">${{ item.price * item.qty }}</p>
+                    <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)">
+                      <client-only><iconify-icon icon="mdi:cancel-circle-outline"
+                          class="tw-text-xl tw-text-[#EB5757]"></iconify-icon></client-only>
+                      Remove
+                    </button>
+                  </div>
+
                 </div>
-                
-                </div>
-               
+
               </div>
             </div>
           </v-card>
@@ -366,22 +364,16 @@ useSeoMeta({
                 <span v-else> ${{ useAmtToString(totalPrice) }} </span>
               </p>
             </div>
-      
+
           </div>
-          <v-btn
-            large
-            class="submit mt-10 d-flex align-center justify-space-between"
-            :disabled="expiredConsultationInBasket"
-            @click="proceedToPayment"
-            >Proceed to Payment <v-icon>mdi-chevron-right</v-icon>
+          <v-btn large class="submit mt-10 d-flex align-center justify-space-between"
+            :disabled="expiredConsultationInBasket" @click="proceedToPayment">Proceed to Payment
+            <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </div>
       </div>
-      <ConsultationSchedule
-        v-if="showConsultationSchedule"
-        @close="showConsultationSchedule = false"
-        @submit="updateConsultationDetails"
-      />
+      <ConsultationSchedule v-if="showConsultationSchedule" @close="showConsultationSchedule = false"
+        @submit="updateConsultationDetails" />
     </v-container>
   </div>
 </template>
