@@ -121,7 +121,7 @@ async function updateConsultationDetails(args) {
     },
   };
   try {
-    await useAxiosPut(`/user/basket/${updatingService.value.id}`, data);
+    await useAxiosPut(`/basket/${updatingService.value.id}`, data);
     await basketStore.fetchBasket();
     store.setToast("Consultation Date and Time Updated Succesfully!", {
       type: "success",
