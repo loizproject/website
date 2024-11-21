@@ -54,17 +54,17 @@ function consultationExpired(consltn) {
   const date = consltn.options.booked_date;
   const time = consltn.options.booked_time;
   const inputDate = new Date(date).getTime();
-  const inputDateTimeString = date + "T" + time; // Combine date and time strings
+  const inputDateTimeString = date + "T" + time; 
   const inputDateTime = new Date(inputDateTimeString);
   const currentDate = new Date();
-  const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // Add 24 hours to the current date
+  const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); 
   const datePast = inputDateTime < next24Hours;
 
   let obj = {
     times: [],
   };
   for (const date in dates) {
-    const times = dates[date]; // "2023-08-31": ["7:00", "12:30", "20:00", "21:00"], these are available times
+    const times = dates[date]; 
     if (consltn.options.booked_date === date) {
       obj = { date, times };
     }
@@ -121,7 +121,7 @@ async function updateConsultationDetails(args) {
     },
   };
   try {
-    await useAxiosPut(`/user/basket/${updatingService.value.id}`, data);
+    await useAxiosPut(`/basket/${updatingService.value.id}`, data);
     await basketStore.fetchBasket();
     store.setToast("Consultation Date and Time Updated Succesfully!", {
       type: "success",
