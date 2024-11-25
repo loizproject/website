@@ -1,11 +1,13 @@
 <template>
   <div
-    v-if="isVisible"
+    v-if="showSecurityModal"
     class="tw-fixed tw-inset-0 tw-bg-gray-900 tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50"
     @click.self="closeModal"
   >
     <!-- Modal content -->
-    <div class="tw-bg-white tw-rounded-lg tw-p-6 tw-w-full tw-max-w-md tw-shadow-lg tw-relative">
+    <div
+      class="tw-bg-white tw-rounded-lg tw-p-6 tw-w-full tw-max-w-md tw-shadow-lg tw-relative"
+    >
       <!-- Modal header -->
       <p class="tw-text-4xl tw-font-semibold tw-mb-4 tw-text-center">
         Welcome to Our Website!
@@ -32,19 +34,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
+import { useStore } from "~/store";
 
 // Modal visibility state
-const isVisible = ref(false);
+const store = useStore();
+const showSecurityModal = ref(false);
 
 // Function to show the modal
 const showModal = () => {
-  isVisible.value = true;
+  const securityCheck = useGetCookie("security_notice");
+  if (securityCheck) {
+    showSecurityModal.value = false;
+    store.setCookies(true);
+    return;
+  }
+  showSecurityModal.value = true;
+  store.setCookies(true);
 };
 
 // Function to close the modal
 const closeModal = () => {
-  isVisible.value = false;
+  useSetCookie("security_notice", "1", 42);
+  showSecurityModal.value = false;
+  store.setCookies(true);
 };
 
 // Expose showModal to the parent so the parent component can trigger it
