@@ -170,73 +170,76 @@ const routeToSubService = (service, subservice) => {
           <div class="my-4"></div>
         </main>
       </section>
-      <v-navigation-drawer absolute v-model="drawer" width="80%" class="mobile-services">
-        <section class="mainn d-flex">
-          <aside class="services-sidebar services-sidebar--mobile">
-            <v-container>
-              <nuxt-link to="/" class="logo">
-                <nuxt-img src="/svg/logo.svg" width="140px" />
-              </nuxt-link>
-
-              <h3>Our Services</h3>
-              <v-list class="sidebar__list">
-                <v-list-item
-                  v-for="(item, index) in services"
-                  :key="index"
-                  :class="item.children ? 'px-0' : ''"
-                >
-                  <v-expansion-panels
-                    v-if="item.subservices && item.subservices.length > 0"
-                    flat
-                    content-class="nested-menu"
+      <div v-if="drawer && !mdAndUp">
+        
+        <v-navigation-drawer absolute v-model="drawer" width="80%" class="mobile-services">
+          <section class="mainn d-flex">
+            <aside class="services-sidebar services-sidebar--mobile">
+              <v-container>
+                <nuxt-link to="/" class="logo">
+                  <nuxt-img src="/svg/logo.svg" width="140px" />
+                </nuxt-link>
+  
+                <h3>Our Services</h3>
+                <v-list class="sidebar__list">
+                  <v-list-item
+                    v-for="(item, index) in services"
+                    :key="index"
+                    :class="item.children ? 'px-0' : ''"
                   >
-                    <v-expansion-panel>
-                      <v-expansion-panel-title
-                        color="#FEF3F9"
-                        :style="isCurrentRoute(item) ? 'color: #02aace' : ''"
-                        @click="routeToService(item)"
-                      >
-                        {{ item.title }}
-                      </v-expansion-panel-title>
-                      <v-expansion-panel-text color="#FEF3F9">
-                        <v-list>
-                          <v-list-item
-                            v-for="(element, index) in item.subservices"
-                            :key="index"
-                            @click="routeToSubService(item, element)"
-                          >
-                            <v-list-item-title
-                              :style="
-                                isCurrentSubRoute(item, element) ? 'color: #02aace' : ''
-                              "
+                    <v-expansion-panels
+                      v-if="item.subservices && item.subservices.length > 0"
+                      flat
+                      content-class="nested-menu"
+                    >
+                      <v-expansion-panel>
+                        <v-expansion-panel-title
+                          color="#FEF3F9"
+                          :style="isCurrentRoute(item) ? 'color: #02aace' : ''"
+                          @click="routeToService(item)"
+                        >
+                          {{ item.title }}
+                        </v-expansion-panel-title>
+                        <v-expansion-panel-text color="#FEF3F9">
+                          <v-list>
+                            <v-list-item
+                              v-for="(element, index) in item.subservices"
+                              :key="index"
+                              @click="routeToSubService(item, element)"
                             >
-                              <iconify-icon
-                                icon="material-symbols:arrow-right-rounded"
-                              ></iconify-icon>
-                              {{ element.title }}
-                            </v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-expansion-panel-text>
-                    </v-expansion-panel>
-                  </v-expansion-panels>
-                  <v-list-item-title
-                    v-else
-                    class="pointer"
-                    :style="{
-                      'color: #02aace':
-                        route.path === `/services/${useGetSlug(item.title)}`,
-                    }"
-                    @click="routeToService(item)"
-                  >
-                    {{ item.title }}
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-container>
-          </aside>
-        </section>
-      </v-navigation-drawer>
+                              <v-list-item-title
+                                :style="
+                                  isCurrentSubRoute(item, element) ? 'color: #02aace' : ''
+                                "
+                              >
+                                <iconify-icon
+                                  icon="material-symbols:arrow-right-rounded"
+                                ></iconify-icon>
+                                {{ element.title }}
+                              </v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-expansion-panel-text>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                    <v-list-item-title
+                      v-else
+                      class="pointer"
+                      :style="{
+                        'color: #02aace':
+                          route.path === `/services/${useGetSlug(item.title)}`,
+                      }"
+                      @click="routeToService(item)"
+                    >
+                      {{ item.title }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-container>
+            </aside>
+          </section>
+        </v-navigation-drawer>
+      </div>
     </default-layout>
   </div>
 </template>

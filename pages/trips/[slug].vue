@@ -119,16 +119,34 @@ const closeModal = () => {
                     <img :src="outro.url " alt="campaign image" class=" tw-rounded-md"> 
                 </div>
 
-
-                <div class=" tw-flex tw-flex-col tw-mt-8">
-                    <p class="tw-font-semibold">Tips for the Tour </p>
-                    <ul class="styled-list tw-ml-4">
-                        <li v-for="(bullet, index ) in trip.tips" :key="index" class=" tw-flex tw-items-start tw-gap-2">
-                            <client-only> <iconify-icon icon="teenyicons:tick-circle-outline" class=" tw-text-xl tw-mt-1"></iconify-icon> </client-only>
-                           <p>{{bullet.description}}</p> 
-                        </li>
-                    </ul>    
-                </div>
+        <div class="tw-flex tw-flex-col tw-mt-8">
+          <p class="tw-font-semibold">Tips for the Tour</p>
+          <ul class="styled-list tw-ml-4">
+            <li
+              v-for="(bullet, index) in trip.tips"
+              :key="index"
+              class="tw-flex tw-items-start tw-gap-2"
+            >
+              <client-only>
+                <iconify-icon
+                  icon="teenyicons:tick-circle-outline"
+                  class="tw-text-xl tw-mt-1"
+                ></iconify-icon>
+              </client-only>
+              <div>
+                <p v-if="Array.isArray(bullet.description)">
+                  <span v-for="(desc, i) in bullet.description" :key="i">
+                    {{ desc }}<br />
+                  </span>
+                </p>
+                <p v-else>
+                  >
+                  {{ bullet.description }}
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
 
 
                 
