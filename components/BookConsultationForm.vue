@@ -77,7 +77,7 @@ const disclaimerMsg = computed(() => {
       `A fee of ${
         isNigerian.value
           ? `₦${useAmtToString(priceNGN.value)}`
-          : `$${useAmtToString(price.value)}`
+          : `$${useAmtToString(price.value)/ (rate.value) }`
       } will be charged for this consultation session. This fee is non-refundable`,
       "Only Paid fees validate the date and Time for consultation session",
       "Consultation session is a one-off and it is for 45 minutes",

@@ -11,15 +11,12 @@ const config = useRuntimeConfig();
 
 
 import { onMounted, ref } from 'vue';
-import Modal from '~/components/Modal.vue';
+
 
 // Reference to the modal component
 const modal = ref(null);
 
-onMounted(() => {
-  // Show the modal when the page is loaded
-  modal.value.showModal();
-});
+
 
 const store = useStore();
 const contentStore = useContentStore();

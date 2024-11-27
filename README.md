@@ -41,7 +41,7 @@ Build the application for production:
 npm run build
 
 # pnpm
-pnpm run build
+pnpm build
 
 # yarn
 yarn build
