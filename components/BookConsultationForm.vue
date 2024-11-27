@@ -59,7 +59,7 @@ const setSearchterm = () => {
   save();
 };
 
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 const filteredCountries = computed(() => {
   if (!searchTerm.value) {
     return countries.value;

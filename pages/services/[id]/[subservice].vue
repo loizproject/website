@@ -47,7 +47,7 @@ const subservice = computed(() => {
   return subservice;
 });
 
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 
 const visaTypes = computed(() => {
   const visas = getSubservicesBySlug("visa-facilitation", "visa-services");

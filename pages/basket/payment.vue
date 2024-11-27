@@ -159,7 +159,7 @@ watch(basket, async (newBasket, oldBasket) => {
 //   });
 // });
 
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 const totalPrice = computed(() => basketStore.getSubTotal);
 const totalPriceNgn = computed(() => basketStore.getNgnSubTotal);
 const paths = computed(() => route.path.split("/"));

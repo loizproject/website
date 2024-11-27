@@ -35,7 +35,7 @@ const user = computed(() => authStore.user);
 const services = computed(() => contentStore.services);
 const countries = computed(() => contentStore.countries);
 const userLocation = computed(() => store.location.countryName);
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 const consultationPrice = computed(() => consultationStore.price);
 const consultationPriceNGN = computed(() => consultationStore.priceNGN);
 const rate = computed(() => store.rate);
@@ -143,7 +143,7 @@ async function payWithPaystack(e) {
     basket: basket.value,
   };
   try {
-    await useAxiosPost("/user/orders/checkout", newTrx);
+    await useAxiosPost("/orders/checkout", newTrx);
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
@@ -154,7 +154,7 @@ async function payWithPaystack(e) {
         msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
         success.value = true;
         await basketStore.clearBasket();
-        await useAxiosPost(`/user/orders/paystack/payments/${transaction.reference}/verify`, {
+        await useAxiosPost(`/orders/paystack/payments/${transaction.reference}/verify`, {
           status: "success",
         });
         await consultationStore.fetchAvailableDates();
@@ -187,7 +187,7 @@ async function payWithRave(e) {
     basket: basket.value,
   };
   try {
-    await useAxiosPost("/user/orders/checkout", newTrx);
+    await useAxiosPost("/orders/checkout", newTrx);
     FlutterwaveCheckout({
       public_key: config.public.FLW_PUBLIC_KEY,
       tx_ref,
@@ -207,7 +207,7 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        await useAxiosPost(`/user/orders/flutterwave/payments/${payment.tx_ref}/verify`, {
+        await useAxiosPost(`/orders/flutterwave/payments/${payment.tx_ref}/verify`, {
           status: "success",
           payment_id: payment.transaction_id
         });
@@ -274,12 +274,12 @@ async function payWithPayPal(paypal) {
           tagline: false,
         },
         createOrder() {
-          return useAxiosPost("/user/payments/paypal-checkout", newTrx)
+          return useAxiosPost("/payments/paypal-checkout", newTrx)
             .then((response) => response.data.data.order)
             .catch((error) => useErrorHandler(error));
         },
         onApprove(data) {
-          return useAxiosPost("/user/payments/paypal-checkout-capture", {
+          return useAxiosPost("/payments/paypal-checkout-capture", {
             orderID: data.orderID,
           })
             .then((response) => {

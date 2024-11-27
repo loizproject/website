@@ -42,8 +42,8 @@ const basket = computed(() => {
   });
   return basketStore.basket;
 });
+const isNigerian = computed(() => store.location.countryCode === "NG");
 
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
 const totalPrice = computed(() => basketStore.getSubTotal);
 const totalPriceNgn = computed(() => basketStore.getNgnSubTotal);
 const paths = computed(() => route.path.split("/"));

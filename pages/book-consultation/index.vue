@@ -8,7 +8,7 @@ const consultationStore = useConsultationStore();
 
 const priceNGN = computed(() => consultationStore.priceNGN);
 const price = computed(() => consultationStore.price);
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 
 const form = ref({});
 function changeService() {

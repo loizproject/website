@@ -4,6 +4,10 @@ import { ref, onMounted } from "vue";
 import { formatDate } from "~/utils/lib";
 
 
+const sliderTrips = computed(() =>{
+  return trips.value.filter(item=>item.banner_url)
+})
+
 const fetchCardData = async () => {
   try {
     cardsData = trips;
@@ -65,7 +69,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
 <template>
   <main>
     <div>
-      <Slider />
+      <Slider :sliderTrips="sliderTrips" />
     </div>
 
     <section
