@@ -1,6 +1,14 @@
-[
-  {
+[  {
     "id": 0,
+    "name": "Adaobi",
+    "imgUrl": "adaobi-24.png",
+    "location": "Abuja, Nigeria",
+    "date": "October 2024",
+    "content": "Securing a visa can be an overwhelming process, but Loiz Travels was there to guide me through every step from day one with clear instructions and suggestions. The Agency has assisted me twice to secure UK visa, so, I highly recommend Loiz Travels to anyone who needs their professional service. Thank you",
+    "aos": "zoom-out"
+  },
+  {
+    "id": 1,
     "name": "Zino",
     "imgUrl": "zino.jpg",
     "location": "Benin City, Nigeria",
@@ -9,7 +17,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 8,
+    "id": 9,
     "name": "Onose",
     "imgUrl": "nono.jpg",
     "location": "Ibadan, Nigeria",
@@ -18,7 +26,7 @@
     "aos": "zoom-in"
   },
   {
-    "id": 7,
+    "id": 6,
     "name": "Nkechi",
     "imgUrl": "nkechi.jpg",
     "location": "Lagos, Nigeria",
@@ -27,7 +35,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 5,
+    "id": 8,
     "name": "Nosa",
     "imgUrl": "nosa.png",
     "location": "Lagos, Nigeria",
@@ -36,7 +44,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 1,
+    "id": 2,
     "name": "Adaobi",
     "imgUrl": "adaobi.png",
     "location": "Abuja, Nigeria",
@@ -45,7 +53,7 @@
     "aos": "zoom-out"
   },
   {
-    "id": 2,
+    "id": 3,
     "name": "Ify",
     "imgUrl": "ify.png",
     "location": "Lagos, Nigeria",
@@ -54,7 +62,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 3,
+    "id": 4,
     "name": "Lauretta",
     "imgUrl": "lauretta.png",
     "location": "Asaba, Nigeria",
@@ -63,7 +71,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 4,
+    "id": 5,
     "name": "Honourable Lucy",
     "imgUrl": "lucy.png",
     "location": "Edo State, Nigeria.",
@@ -72,21 +80,12 @@
     "aos": "zoom-in"
   },
   {
-    "id": 6,
+    "id": 7,
     "name": "Taiwo Family",
     "imgUrl": "taiwo.png",
     "location": "Lagos, Nigeria",
     "date": "December 2015",
     "content": "Our family holiday to the United States of America was packaged by Loiz Tours & Travels. We were given visas and had a swell time. We toured 10 American States all itineraries pre-planned by the indigenous Nigerian Company. Thanks Loiz Tours & Travels, you obviously have repeat customers here",
     "aos": "fade-left"
-  },
-  {
-    "id": 9,
-    "name": "Adaobi",
-    "imgUrl": "adaobi-24.png",
-    "location": "Abuja, Nigeria",
-    "date": "October 2024",
-    "content": "Securing a visa can be an overwhelming process, but Loiz Travels was there to guide me through every step from day one with clear instructions and suggestions. The Agency has assisted me twice to secure UK visa, so, I highly recommend Loiz Travels to anyone who needs their professional service. Thank you",
-    "aos": "zoom-out"
   }
 ]
