@@ -493,10 +493,8 @@ onMounted(async () => {
           </p>
           <v-icon class="ml-2"> mdi-calendar-month </v-icon>
         </div>
-        <div
-          class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
-          @click="showConsultationSchedule = true"
-        >
+        <div class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer" @click="showConsultationSchedule = true"
+    >
           <label
             v-if="!form.booked_date"
             style="color: rgba(0, 0, 0, 0.6)"

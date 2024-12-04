@@ -4,15 +4,48 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { useBasketStore } from "~/store/basket";
 import { ulid } from "ulid";
-const basketStore = useBasketStore();
-const router = useRouter();
 import { useStore } from "~/store";
 import { useContentStore } from "~/store/content";
+import { useConsultationStore } from "~/store/consultation";
+
+
+const convertToUTC = (dateTimeObject) => {
+  const localDate = new Date(
+    `${dateTimeObject.booked_date}T${dateTimeObject.booked_time}`
+  );
+  const utcYear = localDate.getUTCFullYear();
+  const utcMonth = localDate.getUTCMonth() + 1;
+  const utcDay = localDate.getUTCDate();
+  const utcHours = localDate.getUTCHours();
+  const utcMinutes = localDate.getUTCMinutes();
+  const utcSeconds = localDate.getUTCSeconds();
+  const utcString = `${utcYear}-${pad(utcMonth)}-${pad(utcDay)}T${pad(utcHours)}:${pad(
+    utcMinutes
+  )}:${pad(utcSeconds)}Z`;
+  dateTimeObject.utcDateTime = utcString;
+  return utcString;
+};
+
+const consultationStore = useConsultationStore();
+const basketStore = useBasketStore();
+const router = useRouter();
 const store = useStore();
 const contentStore = useContentStore();
 const countries = computed(() => contentStore.countries);
 const hello = countries.value;
+const showConsultationSchedule = ref(false);
+const setDateTime = (args) => {
+  formData.value.booked_date = args.date;
+  formData.value.booked_date_formatted = args.formattedDate;
+  formData.value.booked_time = args.time;
+  formData.value.booked_time_formatted = args.formattedTime;
+  formData.value.date_time = convertToUTC(formData.value);
+  showConsultationSchedule.value = false;
+};
 
+const pad = (value) => {
+  return value < 10 ? `0${value}` : value;
+};
 // const filteredCountries = computed(() => {
 //   if (!searchTerm.value) {
 //     return countries.value;
@@ -32,6 +65,7 @@ const hello = countries.value;
 
 // Form reference
 const formHtml = ref(null);
+
 
 // Form data state
 const formData = ref({
@@ -71,6 +105,7 @@ const submitForm = async () => {
           trip: {
             id: props.trip.id,
             title: props.trip.title,
+            type: props.trip.type,
           },
         },
       },
@@ -106,6 +141,10 @@ const emit = defineEmits(["close-modal"]);
 const closeModal = () => {
   emit("close-modal");
 };
+
+onMounted(() => {
+  consultationStore.fetchAvailableDates();
+});
 </script>
 
 <template>
@@ -144,7 +183,8 @@ const closeModal = () => {
               v-model="formData.title"
               :rules="[
                 (v) => !!v || 'Title is required',
-                (v) => /^[A-Za-z]+$/.test(v) || 'Title must only contain letters',
+                (v) =>
+                  /^[A-Za-z]+$/.test(v) || 'Title must only contain letters',
               ]"
               required
               variant="outlined"
@@ -169,7 +209,9 @@ const closeModal = () => {
               v-model="formData.firstName"
               :rules="[
                 (v) => !!v || 'Firstname is required',
-                (v) => /^[A-Za-z]+$/.test(v) || 'Firstname must only contain letters',
+                (v) =>
+                  /^[A-Za-z]+$/.test(v) ||
+                  'Firstname must only contain letters',
               ]"
               required
               variant="outlined"
@@ -181,7 +223,9 @@ const closeModal = () => {
               v-model="formData.middleName"
               :rules="[
                 (v) => !!v || 'Middlename is required',
-                (v) => /^[A-Za-z]+$/.test(v) || 'Middlename must only contain letters',
+                (v) =>
+                  /^[A-Za-z]+$/.test(v) ||
+                  'Middlename must only contain letters',
               ]"
               required
               variant="outlined"
@@ -249,14 +293,32 @@ const closeModal = () => {
               label="Country of Residence"
             ></v-select>
 
-            <v-text-field
-              label="Preferred Date of Vacation"
-              v-model="formData.vacationDate"
-              type="date"
-              :rules="[(v) => !!v || 'Date is required']"
-              required
-              variant="outlined"
-            ></v-text-field>
+            <div>
+              <v-text-field
+                v-if="trip.type === 'domestic'"
+                label="Preferred Date of Vacation "
+                v-model="formData.vacationDate"
+                type="date"
+                :rules="[(v) => !!v || 'Date is required']"
+                required
+                variant="outlined"
+              >
+              </v-text-field>
+
+              <label
+              class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+            v-else
+            style="color: rgba(0, 0, 0, 0.6)"
+            @click="showConsultationSchedule = true"
+          >
+            <span v-if="formData.booked_date_formatted">
+            {{ formData.booked_date_formatted }} <i>({{ formData.booked_time_formatted }})</i>
+            </span>
+
+            <span v-else> Select Consultation Date and Time</span>
+          </label>
+
+            </div>
           </v-col>
         </v-row>
 
@@ -272,6 +334,21 @@ const closeModal = () => {
           </v-btn>
         </v-row>
       </v-form>
+
+      <DisclaimerModal
+        v-if="modal"
+        :message="disclaimerMsg"
+        :submitting="submitting"
+        actionText="Proceed to Checkout"
+        @close="modal = false"
+        @submit="bookConsultation"
+      />
+      <ConsultationSchedule
+        v-if="showConsultationSchedule"
+        @close="showConsultationSchedule = false"
+        @submit="setDateTime"
+      />
+
     </div>
   </div>
 </template>
@@ -297,6 +374,15 @@ const closeModal = () => {
   flex-grow: 1;
 }
 
+.form-entry {
+    border: 0.5px solid;
+    border-radius: 6px;
+
+    p {
+      margin-bottom: 0;
+      font-size: 1rem;
+    }
+  }
 .modal {
   position: fixed;
   top: 50%;
@@ -325,4 +411,6 @@ const closeModal = () => {
 .maz-border {
   border-width: 40px !important;
 }
+
+
 </style>
