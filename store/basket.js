@@ -1,47 +1,53 @@
-import { defineStore } from 'pinia';
-import { useStore } from './';
-import { useAuthStore } from './auth';
+import { defineStore } from "pinia";
+import { useStore } from "./";
+import { useAuthStore } from "./auth";
 import { useConsultationStore } from "./consultation";
 
 export const useBasketStore = defineStore({
-  id: 'basket',
+  id: "basket",
   state: () => ({
     basket: [],
   }),
   getters: {
     getSubTotal(state) {
-      const store = useStore()
-      const consultationStore = useConsultationStore()
-
-      let total = 0;
-      const rate = store.rate;
+      const store = useStore();
+      const consultationStore = useConsultationStore();
       const country = store.location.countryName;
-      state.basket.forEach(item => {
-        if (country === 'Nigeria') {
-          const type = item.type;
-          type === 'consultation' ? total += consultationStore.priceNGN : type=== 'trip' ? total += item.price : total += (item.price * item.qty);
+      const rate = store.rate;
+
+      return state.basket.reduce((total, item) => {
+        const type = item.type;
+        if (country === "Nigeria") {
+          total +=
+            type === "consultation"
+              ? consultationStore.priceNGN
+              : type === "trip"
+              ? item.price
+              : item.price * item.qty * rate;
         } else {
-          total += item.price * item.qty;
+          total += item.price * item.qty * rate;
         }
-      });
-      return total;
+        return total;
+      }, 0);
     },
     getNgnSubTotal(state) {
-      const store = useStore()
-      const consultationStore = useConsultationStore()
-
-      let total = 0;
+      const store = useStore();
       const rate = store.rate;
       const country = store.location.countryName;
-      state.basket.forEach(item => {
-        if (country === 'Nigeria') {
-          const type = item.type;
-          type === 'consultation' ? total += consultationStore.priceNGN : type === 'third_party' ? total += (item.price * item.qty): type === 'trip' ? total += (item.price* item.qty) : total += (item.price * item.qty * 0.90 );
-        } else {
-          total += item.price * item.qty;
-        }
-      });
-      return total;
+
+      return state.basket.reduce((total, item) => {
+        const type = item.type;
+        return (
+          total +
+          (country === "Nigeria"
+            ? type === "consultation"
+              ? store.consultation.priceNGN
+              : type === "third_party"
+              ? item.price * item.qty
+              : item.price * item.qty * rate
+            : item.price * item.qty)
+        );
+      }, 0);
     },
   },
   actions: {
@@ -53,68 +59,70 @@ export const useBasketStore = defineStore({
       store.setToast("Item added to basket", { type: "success" });
     },
     removeItemFromBasket(payload) {
-      this.basket = this.basket.filter(item => item.id !== payload.id);
+      this.basket = this.basket.filter((item) => item.id !== payload.id);
     },
     async fetchBasket() {
-      const authStore = useAuthStore()
+      const authStore = useAuthStore();
       try {
         if (authStore.user) {
           const res = await useAxiosFetch("/basket");
           let { items } = res.data.data.basket;
           if (Array.isArray(items)) {
-            this.setBasket(items)
-          } else if (typeof items === 'object') {
+            this.setBasket(items);
+          } else if (typeof items === "object") {
             let result = [];
             for (const key in items) {
               result.push(items[key]);
             }
-            this.setBasket(result)
+            this.setBasket(result);
           } else {
-            this.setBasket([])
+            this.setBasket([]);
           }
         }
       } catch (error) {
-        useErrorHandler(error)
+        useErrorHandler(error);
       }
     },
     async addToBasket(payload) {
       let resp = false;
-      let authStore = useAuthStore()
-      const store = useStore()
+      let authStore = useAuthStore();
+      const store = useStore();
       try {
         if (authStore.user) {
           await useAxiosPost("/basket", payload);
-          await this.fetchBasket()
+          await this.fetchBasket();
           resp = true;
         } else {
-          store.setToast("Please sign in to add item to basket", { type: "info" });
+          store.setToast("Please sign in to add item to basket", {
+            type: "info",
+          });
         }
       } catch (error) {
-        useErrorHandler(error)
+        useErrorHandler(error);
       } finally {
         return resp;
       }
     },
     async removeFromBasket(payload) {
-      let authStore = useAuthStore()
+      let authStore = useAuthStore();
       try {
         if (authStore.user) {
           await useAxiosDel(`/basket/${payload.id}`);
-          this.removeItemFromBasket(payload)
+          this.removeItemFromBasket(payload);
         }
       } catch (error) {
-        useErrorHandler(error)
+        useErrorHandler(error);
       }
     },
     async clearBasket() {
-      let authStore = useAuthStore()
+      let authStore = useAuthStore();
       try {
         if (authStore.user) {
           await useAxiosDel("/basket");
-          this.basket = []
+          this.basket = [];
         }
       } catch (error) {
-        useErrorHandler(error)
+        useErrorHandler(error);
       }
     },
   },
