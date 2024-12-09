@@ -44,7 +44,7 @@ const paths = computed(() => route.path.split("/"));
 const form = ref({
   email: computed(() => (authStore.user ? authStore.user.email : null)).value,
   amount: subTotal.value,
-  country: null,
+  country: userLocation.value,
   fName: null,
   lName: null,
   phone: null,
