@@ -44,6 +44,7 @@ const paths = computed(() => route.path.split("/"));
 const form = ref({
   email: computed(() => (authStore.user ? authStore.user.email : null)).value,
   amount: subTotal.value,
+  country: null,
   fName: null,
   lName: null,
   phone: null,
@@ -387,7 +388,7 @@ useHead({
         <div class="tile pa-5">
           <h4>Order Summary</h4>
           <div class="tile pa-3 mt-8">
-            <div v-for="n in basket">
+            <div v-for="(n, i) in basket" :key="i">
               <div
                 v-if="n.consultation"
                 class="d-flex align-center justify-space-between"
