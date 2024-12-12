@@ -149,7 +149,7 @@ async function payWithPaystack(e) {
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
       reference,
-      amount: config.public.APP_ENV === "uat" ? 100 : amount * 100,
+      amount: config.public.APP_ENV === "uat" ? 10000 : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
         msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
