@@ -35,7 +35,7 @@ const user = computed(() => authStore.user);
 const services = computed(() => contentStore.services);
 const countries = computed(() => contentStore.countries);
 const userLocation = computed(() => store.location.countryName);
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 const consultationPrice = computed(() => consultationStore.price);
 const consultationPriceNGN = computed(() => consultationStore.priceNGN);
 const rate = computed(() => store.rate);
@@ -44,6 +44,7 @@ const paths = computed(() => route.path.split("/"));
 const form = ref({
   email: computed(() => (authStore.user ? authStore.user.email : null)).value,
   amount: subTotal.value,
+  country: userLocation.value,
   fName: null,
   lName: null,
   phone: null,
@@ -143,18 +144,18 @@ async function payWithPaystack(e) {
     basket: basket.value,
   };
   try {
-    await useAxiosPost("/user/orders/checkout", newTrx);
+    await useAxiosPost("/orders/checkout", newTrx);
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
       reference,
-      amount: config.public.APP_ENV === "uat" ? 100 : amount * 100,
+      amount: config.public.APP_ENV === "uat" ? 10000 : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
         msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
         success.value = true;
         await basketStore.clearBasket();
-        await useAxiosPost(`/user/orders/${transaction.reference}/payment`, {
+        await useAxiosPost(`/orders/paystack/payments/${transaction.reference}/verify`, {
           status: "success",
         });
         await consultationStore.fetchAvailableDates();
@@ -187,7 +188,7 @@ async function payWithRave(e) {
     basket: basket.value,
   };
   try {
-    await useAxiosPost("/user/orders/checkout", newTrx);
+    await useAxiosPost("/orders/checkout", newTrx);
     FlutterwaveCheckout({
       public_key: config.public.FLW_PUBLIC_KEY,
       tx_ref,
@@ -207,10 +208,11 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        await basketStore.clearBasket();
-        await useAxiosPost(`/user/orders/${payment.tx_ref}/payment`, {
+        await useAxiosPost(`/orders/flutterwave/payments/${payment.tx_ref}/verify`, {
           status: "success",
+          payment_id: payment.transaction_id
         });
+        await basketStore.clearBasket();
         await consultationStore.fetchAvailableDates();
       },
       onclose: async function (incomplete) {
@@ -273,12 +275,12 @@ async function payWithPayPal(paypal) {
           tagline: false,
         },
         createOrder() {
-          return useAxiosPost("/user/payments/paypal-checkout", newTrx)
+          return useAxiosPost("/payments/paypal-checkout", newTrx)
             .then((response) => response.data.data.order)
             .catch((error) => useErrorHandler(error));
         },
         onApprove(data) {
-          return useAxiosPost("/user/payments/paypal-checkout-capture", {
+          return useAxiosPost("/payments/paypal-checkout-capture", {
             orderID: data.orderID,
           })
             .then((response) => {
@@ -386,7 +388,7 @@ useHead({
         <div class="tile pa-5">
           <h4>Order Summary</h4>
           <div class="tile pa-3 mt-8">
-            <div v-for="n in basket">
+            <div v-for="(n, i) in basket" :key="i">
               <div
                 v-if="n.consultation"
                 class="d-flex align-center justify-space-between"
@@ -402,7 +404,7 @@ useHead({
               <div v-else class="d-flex align-start justify-space-between mb-3">
                 <p>{{ n.name }}</p>
                 <p v-if="isNigerian" class="ml-5">
-                  <strong> ₦{{ useAmtToString(n.price * n.qty * rate) }} </strong>
+                  <strong> ₦{{ useAmtToString(n.price * n.qty) }} </strong>
                 </p>
                 <p v-else class="ml-5">${{ n.price * n.qty }}</p>
               </div>
@@ -410,7 +412,7 @@ useHead({
             <div class="d-flex align-end justify-space-between mt-5">
               <p><strong>Subtotal</strong></p>
               <p v-if="isNigerian" class="summary__price">
-                <b> ₦{{ useAmtToString(subTotal) }} </b>
+                <b> ₦{{ useAmtToString(ngnSubTotal) }} </b>
               </p>
               <p v-else class="summary__price">
                 <strong>${{ useAmtToString(subTotal) }}</strong>

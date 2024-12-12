@@ -20,7 +20,7 @@ const form = reactive({
   qty: 1,
 });
 
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 const price = computed(() => {
   return service.value && service.value.price && form.qty
     ? service.value.price * form.qty

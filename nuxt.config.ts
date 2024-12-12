@@ -2,9 +2,11 @@ import getSiteHead from './utils/getSiteHead'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   devServer: {
     port: 3000,
   },
+
   app: {
     head: {
       // ...getSiteHead({}),
@@ -19,6 +21,7 @@ export default defineNuxtConfig({
       ],
     }
   },
+
   css: [
     "vuetify/lib/styles/main.sass",
     "@mdi/font/css/materialdesignicons.min.css",
@@ -27,21 +30,18 @@ export default defineNuxtConfig({
     "~/assets/css/animations.scss",
     "~/assets/css/wordpress.scss",
   ],
+
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
-  modules: [
-    // ...
-    '@pinia/nuxt',
-    '@nuxt/image',
-    '@nuxtjs/google-fonts',
-    "nuxt-lodash",
-    "maz-ui/nuxt",
-    // "nuxt-graphql-request",
-  ],
+
+  modules: [// ...
+  '@pinia/nuxt', '@nuxt/image', '@nuxtjs/google-fonts', "nuxt-lodash", // "nuxt-graphql-request",
+  "maz-ui/nuxt"],
+
   mazUi: {
     injectComponents: true,
     injectCss: true,
@@ -52,9 +52,11 @@ export default defineNuxtConfig({
     injectUseThemeHandler: true,
     devtools: true,
   },
+
   lodash: {
     prefix: "_",
   },
+
   image: {
     provider: 'cloudinary',
     cloudinary: {
@@ -73,6 +75,7 @@ export default defineNuxtConfig({
       }
     }
   },
+
   googleFonts: {
     download: false,
     families: {
@@ -85,6 +88,7 @@ export default defineNuxtConfig({
       },
     }
   },
+
   // graphql: {
   //   clients: {
   //     default: {
@@ -112,9 +116,11 @@ export default defineNuxtConfig({
       },
     }
   },
+
   build: {
     transpile: ["vuetify", "nuxt-graphql-request", "lodash-es"],
   },
+
   vue: {
     compilerOptions: {
       isCustomElement: (tag) => {
@@ -122,6 +128,7 @@ export default defineNuxtConfig({
       }
     }
   },
+
   vite: {
     define: {
       "process.env.DEBUG": false,
@@ -134,4 +141,6 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  compatibilityDate: '2024-11-02',
 });

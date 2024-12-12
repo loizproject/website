@@ -17,8 +17,13 @@ logs
 .DS_Store
 .fleet
 .idea
+.editorconfig
 
 # Local env files
 .env
 .env.*
 !.env.example
+
+# Application  Updates
+.staging.rc
+.uat.rc

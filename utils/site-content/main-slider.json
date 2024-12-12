@@ -1,0 +1,22 @@
+[
+    {
+    "index": 1,
+    "slug": abe ,
+    "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312765/Slide1.png"
+  },
+
+    {
+      "index": 2,
+      "slug": ,
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312764/Slide2.png"
+    }
+    ,
+    {
+        "index": 3,
+        "slug": ,
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1728312764/Slide3.png"
+    }
+    
+
+    
+]

@@ -59,7 +59,7 @@ const setSearchterm = () => {
   save();
 };
 
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 const filteredCountries = computed(() => {
   if (!searchTerm.value) {
     return countries.value;
@@ -77,7 +77,7 @@ const disclaimerMsg = computed(() => {
       `A fee of ${
         isNigerian.value
           ? `₦${useAmtToString(priceNGN.value)}`
-          : `$${useAmtToString(price.value)}`
+          : `$${useAmtToString(price.value)/ (rate.value) }`
       } will be charged for this consultation session. This fee is non-refundable`,
       "Only Paid fees validate the date and Time for consultation session",
       "Consultation session is a one-off and it is for 45 minutes",
@@ -213,11 +213,11 @@ const bookConsultation = async () => {
         const data = {
           price:
             location.value === "Nigeria"
-              ? Math.ceil(_CloneDeep(priceNGN.value) / rate.value)
+              ? Math.ceil(_CloneDeep(priceNGN.value))
               : _CloneDeep(price.value),
+          type: "consultation",
           attributes: {
             id: ulid(),
-            consultation: true,
             requestDetails: form.value,
           },
         };
@@ -259,21 +259,24 @@ onMounted(async () => {
           v-model="form.title"
           variant="outlined"
           label="Title"
-          :rules="[rules.required]"
+          maxlength="10"
+          :rules="[rules.required, (v) => /^[A-Za-z]+$/.test(v) || 'Title must only contain letters',]"
           @change="save"
         ></v-text-field>
         <v-text-field
           v-if="_Includes(form.service.fields, 'first name')"
           v-model="form.fName"
           variant="outlined"
+          maxlength="20"
           label="First Name"
-          :rules="[rules.required, rules.text]"
+          :rules="[rules.required, rules.text, (v) => /^[A-Za-z]+$/.test(v) || 'Firstname must only contain letters']"
           @change="save"
         ></v-text-field>
         <v-text-field
           v-if="_Includes(form.service.fields, 'middle name')"
           v-model="form.mName"
           variant="outlined"
+          maxlength="20"
           label="Middle Name"
           @change="save"
         ></v-text-field>
@@ -282,6 +285,7 @@ onMounted(async () => {
           v-model="form.lName"
           variant="outlined"
           label="Surname"
+          maxlength="20"
           :rules="[rules.required, rules.text]"
           @change="save"
         ></v-text-field>
@@ -290,6 +294,7 @@ onMounted(async () => {
           v-model="form.email"
           variant="outlined"
           label="Email Address"
+          maxlength="30"
           type="email"
           :rules="[rules.required, rules.email]"
           @change="save"
@@ -299,6 +304,7 @@ onMounted(async () => {
           v-model="form.phone"
           default-country-code="NG"
           class="mb-6"
+          maxlength="20"
           @update="phoneResult = $event"
           @change="save"
         />
@@ -310,16 +316,16 @@ onMounted(async () => {
           :rules="[rules.required]"
           @change="save"
         ></v-text-field>
-        <v-text-field
+        <v-select
           v-if="_Includes(form.service.fields, 'age')"
           v-model="form.age"
+         :items="['0-6', '7-12', '13-18', '19-30', '31-40', '41-50','51-65','65+']"
           type="number"
-          min="18"
           variant="outlined"
           label="Age"
-          :rules="[rules.required, rules.number, rules.age]"
+          :rules="[rules.required, rules.string]"
           @change="save"
-        ></v-text-field>
+        ></v-select>
         <v-select
           v-if="_Includes(form.service.fields, 'marital status') && subserviceId != 8"
           v-model="form.marital_status"
@@ -487,10 +493,8 @@ onMounted(async () => {
           </p>
           <v-icon class="ml-2"> mdi-calendar-month </v-icon>
         </div>
-        <div
-          class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
-          @click="showConsultationSchedule = true"
-        >
+        <div class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer" @click="showConsultationSchedule = true"
+    >
           <label
             v-if="!form.booked_date"
             style="color: rgba(0, 0, 0, 0.6)"

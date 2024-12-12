@@ -35,7 +35,7 @@ module.exports = {
       extend: {
         fontSize: {
           'xxs': '0.65rem'
-        },
+        }
       },
       fontFamily: {
         'inter': ['"Inter"', 'sans-serif'],

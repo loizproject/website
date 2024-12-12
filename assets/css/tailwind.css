@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* assets/css/tailwind.css */
+@layer components {
+  .outline-primary {
+    @apply border border-blue-500 text-blue-500;
+  }
+  
+  .bg-primary\/40 {
+    background-color: rgba(var(--tw-color-primary), 0.4);
+  }
+}

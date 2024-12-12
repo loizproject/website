@@ -10,7 +10,7 @@ const type = route.params.type;
 
 const priceNGN = computed(() => consultationStore.priceNGN);
 const price = computed(() => consultationStore.price);
-const isNigerian = computed(() => store.location.countryName === "Nigeria");
+const isNigerian = computed(() => store.location.countryCode === "NG");
 
 definePageMeta({
   layout: "services",
