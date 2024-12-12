@@ -78,9 +78,12 @@ export const useStore = defineStore({
           const country = countries.find(
             (country) => country.code === res.data.data.location.countryCode
           );
+          console.log(country, "country information and response");
           this.location.countryName = country.name;
-          this.location.countryCode = location.countryCode;
-        } else if (config.public.APP_ENV === "local") {
+          this.location.countryCode = res.data.data.location.countryCode;
+        }
+        else if ( config.public.APP_ENV === "local" )
+        {
           this.location = res.data.data.location;
         }
       } catch (error) {
