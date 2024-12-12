@@ -76,7 +76,7 @@ export const useStore = defineStore({
           const response = await useAxiosFetch("/countries");
           const countries = response.data.data.countries;
           const country = countries.find(
-            (country) => country.code === location.countryCode
+            (country) => country.code === res.data.data.location.countryCode
           );
           this.location.countryName = country.name;
           this.location.countryCode = location.countryCode;
