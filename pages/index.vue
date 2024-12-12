@@ -406,10 +406,6 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
-      
-    <!-- <Footer /> -->
-  
-    <HomeSlider />
 
     <section id="advisory-services" class="advisory-services">
       <v-container>
