@@ -107,7 +107,9 @@ background-image: linear-gradient(to right, ${
 }), url(${config.public.MEDIA_ASSETS_URL}${item.img})
 `;
 
-onMounted(() => {
+onMounted( async () =>
+{
+  await store.fetchLocation();
   setTimeout(() => {
     setWatchVideo();
     setBookingVideo();
@@ -359,7 +361,7 @@ useSeoMeta({
             class="tw-flex lg:tw-grid lg:tw-grid-cols-3 xl:tw-grid-cols-4 lg:tw-gap-6 tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap tw-justify-center"
           >
             <v-card
-              v-for="(item, index) in destinations"
+              v-for="(item) in destinations"
               :key="item.title"
               class="slide-card slide-card--destination mx-2 my-2 tw-w-[300px] lg:tw-w-full"
               @mouseenter="toggleContent(item)"

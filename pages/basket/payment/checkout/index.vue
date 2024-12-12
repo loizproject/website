@@ -412,7 +412,7 @@ useHead({
             <div class="d-flex align-end justify-space-between mt-5">
               <p><strong>Subtotal</strong></p>
               <p v-if="isNigerian" class="summary__price">
-                <b> ₦{{ useAmtToString(subTotal) }} </b>
+                <b> ₦{{ useAmtToString(ngnSubTotal) }} </b>
               </p>
               <p v-else class="summary__price">
                 <strong>${{ useAmtToString(subTotal) }}</strong>

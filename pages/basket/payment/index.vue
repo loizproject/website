@@ -189,7 +189,6 @@ function consultationExpired(consltn) {
 }
 
 const expiredConsultationInBasket = computed(() => {
-
   let resp = [];
   basket.value.forEach((item) => {
     if (item.type === "consultation" && consultationExpired(item)) {
@@ -237,7 +236,7 @@ async function updateConsultationDetails(args) {
     },
   };
   try {
-    await useAxiosPut(`/user/basket/${updatingService.value.id}`, data);
+    await useAxiosPut(`/basket/${updatingService.value.id}`, data);
     await basketStore.fetchBasket();
     store.setToast("Consultation Date and Time Updated Succesfully!", {
       type: "success",
@@ -246,7 +245,6 @@ async function updateConsultationDetails(args) {
     useErrorHandler(error);
   }
 }
-
 
 
 function formatDate(date) {
@@ -276,9 +274,7 @@ function formatTime(time24) {
 
 function proceedCheckout() {
   if (basket.value && basket.value.length > 0) {
-    console.log(basket.value);
-    
-    router.push("/checkout");
+    router.push("/basket/payment/checkout");
   } else {
     store.setToast("You have no item in your basket!", { type: "info" });
   }

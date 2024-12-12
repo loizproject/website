@@ -74,16 +74,17 @@ export const useStore = defineStore({
         if (config.public.APP_ENV !== "local") {
           res = await useAxiosFetch("/location");
           const response = await useAxiosFetch("/countries");
-          this.setCountries(response.data.data.countries);
+          const countries = response.data.data.countries;
+          const country = countries.find(
+            (country) => country.code === location.countryCode
+          );
+          this.location = {
+            countryName: country.name,
+            countryCode: location.countryCode,
+          };
+        } else if (config.public.APP_ENV === "local") {
+          this.location = res.data.data.location;
         }
-        const location = res.data.data.location;
-        const country = this.countries.find(
-          (country) => country.code === location.countryCode
-        );
-        this.location = {
-          countryName: country.name,
-          countryCode: location.countryCode,
-        };
       } catch (error) {
         console.log(error);
       }

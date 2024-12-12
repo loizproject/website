@@ -12,42 +12,42 @@ export const useBasketStore = defineStore({
     getSubTotal(state) {
       const store = useStore();
       const consultationStore = useConsultationStore();
-      const country = store.location.countryName;
-      const rate = store.rate;
 
-      return state.basket.reduce((total, item) => {
-        const type = item.type;
-        if (country === "Nigeria") {
-          total +=
-            type === "consultation"
-              ? consultationStore.priceNGN
-              : type === "trip"
-              ? item.price
-              : item.price * item.qty * rate;
+      let total = 0;
+      const rate = store.rate;
+      const country = store.location.countryName;
+      state.basket.forEach((item) => {
+        if ( country === "Nigeria" )
+        {
+          item.type === "consultation" ?? (total += consultationStore.priceNGN);
+          item.type === "trip" ?? (total += item.ngnPrice * item.qty);
         } else {
-          total += item.price * item.qty * rate;
+          item.type === "consultation" ??
+            (total += consultationStore.price * item.qty);
+          item.type === "trip" ?? (total += item.usdPrice * item.qty * rate);
         }
-        return total;
-      }, 0);
+      });
+      return total;
     },
     getNgnSubTotal(state) {
       const store = useStore();
+      const consultationStore = useConsultationStore();
+
+      let total = 0;
       const rate = store.rate;
       const country = store.location.countryName;
-
-      return state.basket.reduce((total, item) => {
-        const type = item.type;
-        return (
-          total +
-          (country === "Nigeria"
-            ? type === "consultation"
-              ? store.consultation.priceNGN
-              : type === "third_party"
-              ? item.price * item.qty
-              : item.price * item.qty * rate
-            : item.price * item.qty)
-        );
-      }, 0);
+      state.basket.forEach((item) => {
+        if (country === "Nigeria") {
+          item.type
+            ? (total += consultationStore.priceNGN)
+            : item.third_party
+            ? (total += item.price * item.qty * rate)
+            : (total += item.price * item.qty * 0.9 * rate);
+        } else {
+          total += item.price * item.qty;
+        }
+      });
+      return total;
     },
   },
   actions: {
