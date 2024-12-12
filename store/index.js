@@ -82,7 +82,7 @@ export const useStore = defineStore({
           this.location.countryName = country.name;
           this.location.countryCode = res.data.data.location.countryCode;
         }
-        else if ( config.public.APP_ENV === "local" )
+        else
         {
           this.location = res.data.data.location;
         }
