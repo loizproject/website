@@ -8,7 +8,6 @@ import { useStore } from "~/store";
 import { useContentStore } from "~/store/content";
 import { useConsultationStore } from "~/store/consultation";
 
-
 const convertToUTC = (dateTimeObject) => {
   const localDate = new Date(
     `${dateTimeObject.booked_date}T${dateTimeObject.booked_time}`
@@ -19,9 +18,9 @@ const convertToUTC = (dateTimeObject) => {
   const utcHours = localDate.getUTCHours();
   const utcMinutes = localDate.getUTCMinutes();
   const utcSeconds = localDate.getUTCSeconds();
-  const utcString = `${utcYear}-${pad(utcMonth)}-${pad(utcDay)}T${pad(utcHours)}:${pad(
-    utcMinutes
-  )}:${pad(utcSeconds)}Z`;
+  const utcString = `${utcYear}-${pad(utcMonth)}-${pad(utcDay)}T${pad(
+    utcHours
+  )}:${pad(utcMinutes)}:${pad(utcSeconds)}Z`;
   dateTimeObject.utcDateTime = utcString;
   return utcString;
 };
@@ -33,6 +32,8 @@ const store = useStore();
 const contentStore = useContentStore();
 const countries = computed(() => contentStore.countries);
 const hello = countries.value;
+const isNigerian = computed(() => store.location.countryCode === "NG");
+
 const showConsultationSchedule = ref(false);
 const setDateTime = (args) => {
   formData.value.booked_date = args.date;
@@ -46,26 +47,9 @@ const setDateTime = (args) => {
 const pad = (value) => {
   return value < 10 ? `0${value}` : value;
 };
-// const filteredCountries = computed(() => {
-//   if (!searchTerm.value) {
-//     return countries.value;
-//   } else {
-//     const result = countries.value.filter((country) => {
-//       return country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1;
-//     });
-//     return result;
-//   }
-// });
-
-// const searchTerm = ref("");
-// const setSearchterm = () => {
-//   searchTerm.value = "";
-//   save();
-// };
 
 // Form reference
 const formHtml = ref(null);
-
 
 // Form data state
 const formData = ref({
@@ -106,27 +90,25 @@ const submitForm = async () => {
             id: props.trip.id,
             title: props.trip.title,
             type: props.trip.type,
+            installments: {
+              ngn: {
+                first: props.trip.installments.ngn.first,
+                second: props.trip.installments.ngn.second,
+              },
+              usd: {
+                first: props.trip.installments.usd.first,
+                second: props.trip.installments.usd.second,
+              },
+            },
           },
         },
       },
     };
-    console.log(reqData);
 
     basketStore.addToBasket(reqData);
-    console.log("Item added to cart:", formData.value);
     router.push("/basket");
   }
 };
-
-// {
-//     "qty": 2,
-//     "name": "World Travel Market International Event",
-//     "price": 1170,
-//     "attributes": {
-//         "id": 39,
-//         "country": "United Kingdom"
-//     }
-// }
 
 // Props to control modal visibility
 const props = defineProps({
@@ -184,7 +166,7 @@ onMounted(() => {
               :rules="[
                 (v) => !!v || 'Title is required',
                 (v) =>
-                  /^[A-Za-z]+$/.test(v) || 'Title must only contain letters',
+                  /^[A-Za-z.]+$/.test(v) || 'Title must only contain letters',
               ]"
               required
               variant="outlined"
@@ -197,7 +179,7 @@ onMounted(() => {
               :rules="[
                 (v) => !!v || 'Surname is required',
                 (v) =>
-                  /^[A-Za-z]+$/.test(v) || 'Surname must only contain letters',
+                  /^[A-Za-z-]+$/.test(v) || 'Surname must only contain letters',
               ]"
               required
               variant="outlined"
@@ -296,7 +278,7 @@ onMounted(() => {
             <div>
               <v-text-field
                 v-if="trip.type === 'domestic'"
-                label="Preferred Date of Vacation "
+                label="Preferred Month of Vacation "
                 v-model="formData.vacationDate"
                 type="date"
                 :rules="[(v) => !!v || 'Date is required']"
@@ -306,18 +288,18 @@ onMounted(() => {
               </v-text-field>
 
               <label
-              class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
-            v-else
-            style="color: rgba(0, 0, 0, 0.6)"
-            @click="showConsultationSchedule = true"
-          >
-            <span v-if="formData.booked_date_formatted">
-            {{ formData.booked_date_formatted }} <i>({{ formData.booked_time_formatted }})</i>
-            </span>
+                class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+                v-else
+                style="color: rgba(0, 0, 0, 0.6)"
+                @click="showConsultationSchedule = true"
+              >
+                <span v-if="formData.booked_date_formatted">
+                  {{ formData.booked_date_formatted }}
+                  <i>({{ formData.booked_time_formatted }})</i>
+                </span>
 
-            <span v-else> Select Consultation Date and Time</span>
-          </label>
-
+                <span v-else> Select Consultation Date and Time</span>
+              </label>
             </div>
           </v-col>
         </v-row>
@@ -348,7 +330,6 @@ onMounted(() => {
         @close="showConsultationSchedule = false"
         @submit="setDateTime"
       />
-
     </div>
   </div>
 </template>
@@ -375,14 +356,14 @@ onMounted(() => {
 }
 
 .form-entry {
-    border: 0.5px solid;
-    border-radius: 6px;
+  border: 0.5px solid;
+  border-radius: 6px;
 
-    p {
-      margin-bottom: 0;
-      font-size: 1rem;
-    }
+  p {
+    margin-bottom: 0;
+    font-size: 1rem;
   }
+}
 .modal {
   position: fixed;
   top: 50%;
@@ -412,5 +393,12 @@ onMounted(() => {
   border-width: 40px !important;
 }
 
-
+/* TODO: write a meddia query to make the modal to have an overflow of auto for tablets, and mobile devices */
+@media (max-width: 768px) {
+  .modal {
+    width: 90%;
+    max-height: 90vh;
+    overflow: auto;
+  }
+}
 </style>

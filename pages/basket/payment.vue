@@ -32,10 +32,7 @@ const consultationPriceNGN = computed(() => consultationStore.priceNGN);
 const availableDates = computed(() => consultationStore.availableDates);
 const rate = computed(() => store.rate);
 
-const basket = computed(() => 
-
-  basketStore.basket  
-);
+const basket = computed(() => basketStore.basket  );
 
 const basketRef = ref({})
 
@@ -53,11 +50,11 @@ watch(basket, async (newBasket, oldBasket) => {
             
             installments:{
               first: {
-                price:0.7 * item.price,
+                price: isNigerian.value ? item.installments.ngn.first : item.installments.usd.first,
                 isSelected: false
               },
               second: {
-                price: 0.3 * item.price,
+                price: isNigerian.value ? item.installments.ngn.second : item.installments.usd.second,
               isSelected: false}
             },
           ...item,
@@ -72,8 +69,6 @@ watch(basket, async (newBasket, oldBasket) => {
     // return item;
   })
   basketRef.value = res
-  console.log(basketRef.value);
-  
   }
 })
 
@@ -189,7 +184,6 @@ function consultationExpired(consltn) {
 }
 
 const expiredConsultationInBasket = computed(() => {
-
   let resp = [];
   basket.value.forEach((item) => {
     if (item.type === "consultation" && consultationExpired(item)) {
@@ -200,6 +194,7 @@ const expiredConsultationInBasket = computed(() => {
   });
   return resp.includes(true);
 });
+console.log( expiredConsultationInBasket );
 
 async function removeItem(item) {
   await basketStore.removeFromBasket(item);
@@ -276,8 +271,6 @@ function formatTime(time24) {
 
 function proceedCheckout() {
   if (basket.value && basket.value.length > 0) {
-    console.log(basket.value);
-    
     router.push("/checkout");
   } else {
     store.setToast("You have no item in your basket!", { type: "info" });
@@ -435,7 +428,7 @@ useSeoMeta({
                           Pick a payment plan
                         </p>
                         <p class="tw-font-thin tw-text-[16px]">
-                          Choose the best way to pay for this tripovertime
+                          Choose the best way to pay for this trip overtime
                         </p>
                         <div class="horizontal-line tw-mt-2"></div>
                       </div>

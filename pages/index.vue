@@ -359,7 +359,7 @@ useSeoMeta({
             class="tw-flex lg:tw-grid lg:tw-grid-cols-3 xl:tw-grid-cols-4 lg:tw-gap-6 tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap tw-justify-center"
           >
             <v-card
-              v-for="(item, index) in destinations"
+              v-for="item in destinations"
               :key="item.title"
               class="slide-card slide-card--destination mx-2 my-2 tw-w-[300px] lg:tw-w-full"
               @mouseenter="toggleContent(item)"
@@ -404,10 +404,13 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
-      
-    <!-- <Footer /> -->
-  
-    <HomeSlider />
+
+     <section id="trips-section" class="trips__container">
+      <v-container>
+        <h2 class="tw-mx-auto tw-capitalize tw-mb-6">Latest Trips</h2>
+        <TripSlider />
+      </v-container>
+    </section>
 
     <section id="advisory-services" class="advisory-services">
       <v-container>
@@ -775,6 +778,15 @@ h2 {
     // font-size: 1.2rem;
     font-weight: bold;
   }
+}
+
+.trips__container{
+  padding: 5% 10%;
+  height: 68.56rem;
+  background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
+    url("https://res.cloudinary.com/loiztours/image/upload/v1733477469/site-media/img/trips/trips_backgound.png");
+  background-size: cover;
+  background-position: center;
 }
 
 .advisory-services {

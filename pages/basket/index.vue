@@ -27,17 +27,7 @@ const rate = computed(() => store.rate);
 
 const basket = computed(() => {
   basketStore.basket.map((item) => {
-    switch (item.type) {
-      case 'consultation':
-        return item;
-
-      case 'trip':
-        return item;
-
-      default:
-        item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
-    }
-
+     item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
     return item;
   });
   return basketStore.basket;
@@ -47,7 +37,6 @@ const isNigerian = computed(() => store.location.countryCode === "NG");
 const totalPrice = computed(() => basketStore.getSubTotal);
 const totalPriceNgn = computed(() => basketStore.getNgnSubTotal);
 const paths = computed(() => route.path.split("/"));
-console.log(totalPrice, "total price");
 
 function consultationExpired(consltn) {
   const dates = availableDates.value;

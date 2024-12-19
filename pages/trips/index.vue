@@ -3,10 +3,9 @@
 import { ref, onMounted } from "vue";
 import { formatDate } from "~/utils/lib";
 
-
-const sliderTrips = computed(() =>{
-  return trips.value.filter(item=>item.banner_url)
-})
+const sliderTrips = computed(() => {
+  return trips.value.filter((item) => item.banner_url);
+});
 
 const fetchCardData = async () => {
   try {
@@ -17,7 +16,6 @@ const fetchCardData = async () => {
 };
 // Fetch the data when the component is mounted
 onMounted(fetchCardData);
-
 
 // Fetch the data
 const { data: apires } = await useAxiosFetch("/trips");
@@ -35,20 +33,20 @@ const showPastTrips = () => {
 };
 const clearDateFilter = () => {
   showFutureTrips.value = null;
-}; 
+};
 // Computed property to filter trips based on search and/or date
 const currentShowingCards = computed(() => {
   const currentDate = new Date().toISOString().split("T")[0]; // Get today’s date in YYYY-MM-DD format
   let res = [];
 
   trips.value.forEach((item) => {
-    const itemDate = item.date || item.startDate; 
+    const itemDate = item.date || item.startDate;
     const isFutureTrip = itemDate >= currentDate;
 
     const isDateMatch =
-      showFutureTrips.value === null || 
-      (showFutureTrips.value && isFutureTrip) || 
-      (!showFutureTrips.value && !isFutureTrip); 
+      showFutureTrips.value === null ||
+      (showFutureTrips.value && isFutureTrip) ||
+      (!showFutureTrips.value && !isFutureTrip);
 
     const isSearchMatch =
       !search.value ||
@@ -83,11 +81,27 @@ const banner = (images) => images.find((image) => image.type === "banner");
       <div class="tw-bg-white tw-p-8 tw-rounded-md tw-w-[90%]">
         <div class="tw-flex tw-items-center tw-justify-between tw-w-full">
           <div class="filter tw-flex tw-gap-6">
-            
-              <button @click="clearDateFilter" class="toggle-button" :class="{ active: showFutureTrips === null }">All</button>
-              <button @click="showCurrentTrips" class="toggle-button" :class="{ active: showFutureTrips === true }">Latest</button>
-              <button @click="showPastTrips" class="toggle-button" :class="{ active: showFutureTrips === false }">Previous</button>
-      
+            <button
+              @click="clearDateFilter"
+              class="toggle-button"
+              :class="{ active: showFutureTrips === null }"
+            >
+              All
+            </button>
+            <button
+              @click="showCurrentTrips"
+              class="toggle-button"
+              :class="{ active: showFutureTrips === true }"
+            >
+              Latest
+            </button>
+            <button
+              @click="showPastTrips"
+              class="toggle-button"
+              :class="{ active: showFutureTrips === false }"
+            >
+              Previous
+            </button>
           </div>
 
           <div class="lg:tw-w-1/4">
@@ -156,19 +170,25 @@ const banner = (images) => images.find((image) => image.type === "banner");
                   ></iconify-icon>
                 </client-only>
                 <div
-                  class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#D0EEF5] tw-rounded-2xl"
+                  class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#fef3f9] tw-rounded-2xl"
                 >
                   <span
                     v-for="location in card.locations"
-                    :key="location.state"
-                    class="tw-m-0"
-                    >{{ location.state }}</span
+                    :key="location.city"
+                    class="tw-m-0 tw-text-[#eb0c8f]"
+                    >{{ location.city }}</span
                   >
                 </div>
               </div>
-              <v-btn :to="`/trips/${card.slug}`" class="submit" elevation="0"
-                >See details</v-btn
-              >
+              <v-btn :to="`/trips/${card.slug}`" class="submit" elevation="0">
+                See details
+                <!-- <client-only>
+                  <iconify-icon
+                    icon="teenyicons:arrow-right-solid"
+                    class="tw-text-xl tw-text-[#eb0c8f] tw-ml-2"
+                  ></iconify-icon>
+                </client-only> -->
+              </v-btn>
             </div>
           </div>
         </div>
@@ -241,8 +261,6 @@ const banner = (images) => images.find((image) => image.type === "banner");
   transform: scale(1.1); /* Scales the image slightly on hover */
 }
 
-
-
 .toggle-button {
   padding: 8px 16px;
   border: none;
@@ -252,12 +270,12 @@ const banner = (images) => images.find((image) => image.type === "banner");
 }
 
 .toggle-button.active {
-  background-color: #EB0C8F;
+  background-color: #eb0c8f;
   color: white;
 }
 
 .toggle-button:hover {
-  background-color: #F585C7;
+  background-color: #f585c7;
   color: white;
   transition: 0.3s ease;
 }

@@ -14,6 +14,6 @@ export function formatDate(date) {
       suffix = "th";
   }
   const month = format(date, "MMM");
-  const formattedDate = `${month}${day}${suffix}`;
+  const formattedDate = `${month} ${day}${suffix}`;
   return formattedDate;
 }
