@@ -213,7 +213,7 @@ const bookConsultation = async () => {
         const data = {
           price:
             location.value === "Nigeria"
-              ? Math.ceil(_CloneDeep(priceNGN.value) / rate.value)
+              ? Math.ceil(_CloneDeep(priceNGN.value))
               : _CloneDeep(price.value),
           type: "consultation",
           attributes: {

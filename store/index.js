@@ -1,7 +1,8 @@
-import { defineStore } from 'pinia';
+import { countryCodeToUnicodeFlag } from "maz-ui";
+import { defineStore } from "pinia";
 
 export const useStore = defineStore({
-  id: 'rootStore',
+  id: "rootStore",
   state: () => ({
     cookies: true,
     likeWatchVideo: false,
@@ -10,9 +11,10 @@ export const useStore = defineStore({
     toastMeta: {},
     rate: 900,
     location: {
-      countryName: '',
-      countryCode: '',
+      countryName: "",
+      countryCode: "",
     },
+    countries: [],
   }),
   actions: {
     // former vuex mutations
@@ -28,21 +30,26 @@ export const useStore = defineStore({
     setRate(payload) {
       this.rate = payload;
     },
-
+    setCountries(payload) {
+      this.countries = payload;
+    },
     // Actions
     setToast(text, payload) {
       this.toastMeta = {
         title: text,
-        ...payload
-      }
-      this.toast = true
-      setTimeout(() => {
-        this.toast = false
-      }, payload && payload.duration ? payload.duration : 5000);
+        ...payload,
+      };
+      this.toast = true;
+      setTimeout(
+        () => {
+          this.toast = false;
+        },
+        payload && payload.duration ? payload.duration : 5000
+      );
     },
     async fetchRates() {
       try {
-        const res = await useAxiosFetch('/rates');
+        const res = await useAxiosFetch("/rates");
         const rate = res.data.data.rates.currencies.NGN;
         this.setRate(rate);
       } catch (error) {
@@ -50,25 +57,35 @@ export const useStore = defineStore({
       }
     },
     async fetchLocation() {
-      const config = useRuntimeConfig()
+      const config = useRuntimeConfig();
       let res = {
         data: {
           success: true,
-          message: 'Location information fetched successfully',
+          message: "Location information fetched successfully",
           data: {
             location: {
-              countryName: 'Nigeria',
-              countryCode: 'NG',
+              countryName: "Nigeria",
+              countryCode: "NG",
             },
           },
         },
       };
       try {
-        if (config.public.APP_ENV !== 'local') {
-          res = await useAxiosFetch('/location');
+        if (config.public.APP_ENV !== "local") {
+          res = await useAxiosFetch("/location");
+          const response = await useAxiosFetch("/countries");
+          const countries = response.data.data.countries;
+          const country = countries.find(
+            (country) => country.code === res.data.data.location.countryCode
+          );
+          console.log(country, "country information and response");
+          this.location.countryName = country.name;
+          this.location.countryCode = res.data.data.location.countryCode;
         }
-        const location = res.data.data.location;
-        this.location = location;
+        else
+        {
+          this.location = res.data.data.location;
+        }
       } catch (error) {
         console.log(error);
       }

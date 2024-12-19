@@ -9,7 +9,6 @@ const { mdAndUp } = useDisplay();
 const router = useRouter();
 const config = useRuntimeConfig();
 
-
 import { onMounted, ref } from 'vue';
 
 
@@ -107,7 +106,9 @@ background-image: linear-gradient(to right, ${
 }), url(${config.public.MEDIA_ASSETS_URL}${item.img})
 `;
 
-onMounted(() => {
+onMounted( async () =>
+{
+  await store.fetchLocation();
   setTimeout(() => {
     setWatchVideo();
     setBookingVideo();
