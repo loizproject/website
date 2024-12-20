@@ -1,10 +1,11 @@
-[  {
+[
+  {
     "id": 0,
     "name": "Adaobi",
     "imgUrl": "adaobi-24.png",
     "location": "Abuja, Nigeria",
     "date": "October 2024",
-    "content": "Securing a visa can be an overwhelming process, but Loiz Travels was there to guide me through every step from day one with clear instructions and suggestions. The Agency has assisted me twice to secure UK visa, so, I highly recommend Loiz Travels to anyone who needs their professional service. Thank you",
+    "content": "Securing a visa can be an overwhelming process, but Loiz Travels was there to guide me through every step from day one with clear instructions and suggestions. The Agency has assisted me twice to secure UK visa, so, I highly recommend Loiz Travels to anyone who needs their professional service. Thank you",
     "aos": "zoom-out"
   },
   {
@@ -17,16 +18,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 9,
-    "name": "Onose",
-    "imgUrl": "nono.jpg",
-    "location": "Ibadan, Nigeria",
-    "date": "October 2019",
-    "content": "I had a seamless application process with Loiz Tours and Travels Ltd. They made sure my documents were intact, my forms were properly filled and I had the privilege of experiencing their premium service, the staff that worked on my application was pleasant and I got a Schengen visa with my daughter and had a lovely trip and holiday to Belgium",
-    "aos": "zoom-in"
-  },
-  {
-    "id": 6,
+    "id": 2,
     "name": "Nkechi",
     "imgUrl": "nkechi.jpg",
     "location": "Lagos, Nigeria",
@@ -35,16 +27,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 8,
-    "name": "Nosa",
-    "imgUrl": "nosa.png",
-    "location": "Lagos, Nigeria",
-    "date": "March 2020",
-    "content": "I was issued a UK visa at first attempt through Loiz Tours & Travels. I was so overwhelmed with joy. Their expertise, customer relation services are top notch! Loiz Tours & Travels, you've got a client for life. I am super excited",
-    "aos": "fade-left"
-  },
-  {
-    "id": 2,
+    "id": 3,
     "name": "Adaobi",
     "imgUrl": "adaobi.png",
     "location": "Abuja, Nigeria",
@@ -53,22 +36,13 @@
     "aos": "zoom-out"
   },
   {
-    "id": 3,
-    "name": "Ify",
-    "imgUrl": "ify.png",
-    "location": "Lagos, Nigeria",
-    "date": "November, 2016.",
-    "content": "Thanks to Loiz Tours & Travels, I was able to acquire a visa to the United States of America without any difficulty. The visa was facilitated by Loiz Tours & Travels. I also had a wonderful travel experience and everything was coordinated perfectly. Thank you for the opportunity.",
-    "aos": "fade-right"
-  },
-  {
     "id": 4,
-    "name": "Lauretta",
-    "imgUrl": "lauretta.png",
-    "location": "Asaba, Nigeria",
-    "date": "September 2016",
-    "content": "It was my first international trip to attend a professional Conference in Spain and it was awesome. Thanks to Loiz Tours & Travels for the top-notch communication, excellent visa facilitation, packaging and well planned itinerary. I highly recommend them",
-    "aos": "fade-right"
+    "name": "Nosa",
+    "imgUrl": "nosa.png",
+    "location": "Lagos, Nigeria",
+    "date": "March 2020",
+    "content": "I was issued a UK visa at first attempt through Loiz Tours & Travels. I was so overwhelmed with joy. Their expertise, customer relation services are top notch! Loiz Tours & Travels, you've got a client for life. I am super excited",
+    "aos": "fade-left"
   },
   {
     "id": 5,
@@ -80,7 +54,34 @@
     "aos": "zoom-in"
   },
   {
+    "id": 6,
+    "name": "Onose",
+    "imgUrl": "nono.jpg",
+    "location": "Ibadan, Nigeria",
+    "date": "October 2019",
+    "content": "I had a seamless application process with Loiz Tours and Travels Ltd. They made sure my documents were intact, my forms were properly filled and I had the privilege of experiencing their premium service, the staff that worked on my application was pleasant and I got a Schengen visa with my daughter and had a lovely trip and holiday to Belgium",
+    "aos": "zoom-in"
+  },
+  {
     "id": 7,
+    "name": "Ify",
+    "imgUrl": "ify.png",
+    "location": "Lagos, Nigeria",
+    "date": "November, 2016",
+    "content": "Thanks to Loiz Tours & Travels, I was able to acquire a visa to the United States of America without any difficulty. The visa was facilitated by Loiz Tours & Travels. I also had a wonderful travel experience and everything was coordinated perfectly. Thank you for the opportunity.",
+    "aos": "fade-right"
+  },
+  {
+    "id": 8,
+    "name": "Lauretta",
+    "imgUrl": "lauretta.png",
+    "location": "Asaba, Nigeria",
+    "date": "September 2016",
+    "content": "It was my first international trip to attend a professional Conference in Spain and it was awesome. Thanks to Loiz Tours & Travels for the top-notch communication, excellent visa facilitation, packaging and well planned itinerary. I highly recommend them",
+    "aos": "fade-right"
+  },
+  {
+    "id": 9,
     "name": "Taiwo Family",
     "imgUrl": "taiwo.png",
     "location": "Lagos, Nigeria",
