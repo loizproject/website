@@ -25,6 +25,7 @@ const today = new Date();
 const time = ref(null);
 
 const availableDates = computed(() => consultationStore.availableDates);
+console.log("The available dates for a consultation session", availableDates.value);
 const todaysDate = computed(() => {
   return formatDate(today, "yyyy-MM-dd");
 });

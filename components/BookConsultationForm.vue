@@ -106,9 +106,7 @@ const getForm = () => {
   }
 };
 
-const fetchAvailableDates = async () => {
-  await consultationStore.fetchAvailableDates();
-};
+const fetchAvailableDates = async () => await consultationStore.fetchAvailableDates()
 
 const allowedDates = (val) => {
   const currentDate = new Date();
@@ -242,8 +240,8 @@ const bookConsultation = async () => {
 };
 
 onMounted(async () => {
-  await setService();
-  await getForm();
+  setService();
+  getForm();
   await fetchAvailableDates();
 });
 </script>

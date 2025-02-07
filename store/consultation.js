@@ -10,6 +10,11 @@ export const useConsultationStore = defineStore({
     services: consultationMeta,
   }),
   actions: {
+    /**
+     * Fetch available dates for consultation
+     * and populates the available dates for the consultation when the consultation page is loaded
+     * @returns {Promise<void>}
+     */
     async fetchAvailableDates() {
       try {
         const monthNames = [
