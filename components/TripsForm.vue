@@ -43,6 +43,7 @@ const setDateTime = (args) => {
   formData.value.date_time = convertToUTC(formData.value);
   showConsultationSchedule.value = false;
 };
+const searchTerm = ref("");
 
 const pad = (value) => {
   return value < 10 ? `0${value}` : value;
@@ -63,11 +64,19 @@ const formData = ref({
   gender: "",
   country: "",
   vacationDate: "",
+  booked_date: "",
+  booked_time: "",
+  payment_option: ""
 });
 
 definePageMeta({
   middleware: ["auth"],
 });
+
+const setSearchterm = () => {
+  searchTerm.value = "";
+  save();
+};
 
 // Form submission
 const submitForm = async () => {
@@ -115,6 +124,7 @@ const props = defineProps({
   isModalOpen: Boolean,
   trip: Object,
 });
+
 
 // Emit events to parent to close the modal
 const emit = defineEmits(["close-modal"]);
@@ -273,7 +283,23 @@ onMounted(() => {
               item-title="name"
               variant="outlined"
               label="Country of Residence"
-            ></v-select>
+              @update:model-value="setSearchterm"
+            >
+              <template v-slot:prepend-item>
+                <div class="d-flex align-center justify-end">
+                  <v-text-field
+                    v-model="searchTerm"
+                    hide-details
+                    type="text"
+                    label="Search"
+                    placeholder="Search"
+                    variant="outlined"
+                    class="mx-3 mt-4"
+                  />
+                </div>
+                <v-divider class="mt-2"></v-divider>
+              </template>
+            </v-select>
 
             <div>
               <v-text-field
@@ -391,14 +417,5 @@ onMounted(() => {
 
 .maz-border {
   border-width: 40px !important;
-}
-
-/* TODO: write a meddia query to make the modal to have an overflow of auto for tablets, and mobile devices */
-@media (max-width: 768px) {
-  .modal {
-    width: 90%;
-    max-height: 90vh;
-    overflow: auto;
-  }
 }
 </style>
