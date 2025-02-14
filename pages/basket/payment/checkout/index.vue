@@ -30,15 +30,13 @@ const textLimit = computed(() => (xs.value ? 12 : 25));
 const payPalReady = ref(false);
 
 const subTotal = computed(() => basketStore.getSubTotal);
-const ngnSubTotal = computed(() => basketStore.getNgnSubTotal);
 const user = computed(() => authStore.user);
 const services = computed(() => contentStore.services);
 const countries = computed(() => contentStore.countries);
 const userLocation = computed(() => store.location.countryName);
 const isNigerian = computed(() => store.location.countryCode === "NG");
-const consultationPrice = computed(() => consultationStore.price);
-const consultationPriceNGN = computed(() => consultationStore.priceNGN);
-const rate = computed(() => store.rate);
+const consultationPrice = computed(() => consultationStore.price_usd);
+const consultationPriceNGN = computed(() => consultationStore.price_ngn);
 const paths = computed(() => route.path.split("/"));
 
 const form = ref({
@@ -52,32 +50,42 @@ const form = ref({
 
 const msg = ref({
   title: "Payment made succesfully!",
-  text:
-    "Thank you for your payment! Your transaction has been successfully processed. If you have any questions or require further assistance, please don't hesitate to reach out to us via the contact page. We'll be happy to help.",
+  text: "Thank you for your payment! Your transaction has been successfully processed. If you have any questions or require further assistance, please don't hesitate to reach out to us via the contact page. We'll be happy to help.",
 });
 
 const errorMsg = ref({
   title: "An error occoured.",
-  text:
-    "Unfortunately, we were unable to process your payment at this time. Please double-check the payment information you provided and ensure that there are sufficient funds available. If the issue persists, you can contact our customer support for assistance. We apologize for any inconvenience this may have caused.",
+  text: "Unfortunately, we were unable to process your payment at this time. Please double-check the payment information you provided and ensure that there are sufficient funds available. If the issue persists, you can contact our customer support for assistance. We apologize for any inconvenience this may have caused.",
 });
 
 const basket = computed(() => {
   const bas = basketStore.basket;
+  const price = isNigerian ? consultationPriceNGN.value : consultationPrice.value;
   bas.forEach((item) => {
-    !item.consultation
-      ? (item.parentService = contentStore.getSubservicesById(item.options.subservice_id))
+    item.type !== 'consultation'
+      ? (item.parentService = contentStore.getSubservicesById(
+          item.options.subservice_id
+        ))
       : "";
+       item.price = item.type === 'consultation' ? price : item.parentService.price;
   });
   return bas;
 });
+
+function formatCurrency(currency, amount, locale = "en-NG") {
+  return new Intl.NumberFormat(locale, { style: "currency", currency }).format(
+    amount
+  );
+}
 
 const filteredCountries = computed(() => {
   if (!searchTerm.value) {
     return countries;
   } else {
     return countries.filter((country) => {
-      return country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1;
+      return (
+        country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1
+      );
     });
   }
 });
@@ -120,19 +128,20 @@ function generateREF() {
   if (window.performance && typeof window.performance.now === "function") {
     d += performance.now();
   }
-  let ref = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    let r = (d + Math.random() * 16) % 16 | 0;
-    d = Math.floor(d / 16);
-    return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-  });
+  let ref = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      let r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+    }
+  );
   return ref;
 }
 
 async function payWithPaystack(e) {
   e.preventDefault();
-  const amount = isNigerian.value
-    ? parseFloat(Number(ngnSubTotal.value))
-    : parseFloat(Number(subTotal.value));
+  const amount = parseFloat(Number(subTotal.value));
   const paystack = new PaystackPop();
   const reference = generateREF();
   form.value.amount = amount;
@@ -155,9 +164,12 @@ async function payWithPaystack(e) {
         msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
         success.value = true;
         await basketStore.clearBasket();
-        await useAxiosPost(`/orders/paystack/payments/${transaction.reference}/verify`, {
-          status: "success",
-        });
+        await useAxiosPost(
+          `/orders/paystack/payments/${transaction.reference}/verify`,
+          {
+            status: "success",
+          }
+        );
         await consultationStore.fetchAvailableDates();
       },
       onClose: async () => {
@@ -172,9 +184,7 @@ async function payWithPaystack(e) {
 
 async function payWithRave(e) {
   e.preventDefault();
-  const amount = isNigerian.value
-    ? parseFloat(Number(ngnSubTotal.value))
-    : parseFloat(Number(subTotal.value));
+  const amount = parseFloat(Number(subTotal.value));
   const tx_ref = generateREF();
   form.value.amount = amount;
   form.value.country = userLocation.value;
@@ -208,10 +218,13 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        await useAxiosPost(`/orders/flutterwave/payments/${payment.tx_ref}/verify`, {
-          status: "success",
-          payment_id: payment.transaction_id
-        });
+        await useAxiosPost(
+          `/orders/flutterwave/payments/${payment.tx_ref}/verify`,
+          {
+            status: "success",
+            payment_id: payment.transaction_id,
+          }
+        );
         await basketStore.clearBasket();
         await consultationStore.fetchAvailableDates();
       },
@@ -232,7 +245,8 @@ async function initPayPal() {
   if (
     !(
       isNigerian.value &&
-      (config.public.APP_ENV === "uat" || config.public.APP_ENV === "production")
+      (config.public.APP_ENV === "uat" ||
+        config.public.APP_ENV === "production")
     )
   ) {
     try {
@@ -293,7 +307,8 @@ async function payWithPayPal(paypal) {
                 orderData,
                 JSON.stringify(orderData, null, 2)
               );
-              const transaction = orderData.purchase_units[0].payments.captures[0];
+              const transaction =
+                orderData.purchase_units[0].payments.captures[0];
               msg.value.info = `LTT Transaction ${transaction.status}: ${transaction.id}.`;
               success.value = true;
               await basketStore.clearBasket();
@@ -390,15 +405,21 @@ useHead({
           <div class="tile pa-3 mt-8">
             <div v-for="(n, i) in basket" :key="i">
               <div
-                v-if="n.consultation"
+                v-if="n.type === 'consultation'"
                 class="d-flex align-center justify-space-between"
               >
-                <p>Consultation Session</p>
+                <p>{{ n.name }}</p>
                 <p v-if="isNigerian">
-                  <strong>₦{{ useAmtToString(consultationPriceNGN) }}</strong>
+                  <strong>{{
+                    formatCurrency("NGN", consultationPriceNGN)
+                  }}</strong>
                 </p>
                 <p v-else>
-                  <strong>${{ consultationPrice }}</strong>
+                  <strong
+                    >${{
+                      formatCurrency("USD", consultationPrice, "en-US")
+                    }}</strong
+                  >
                 </p>
               </div>
               <div v-else class="d-flex align-start justify-space-between mb-3">
@@ -412,10 +433,10 @@ useHead({
             <div class="d-flex align-end justify-space-between mt-5">
               <p><strong>Subtotal</strong></p>
               <p v-if="isNigerian" class="summary__price">
-                <b> ₦{{ useAmtToString(ngnSubTotal) }} </b>
+                <b> {{ formatCurrency("NGN", subTotal) }} </b>
               </p>
               <p v-else class="summary__price">
-                <strong>${{ useAmtToString(subTotal) }}</strong>
+                <strong>{{ formatCurrency("USD", subTotal, "en-US") }}</strong>
               </p>
             </div>
             <!-- <div v-if="isNigerian" class="mt-2">

@@ -63,8 +63,8 @@ const user = computed(() => authStore.user);
 
 const services = computed(() => contentStore.services);
 const consultationServices = computed(() => consultationStore.services);
-const consultationPrice = computed(() => consultationStore.price);
-const consultationPriceNGN = computed(() => consultationStore.priceNGN);
+const consultationPrice = computed(() => consultationStore.price_usd);
+const consultationPriceNGN = computed(() => consultationStore.price_ngn);
 const location = computed(() => store.location.countryName);
 
 const isNigerian = computed(() => location.value === "Nigeria");
@@ -88,6 +88,11 @@ const logout = async () => {
     useErrorHandler(error);
   }
 };
+
+function formatCurrency ( currency, amount, locale = 'en-US' )
+{
+  return new Intl.NumberFormat( locale, { style: 'currency', currency } ).format( amount );
+}
 
 const setActiveRoute = (routeName) => {
   headerRoutes.value.forEach((element) => {
@@ -133,14 +138,14 @@ const setActiveRoute = (routeName) => {
                   <v-row>
                     <v-col cols="4">
                       <nuxt-link
-                        to="/book-consultation"
+                        to="/consultations"
                         class="sub-header__title d-flex align-center"
                       >
                         Book Consultation
                       </nuxt-link>
                     </v-col>
                     <v-col cols="4" v-for="n in services" :key="n.id">
-                      <nuxt-link :to="`/services/${n.slug}`">
+                      <nuxt-link :to="`/bookings/${n.slug}`">
                         {{ n.title }}
                       </nuxt-link>
                     </v-col>
@@ -228,7 +233,7 @@ const setActiveRoute = (routeName) => {
               {{ basket.length }}
             </div>
             <v-card v-if="cartMenu && basket.length > 0" class="cart__menu pa-4">
-              <div v-for="item in basket" class="my-2">
+              <div v-for="(item, i) in basket" class="my-2" :key="i">
                 <div
                   v-if="item.options && item.options.booked_date"
                   class="d-flex items-center justify-space-between"
@@ -240,9 +245,9 @@ const setActiveRoute = (routeName) => {
                     </p>
                   </div>
                   <p v-if="isNigerian" class="ml-2">
-                    ₦{{ useAmtToString(consultationPriceNGN) }}
+                    {{ formatCurrency('NGN', consultationPriceNGN) }}
                   </p>
-                  <p v-else class="ml-2">${{ useAmtToString(consultationPrice) }}</p>
+                  <p v-else class="ml-2">{{ formatCurrency('USD', consultationPrice, 'en-US') }}</p>
                 </div>
                 <div v-else class="d-flex items-center justify-space-between">
                   <div>
@@ -254,7 +259,7 @@ const setActiveRoute = (routeName) => {
                       </i>
                     </p>
                   </div>
-                  <p class="ml-2">${{ item.price * item.qty }}</p>
+                  <p class="ml-2">{{ formatCurrency('USD', item.price * item.qty, 'en-US') }}</p>
                 </div>
                 <v-divider></v-divider>
               </div>

@@ -9,13 +9,10 @@ const { mdAndUp } = useDisplay();
 const router = useRouter();
 const config = useRuntimeConfig();
 
-import { onMounted, ref } from 'vue';
-
+import { onMounted, ref } from "vue";
 
 // Reference to the modal component
 const modal = ref(null);
-
-
 
 const store = useStore();
 const contentStore = useContentStore();
@@ -78,7 +75,9 @@ function truncateText(text) {
 }
 
 function bookConsultation() {
-  router.push(`/book-consultation/${useGetSlug(consultationService.value.text)}`);
+  router.push(
+    `/consultations/bookings/${useGetSlug(consultationService.value.text)}`
+  );
 }
 
 function setServiceDestinations() {
@@ -106,8 +105,7 @@ background-image: linear-gradient(to right, ${
 }), url(${config.public.MEDIA_ASSETS_URL}${item.img})
 `;
 
-onMounted( async () =>
-{
+onMounted(async () => {
   await store.fetchLocation();
   setTimeout(() => {
     setWatchVideo();
@@ -146,7 +144,6 @@ useSeoMeta({
 
 <template>
   <div>
-
     <Modal ref="modal" />
 
     <section id="home-banner" class="home-banner d-flex align-center">
@@ -182,7 +179,9 @@ useSeoMeta({
               class="submit play-video d-flex align-center py-4"
               @click="toggleBookingVideoModal"
             >
-              <p class="mb-0">Booking <span v-if="mdAndUp">Journey</span> Video</p>
+              <p class="mb-0">
+                Booking <span v-if="mdAndUp">Journey</span> Video
+              </p>
               <iconify-icon
                 icon="gravity-ui:play-fill"
                 class="play-video__icon ml-2"
@@ -201,7 +200,9 @@ useSeoMeta({
       </v-container>
       <div class="home-banner__actions">
         <v-container class="">
-          <div class="search relative d-sm-flex align-center justify-space-around">
+          <div
+            class="search relative d-sm-flex align-center justify-space-around"
+          >
             <h3 class="mr-4">
               Search from a long list <br class="d-none d-md-block" />
               of travel services
@@ -217,7 +218,10 @@ useSeoMeta({
                 <v-icon>mdi-magnify</v-icon>
               </div>
             </div>
-            <div v-if="search && search.length >= 3" class="search__results mt-1">
+            <div
+              v-if="search && search.length >= 3"
+              class="search__results mt-1"
+            >
               <v-card class="pa-5">
                 <h4>Top Results</h4>
                 <div v-if="results.length === 0" class="py-4">No results</div>
@@ -254,26 +258,26 @@ useSeoMeta({
         <div data-aos="fade-up">
           <h2>OUR STYLE</h2>
           <p>
-            We are collaborative, customer centric and believe in business agility to
-            compete and thrive in the industry, while responding to our customers needs.
-            We use our customers persona and customer journey mapping to understand our
-            customers, while removing their pain points on all touch points.
+            We are collaborative, customer centric and believe in business
+            agility to compete and thrive in the industry, while responding to
+            our customers needs. We use our customers persona and customer
+            journey mapping to understand our customers, while removing their
+            pain points on all touch points.
           </p>
           <p>
-            We use all forms of consumer messaging communications: Email, SMS, WhatsApp,
-            Telegram, Facebook messenger, phone calls, FAQs and above all, face to face,
-            in a bid to get all your questions answered.
+            We use all forms of consumer messaging communications: Email, SMS,
+            WhatsApp, Telegram, Facebook messenger, phone calls, FAQs and above
+            all, face to face, in a bid to get all your questions answered.
           </p>
         </div>
       </v-container>
     </section>
 
     <section id="our-services" class="our-services">
-
       <v-container>
         <h2>Our Services</h2>
       </v-container>
-      
+
       <div class="our-services__slider">
         <v-slide-group
           ref="ourServicesSlider"
@@ -296,7 +300,11 @@ useSeoMeta({
                 cover
                 :style="`backgroundImage: linear-gradient(to right, #00000020, #00000020), url(${item.image})`"
               >
-                <v-btn elevation="0" color="#34343450" @click="likeService(item)">
+                <v-btn
+                  elevation="0"
+                  color="#34343450"
+                  @click="likeService(item)"
+                >
                   <v-icon
                     :key="likeServiceKey"
                     :color="item.like ? 'orange !important' : '#fff'"
@@ -322,8 +330,8 @@ useSeoMeta({
     </section>
 
     <section
-      id="book-consultation"
-      class="book-consultation d-flex align-center justify-center my-4"
+      id="consultationn"
+      class="consultationn d-flex align-center justify-center my-4"
     >
       <v-container class="text-center">
         <div data-aos="zoom-in">
@@ -385,28 +393,30 @@ useSeoMeta({
         </div>
       </v-container>
     </section>
-    
+
     <section id="our-history" class="our-history">
       <v-container>
         <div data-aos="fade-right">
           <h2>Our History</h2>
           <p>
-            Loiz Tours & Travels was founded in March 2013. The passion was borne out of
-            the need by Nigerians to relieve anxiety and stress by embarking on a holiday
-            and savouring a relaxing and beautiful experience to calm nerves and improve
-            mental health. Loiz Tours & Travels has been actively helping customers plan
-            and organise travel packages since 2013.
+            Loiz Tours & Travels was founded in March 2013. The passion was
+            borne out of the need by Nigerians to relieve anxiety and stress by
+            embarking on a holiday and savouring a relaxing and beautiful
+            experience to calm nerves and improve mental health. Loiz Tours &
+            Travels has been actively helping customers plan and organise travel
+            packages since 2013.
           </p>
           <p>
-            Led by IATA Certified International Travel Consultant, the company is a legend
-            in the Nigerian travel industry with bespoke, exhilarating, adventurous,
-            educative, relocation and fun-packed packages.
+            Led by IATA Certified International Travel Consultant, the company
+            is a legend in the Nigerian travel industry with bespoke,
+            exhilarating, adventurous, educative, relocation and fun-packed
+            packages.
           </p>
         </div>
       </v-container>
     </section>
 
-     <section id="trips-section" class="trips__container">
+    <section id="trips-section" class="trips__container">
       <v-container>
         <h2 class="tw-mx-auto tw-capitalize tw-mb-6">Latest Trips</h2>
         <TripSlider />
@@ -434,7 +444,11 @@ useSeoMeta({
               </div>
             </div>
           </v-col>
-          <v-col cols="12" md="6" class="advisory-services__img d-none d-md-block">
+          <v-col
+            cols="12"
+            md="6"
+            class="advisory-services__img d-none d-md-block"
+          >
           </v-col>
         </v-row>
       </v-container>
@@ -480,7 +494,9 @@ useSeoMeta({
             :data-aos="item.aos"
           >
             <div class="card">
-              <div class="d-flex flex-column justify-space-between px-5 px-md-8 h-full">
+              <div
+                class="d-flex flex-column justify-space-between px-5 px-md-8 h-full"
+              >
                 <p class="testimonials__content">{{ item.content }}</p>
                 <div class="d-flex align-center">
                   <img
@@ -491,7 +507,9 @@ useSeoMeta({
                     <p class="testimonials__name mb-0">
                       {{ item.name }}
                     </p>
-                    <p class="testimonials__date">{{ item.location }}, {{ item.date }}</p>
+                    <p class="testimonials__date">
+                      {{ item.location }}, {{ item.date }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -500,7 +518,6 @@ useSeoMeta({
         </v-row>
       </v-container>
     </section>
-    
   </div>
 </template>
 
@@ -678,9 +695,9 @@ h2 {
   }
 }
 
-.book-consultation {
+.consultationn {
   background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
-    url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/book-consultation.jpg");
+    url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings.jpg");
   background-size: cover;
   background-position: center;
   min-height: 550px;
@@ -781,7 +798,7 @@ h2 {
   }
 }
 
-.trips__container{
+.trips__container {
   padding: 5% 10%;
   height: 68.56rem;
   background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
@@ -904,10 +921,10 @@ h2 {
     }
   }
 
-  .book-consultation {
+  .consultationn {
     min-height: 650px;
     background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
-      url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/book-consultation-mob.jpg");
+      url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings-mob.jpg");
 
     & .v-btn {
       margin-top: 5%;
@@ -1029,7 +1046,7 @@ h2 {
     }
   }
 
-  .book-consultation {
+  .consultationn {
     min-height: 600px;
 
     & .v-label {

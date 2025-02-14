@@ -36,31 +36,31 @@ const closeModal = () => {
   isModalOpen.value = false;
 };
 
-let NGNaira = new Intl.NumberFormat( 'en-US', {
-  style: 'currency',
-  currency: 'NGN'
+function formatCurrency(currency, amount, locale = "en-NG") {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+  }).format(amount);
+}
+
+let NGNaira = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "NGN",
 });
 
-let USDollar = new Intl.NumberFormat( 'en-US', {
-  style: 'currency',
-  currency: 'USD'
-})
+let USDollar = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
 
-console.log( trip.itinerary );
-
-const itinerary = computed( () =>
-{
+const itinerary = computed(() => {
   // if the description is an array then loop over it
-  if ( Array.isArray( trip.itinerary ) )
-  {
-    trip.itinerary.forEach( item =>
-    {
+  if (Array.isArray(trip.itinerary)) {
+    trip.itinerary.forEach((item) => {
       return item.description;
-    })
+    });
   }
-} )
-
-console.log( itinerary.value );
+});
 </script>
 
 <template>
@@ -99,11 +99,12 @@ console.log( itinerary.value );
         </div>
 
         <div class="tw-flex tw-items-center tw-justify-center tw-mt-4">
-          <client-only
-            ><iconify-icon icon="mdi:naira" class="tw-text-2xl"></iconify-icon
-          ></client-only>
-          <h6 class="tw-text-3xl tw-font-normal" v-if="isNigerian">{{ NGNaira.format(trip.ngnPrice) }}</h6>
-          <h6 class="tw-text-3xl tw-font-normal" v-else>{{ USDollar.format(trip.usdPrice) }}</h6>
+          <h6 class="tw-text-3xl tw-font-normal" v-if="isNigerian">
+            {{ formatCurrency("NGN", trip.ngnPrice) }}
+          </h6>
+          <h6 class="tw-text-3xl tw-font-normal" v-else>
+            {{ formatCurrency("USD", trip.usdPrice, "en-US") }}
+          </h6>
         </div>
 
         <div
@@ -161,7 +162,7 @@ console.log( itinerary.value );
         </div>
 
         <div class="tw-mt-8">
-          <img :src="outro.url" alt="campaign image" class="tw-rounded-md" />
+          <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full" />
         </div>
 
         <div class="tw-flex tw-flex-col tw-mt-8">

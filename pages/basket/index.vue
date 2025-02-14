@@ -20,8 +20,8 @@ const showConsultationSchedule = ref(false);
 const updatingService = ref(null);
 
 const services = computed(() => contentStore.services);
-const consultationPrice = computed(() => consultationStore.price);
-const consultationPriceNGN = computed(() => consultationStore.priceNGN);
+const consultationPrice = computed(() => consultationStore.price_usd);
+const consultationPriceNGN = computed(() => consultationStore.price_ngn);
 const availableDates = computed(() => consultationStore.availableDates);
 const rate = computed(() => store.rate);
 
@@ -35,7 +35,6 @@ const basket = computed(() => {
 const isNigerian = computed(() => store.location.countryCode === "NG");
 
 const totalPrice = computed(() => basketStore.getSubTotal);
-const totalPriceNgn = computed(() => basketStore.getNgnSubTotal);
 const paths = computed(() => route.path.split("/"));
 
 function consultationExpired(consltn) {
@@ -151,6 +150,13 @@ function proceedToPayment() {
   }
 }
 
+function formatCurrency( currency, amount, locale = 'en-NG' ){
+  return new Intl.NumberFormat( locale, {
+    style: "currency",
+    currency,
+  } ).format( amount );
+}
+
 onMounted(async () => {
   await basketStore.fetchBasket();
   await consultationStore.fetchAvailableDates();
@@ -248,9 +254,9 @@ useSeoMeta({
               <div class="details__head d-flex align-center justify-space-between">
                 <h4>{{ item.name }}</h4>
                 <p v-if="isNigerian" class="ml-2 d-none d-md-block">
-                  ₦{{ useAmtToString(item.price * item.qty) }}
+                  {{ formatCurrency('NGN', item.ngnPrice * item.qty) }}
                 </p>
-                <p v-else class="ml-2 d-none d-md-block">${{ item.price * item.qty }}</p>
+                <p v-else class="ml-2 d-none d-md-block">{{ formatCurrency('USD', item.usdPrice * item.qty, 'en-US') }}</p>
               </div>
 
               <div class="details__body d-md-flex tw-flex align-center justify-space-between">
@@ -312,9 +318,9 @@ useSeoMeta({
                   <span v-if="lgAndUp"> Change Date/Time </span>
                 </v-btn>
                 <p v-if="isNigerian" class="d-none d-md-block ml-2">
-                  ₦{{ useAmtToString(consultationPriceNGN) }}
+                  {{ formatCurrency('NGN',consultationPriceNGN) }}
                 </p>
-                <p v-else class="d-none d-md-block ml-2">${{ consultationPrice }}</p>
+                <p v-else class="d-none d-md-block ml-2">{{ formatCurrency('USD', consultationPrice, 'en-US') }}</p>
               </div>
               <div class="details__body d-md-flex flex-wrap justify-space-between">
                 <div class=" tw-flex tw-flex-col tw-gap-4">
@@ -323,9 +329,9 @@ useSeoMeta({
                   <!-- <p>1 Person</p> -->
 
                   <div class="d-flex  justify-space-between">
-                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(consultationPriceNGN)
+                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">{{ formatCurrency('NGN',consultationPriceNGN)
                       }}</p>
-                    <p v-else class="details__price mr-2 d-md-none">${{ item.price * item.qty }}</p>
+                    <p v-else class="details__price mr-2 d-md-none">{{ formatCurrency('USD', item.price * item.qty, 'en-US') }}</p>
                     <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)">
                       <client-only><iconify-icon icon="mdi:cancel-circle-outline"
                           class="tw-text-xl tw-text-[#EB5757]"></iconify-icon></client-only>
@@ -348,7 +354,7 @@ useSeoMeta({
               <p>Subtotal</p>
               <p class="summary__price">
                 <span v-if="isNigerian">
-                  <b>₦{{ useAmtToString(totalPriceNgn) }}</b>
+                  <b>₦{{ useAmtToString(totalPrice) }}</b>
                 </span>
                 <span v-else> ${{ useAmtToString(totalPrice) }} </span>
               </p>

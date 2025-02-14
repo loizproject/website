@@ -38,9 +38,8 @@ const rules = {
   required: (value) => !!value || "Oops this is Required.",
 };
 
-const { dontShowPersons, testimonials, getSubservicesBySlug, allTestimonials } = computed(
-  () => contentStore
-).value;
+const { dontShowPersons, testimonials, getSubservicesBySlug, allTestimonials } =
+  computed(() => contentStore).value;
 
 const subservice = computed(() => {
   const subservice = getSubservicesBySlug(slug, serviceSlug);
@@ -68,7 +67,9 @@ const countries = computed(() => {
   const countries = [];
   if (service_categories) {
     service_categories.forEach((element) => {
-      countries.includes(element.country) ? null : countries.push(element.country);
+      countries.includes(element.country)
+        ? null
+        : countries.push(element.country);
     });
   }
   return countries;
@@ -132,7 +133,9 @@ const goToCheckout = async () => {
 };
 
 const bookConsultation = () => {
-  router.push(`/book-consultation/${serviceSlug}?subservice_id=${subservice.value.id}`);
+  router.push(
+    `/consultations/bookings/${serviceSlug}?subservice_id=${subservice.value.id}`
+  );
 };
 
 const chat = () => {
@@ -146,7 +149,9 @@ const chat = () => {
 
 onMounted(() => {
   country.value = route.query.country;
-  destination.value = destinations.value.find((item) => item.title === route.query.title);
+  destination.value = destinations.value.find(
+    (item) => item.title === route.query.title
+  );
 });
 
 definePageMeta({
@@ -156,7 +161,8 @@ definePageMeta({
 
 const meta = computed(() => {
   return {
-    title: subservice.value.title || "Visa Facilitation: Loiz Tours & Travels Ltd",
+    title:
+      subservice.value.title || "Visa Facilitation: Loiz Tours & Travels Ltd",
     description: subservice.value.description,
     image:
       subservice.value.image ||
@@ -186,9 +192,12 @@ useSeoMeta({
       <div class="relative d-flex justify-space-between">
         <div class=""></div>
         <p class="">
-          🇳🇬 Exclusive Offer: 10% Discount at Checkout and you can also pay in Naira! 🎉
+          🇳🇬 Exclusive Offer: 10% Discount at Checkout and you can also pay in
+          Naira! 🎉
         </p>
-        <v-icon class="pointer" color="#fff" @click="promo = !promo">mdi-close</v-icon>
+        <v-icon class="pointer" color="#fff" @click="promo = !promo"
+          >mdi-close</v-icon
+        >
       </div>
     </section>
     <v-container v-if="subservice">
@@ -259,7 +268,9 @@ useSeoMeta({
             <v-col cols="12" :sm="dontShowPersons.includes(slug) ? 12 : 6">
               <div class="country">
                 <h3>Type of Visa</h3>
-                <p class="mt-2 mb-4">Choose a type of Visa you would like to purchase</p>
+                <p class="mt-2 mb-4">
+                  Choose a type of Visa you would like to purchase
+                </p>
                 <v-select
                   v-model="visaType"
                   :items="visaTypes"
@@ -285,8 +296,12 @@ useSeoMeta({
                   >
                     -
                   </button>
-                  <div class="purchase__btn purchase__btn--number">{{ qty }}</div>
-                  <button type="button" class="purchase__btn" @click="qty++">+</button>
+                  <div class="purchase__btn purchase__btn--number">
+                    {{ qty }}
+                  </div>
+                  <button type="button" class="purchase__btn" @click="qty++">
+                    +
+                  </button>
                 </div>
               </div>
             </v-col>
@@ -316,17 +331,20 @@ useSeoMeta({
               <p>{{ destination.description }}</p>
               <h4>Feautres</h4>
               <ul class="mb-5">
-                <li v-for="item in useParseJSON(destination.features)" :key="item">
+                <li
+                  v-for="item in useParseJSON(destination.features)"
+                  :key="item"
+                >
                   {{ item }}
                 </li>
               </ul>
-              <nuxt-link class="variant" to="/book-consultation">
+              <nuxt-link class="variant" to="/consultations/bookings">
                 Book Consultation
               </nuxt-link>
             </div>
             <div v-else>
               <p>{{ subservice.description }}</p>
-              <nuxt-link class="variant" to="/book-consultation">
+              <nuxt-link class="variant" to="/consultations/bookings">
                 Book Consultation
               </nuxt-link>
             </div>
@@ -338,8 +356,14 @@ useSeoMeta({
               :key="item.id"
               class="testimonials d-flex align-start my-2"
             >
-              <v-avatar :size="$vuetify.breakpoint.smAndDown ? 38 : 45" class="mt-2">
-                <v-img :src="`/img/testimonials/${item.imgUrl}`" alt="John"></v-img>
+              <v-avatar
+                :size="$vuetify.breakpoint.smAndDown ? 38 : 45"
+                class="mt-2"
+              >
+                <v-img
+                  :src="`/img/testimonials/${item.imgUrl}`"
+                  alt="John"
+                ></v-img>
               </v-avatar>
               <div class="ml-2">
                 <p class="testimonials__desc">
@@ -355,7 +379,10 @@ useSeoMeta({
         </v-container>
         <div class="d-flex align-center justify-space-between pa-4">
           <v-btn large class="add-to-cart ml-4" @click="addToBasket">
-            <iconify-icon icon="fontisto:shopping-basket-add" class="mr-2"></iconify-icon>
+            <iconify-icon
+              icon="fontisto:shopping-basket-add"
+              class="mr-2"
+            ></iconify-icon>
             Add to Basket
           </v-btn>
           <v-btn large class="submit ml-4" @click="goToCheckout">

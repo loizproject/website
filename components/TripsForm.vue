@@ -66,7 +66,7 @@ const formData = ref({
   vacationDate: "",
   booked_date: "",
   booked_time: "",
-  payment_option: ""
+  payment_option: "",
 });
 
 definePageMeta({
@@ -83,6 +83,16 @@ const submitForm = async () => {
   const { valid } = await formHtml.value.validate(); // Validate form
 
   const { country, vacationDate, ...customer } = formData.value;
+  const installmentOptions = {
+    ngn: {
+      first: props.trip.installments.ngn.first,
+      second: props.trip.installments.ngn.second,
+    },
+    usd: {
+      first: props.trip.installments.usd.first,
+      second: props.trip.installments.usd.second,
+    }
+  }
 
   if (valid) {
     const reqData = {
@@ -99,32 +109,23 @@ const submitForm = async () => {
             id: props.trip.id,
             title: props.trip.title,
             type: props.trip.type,
-            installments: {
-              ngn: {
-                first: props.trip.installments.ngn.first,
-                second: props.trip.installments.ngn.second,
-              },
-              usd: {
-                first: props.trip.installments.usd.first,
-                second: props.trip.installments.usd.second,
-              },
+            payment_option: formData.value.payment_option === "Pay in Full" ? "onetime" : "installments",
+            installmentOptions: props.trip.type === "foreign" && formData.value.payment_option === "" ? installmentOptions.usd : installmentOptions.ngn,
             },
           },
         },
-      },
+      }
+      basketStore.addToBasket(reqData);
     };
 
-    basketStore.addToBasket(reqData);
     router.push("/basket");
-  }
-};
+  };
 
 // Props to control modal visibility
 const props = defineProps({
   isModalOpen: Boolean,
   trip: Object,
 });
-
 
 // Emit events to parent to close the modal
 const emit = defineEmits(["close-modal"]);
@@ -143,7 +144,7 @@ onMounted(() => {
   <div v-if="isModalOpen" class="modal-overlay" @click="closeModal"></div>
 
   <div v-if="isModalOpen" class="modal modal-content">
-    <div class="tw-rounded-lg">
+    <div class="tw-rounded-lg tw-max-h-screen">
       <div
         class="tw-bg-[#131313] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center"
       >
@@ -163,7 +164,7 @@ onMounted(() => {
         ref="formHtml"
         @submit.prevent="submitForm"
         lazy-validation
-        class="tw-p-10"
+        class="tw-p-10 tw-overflow-y-auto tw-h-[50vh] md:tw-h-[50vh]"
       >
         <p>Please fill out the form</p>
 
@@ -235,6 +236,16 @@ onMounted(() => {
               required
               variant="outlined"
             ></v-text-field>
+
+            <v-select
+              label="Payment Option"
+              v-model="formData.payment_option"
+              :items="['Pay in Full', 'Pay in Installments']"
+              type="string"
+              required
+              :rules="[(v) => !!v || 'Payment Option is required']"
+              variant="outlined"
+            ></v-select>
           </v-col>
 
           <!-- Right Column -->
@@ -258,7 +269,7 @@ onMounted(() => {
               variant="outlined"
             ></v-select>
 
-            <div class="tw-w-full tw-max-w-auto tw-flex tw-pb-8">
+            <div class="tw-w-2/5 tw-max-w-auto tw-flex tw-pb-8">
               <MazPhoneNumberInput
                 label="Phone Number"
                 v-model="formData.phone"
@@ -303,7 +314,7 @@ onMounted(() => {
 
             <div>
               <v-text-field
-                v-if="trip.type === 'domestic'"
+                v-if="trip.type === 'foreign'"
                 label="Preferred Month of Vacation "
                 v-model="formData.vacationDate"
                 type="date"
@@ -324,8 +335,35 @@ onMounted(() => {
                   <i>({{ formData.booked_time_formatted }})</i>
                 </span>
 
-                <span v-else> Select Consultation Date and Time</span>
+                <span v-else>Select Consultation Date and Time</span>
               </label>
+              <ConsultationSchedule
+                v-if="showConsultationSchedule"
+                @close="showConsultationSchedule = false"
+                @submit="setDateTime"
+              />
+              <v-dialog
+                v-model="intendedDateModal"
+                width="85%"
+                max-width="500px"
+              >
+                <v-card class="select-date pa-6">
+                  <v-row no-gutters justify="center">
+                    <v-col cols="12">
+                      <h3 class="text-center mt-5">Select date</h3>
+                      <div class="d-flex justify-center">
+                        <v-date-picker
+                          v-model="form.intended_trip_date"
+                          :allowed-dates="allowedDates"
+                          color="#02aace"
+                          class="mt-4 ma"
+                          @update:model-value="intendedDateModal = false"
+                        ></v-date-picker>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-dialog>
             </div>
           </v-col>
         </v-row>
@@ -360,7 +398,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 /* Modal styles */
 .modal-overlay {
   position: fixed;

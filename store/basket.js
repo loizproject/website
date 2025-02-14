@@ -14,39 +14,36 @@ export const useBasketStore = defineStore({
       const consultationStore = useConsultationStore();
 
       let total = 0;
-      const rate = store.rate;
       const country = store.location.countryName;
-      state.basket.forEach((item) => {
-        if ( country === "Nigeria" )
-        {
-          item.type === "consultation" ?? (total += consultationStore.priceNGN);
-          item.type === "trip" ?? (total += item.ngnPrice * item.qty);
-        } else {
-          item.type === "consultation" ??
-            (total += consultationStore.price * item.qty);
-          item.type === "trip" ?? (total += item.usdPrice * item.qty * rate);
-        }
-      });
-      return total;
-    },
-    getNgnSubTotal(state) {
-      const store = useStore();
-      const consultationStore = useConsultationStore();
 
-      let total = 0;
-      const rate = store.rate;
-      const country = store.location.countryName;
+      // Ensure country is valid
+      if (!country) {
+        console.warn("Country not set in store.location.countryName");
+        return total;
+      }
+
       state.basket.forEach((item) => {
-        if (country === "Nigeria") {
-          item.type
-            ? (total += consultationStore.priceNGN)
-            : item.third_party
-            ? (total += item.price * item.qty * rate)
-            : (total += item.price * item.qty * 0.9 * rate);
-        } else {
-          total += item.price * item.qty;
+        switch (item.type) {
+          case "consultation":
+            if (country === "Nigeria") {
+              total += consultationStore.price_ngn;
+            } else {
+              total += consultationStore.price_usd;
+            }
+            break;
+          case "trip":
+            if (country === "Nigeria") {
+              total += item.ngnPrice * item.qty;
+            } else {
+              total += item.usdPrice * item.qty;
+            }
+            break;
+          default:
+            break;
         }
       });
+
+      console.log(total, "the total amount");
       return total;
     },
   },

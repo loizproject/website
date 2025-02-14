@@ -46,7 +46,11 @@ onMounted(async () => {
     <v-app @scroll="scrollFunction">
       <div>
         <Header @toggleMenu="drawer = !drawer" />
-        <section toggleable="lg" type="dark" class="sub-header d-flex align-center">
+        <section
+          toggleable="lg"
+          type="dark"
+          class="sub-header d-flex align-center"
+        >
           <v-container>
             <nav class="d-flex justify-start justify-md-space-between mx-auto">
               <v-menu
@@ -74,13 +78,19 @@ onMounted(async () => {
                   <v-list-item
                     v-for="item in consultationServices"
                     :key="item.id"
-                    :class="item.subservices && item.subservices.length > 0 ? 'px-0' : ''"
+                    :class="
+                      item.subservices && item.subservices.length > 0
+                        ? 'px-0'
+                        : ''
+                    "
                   >
                     <v-list-item-title>
                       <p
                         class="tw-text-base tw-w-full mb-0"
                         @click="
-                          router.push(`/book-consultation/${useGetSlug(item.text)}`)
+                          router.push(
+                            `/consultations/bookings/${useGetSlug(item.text)}`
+                          )
                         "
                       >
                         {{ item.text }}

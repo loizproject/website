@@ -65,7 +65,9 @@ const filteredCountries = computed(() => {
     return countries.value;
   } else {
     const result = countries.value.filter((country) => {
-      return country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1;
+      return (
+        country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1
+      );
     });
     return result;
   }
@@ -77,7 +79,7 @@ const disclaimerMsg = computed(() => {
       `A fee of ${
         isNigerian.value
           ? `₦${useAmtToString(priceNGN.value)}`
-          : `$${useAmtToString(price.value)/ (rate.value) }`
+          : `$${useAmtToString(price.value) / rate.value}`
       } will be charged for this consultation session. This fee is non-refundable`,
       "Only Paid fees validate the date and Time for consultation session",
       "Consultation session is a one-off and it is for 45 minutes",
@@ -106,7 +108,8 @@ const getForm = () => {
   }
 };
 
-const fetchAvailableDates = async () => await consultationStore.fetchAvailableDates()
+const fetchAvailableDates = async () =>
+  await consultationStore.fetchAvailableDates();
 
 const allowedDates = (val) => {
   const currentDate = new Date();
@@ -119,12 +122,14 @@ const setService = () => {
     (item) => _CamelCase(item.text) === _CamelCase(type.value)
   );
   service.length > 0 ? (form.value.service = service[0]) : "";
-  form.value.service.id === 5 ? (form.value.countryOfInterest = "Nigeria") : null;
+  form.value.service.id === 5
+    ? (form.value.countryOfInterest = "Nigeria")
+    : null;
 };
 
 const changeService = () => {
   const service = form.value.service;
-  router.push(`/book-consultation/${_KebabCase(service.text)}`);
+  router.push(`/consultations/bookings/${_KebabCase(service.text)}`);
 };
 
 const openDisclaimer = async () => {
@@ -138,11 +143,20 @@ const openDisclaimer = async () => {
   ) {
     modal.value = true;
   } else if (!phoneResult.value.isValid) {
-    store.setToast("Please enter a valid phone number.", { icon: "info", type: "info" });
+    store.setToast("Please enter a valid phone number.", {
+      icon: "info",
+      type: "info",
+    });
   } else if (!(form.value.booked_date && form.value.booked_time)) {
-    store.setToast("Please enter a valid date and time.", { icon: "info", type: "info" });
+    store.setToast("Please enter a valid date and time.", {
+      icon: "info",
+      type: "info",
+    });
   } else {
-    store.setToast("Please fill all required fields.", { icon: "info", type: "info" });
+    store.setToast("Please fill all required fields.", {
+      icon: "info",
+      type: "info",
+    });
   }
 };
 
@@ -165,9 +179,9 @@ const convertToUTC = (dateTimeObject) => {
   const utcHours = localDate.getUTCHours();
   const utcMinutes = localDate.getUTCMinutes();
   const utcSeconds = localDate.getUTCSeconds();
-  const utcString = `${utcYear}-${pad(utcMonth)}-${pad(utcDay)}T${pad(utcHours)}:${pad(
-    utcMinutes
-  )}:${pad(utcSeconds)}Z`;
+  const utcString = `${utcYear}-${pad(utcMonth)}-${pad(utcDay)}T${pad(
+    utcHours
+  )}:${pad(utcMinutes)}:${pad(utcSeconds)}Z`;
   dateTimeObject.utcDateTime = utcString;
   return utcString;
 };
@@ -223,7 +237,9 @@ const bookConsultation = async () => {
         submitting.value = false;
         if (res) {
           clearForm();
-          basket.value && basket.value.length > 0 ? router.push("/basket") : null;
+          basket.value && basket.value.length > 0
+            ? router.push("/basket")
+            : null;
         }
       } else {
         store.setToast("Please enter a valid phone number.", {
@@ -249,7 +265,9 @@ onMounted(async () => {
 <template>
   <div>
     <v-form ref="formHtml" lazy-validation @submit.prevent="openDisclaimer">
-      <h2 v-if="form && form.service" class="form-title">{{ form.service.text }}</h2>
+      <h2 v-if="form && form.service" class="form-title">
+        {{ form.service.text }}
+      </h2>
       <v-card v-if="form.service && form.service.text">
         <div class=""></div>
         <v-text-field
@@ -258,7 +276,10 @@ onMounted(async () => {
           variant="outlined"
           label="Title"
           maxlength="10"
-          :rules="[rules.required, (v) => /^[A-Za-z]+$/.test(v) || 'Title must only contain letters',]"
+          :rules="[
+            rules.required,
+            (v) => /^[A-Za-z.]+$/.test(v) || 'Title must only contain letters',
+          ]"
           @change="save"
         ></v-text-field>
         <v-text-field
@@ -267,7 +288,12 @@ onMounted(async () => {
           variant="outlined"
           maxlength="20"
           label="First Name"
-          :rules="[rules.required, rules.text, (v) => /^[A-Za-z]+$/.test(v) || 'Firstname must only contain letters']"
+          :rules="[
+            rules.required,
+            rules.text,
+            (v) =>
+              /^[A-Za-z]+$/.test(v) || 'Firstname must only contain letters',
+          ]"
           @change="save"
         ></v-text-field>
         <v-text-field
@@ -317,7 +343,16 @@ onMounted(async () => {
         <v-select
           v-if="_Includes(form.service.fields, 'age')"
           v-model="form.age"
-         :items="['0-6', '7-12', '13-18', '19-30', '31-40', '41-50','51-65','65+']"
+          :items="[
+            '0-6',
+            '7-12',
+            '13-18',
+            '19-30',
+            '31-40',
+            '41-50',
+            '51-65',
+            '65+',
+          ]"
           type="number"
           variant="outlined"
           label="Age"
@@ -325,7 +360,10 @@ onMounted(async () => {
           @change="save"
         ></v-select>
         <v-select
-          v-if="_Includes(form.service.fields, 'marital status') && subserviceId != 8"
+          v-if="
+            _Includes(form.service.fields, 'marital status') &&
+            subserviceId != 8
+          "
           v-model="form.marital_status"
           :items="['Single', 'Married', 'Divorced', 'Widowed', 'Others']"
           variant="outlined"
@@ -358,7 +396,9 @@ onMounted(async () => {
           @change="save"
         ></v-text-field>
         <v-select
-          v-if="_Includes(form.service.fields, 'desired educational qualification')"
+          v-if="
+            _Includes(form.service.fields, 'desired educational qualification')
+          "
           v-model="form.categry_of_service"
           :items="['First Degree', 'Masters', 'Diploma', 'Short Courses']"
           variant="outlined"
@@ -378,7 +418,7 @@ onMounted(async () => {
             'Work ',
             'Migrant',
             'Migrant Super Special visa',
-            'Visiting visa'
+            'Visiting visa',
           ]"
           variant="outlined"
           label="Visa Type"
@@ -492,8 +532,10 @@ onMounted(async () => {
           </p>
           <v-icon class="ml-2"> mdi-calendar-month </v-icon>
         </div>
-        <div class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer" @click="showConsultationSchedule = true"
-    >
+        <div
+          class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+          @click="showConsultationSchedule = true"
+        >
           <label
             v-if="!form.booked_date"
             style="color: rgba(0, 0, 0, 0.6)"
@@ -502,15 +544,16 @@ onMounted(async () => {
             Select Consultation Date and Time
           </label>
           <p v-else>
-            {{ form.booked_date_formatted }} <i>({{ form.booked_time_formatted }})</i>
+            {{ form.booked_date_formatted }}
+            <i>({{ form.booked_time_formatted }})</i>
           </p>
           <v-icon class="ml-2"> mdi-calendar-month </v-icon>
         </div>
         <div v-if="_Includes(form.service.fields, 'misc')">
           <p class="misc">
-            If there are specific topics or questions you would like to discuss during the
-            consultation, feel free to share them with us in advance, so we can ensure
-            that our session is tailored to your needs.
+            If there are specific topics or questions you would like to discuss
+            during the consultation, feel free to share them with us in advance,
+            so we can ensure that our session is tailored to your needs.
           </p>
           <v-textarea
             v-model="form.misc"
@@ -532,7 +575,11 @@ onMounted(async () => {
         >
           <template v-slot:label>
             <span class="mr-1"> I agree to Loiz Tours and Travels </span>
-            <a target="_blank" :href="`${config.public.APP_URL}/terms`" @click.stop>
+            <a
+              target="_blank"
+              :href="`${config.public.APP_URL}/terms`"
+              @click.stop
+            >
               Terms & Conditions
             </a>
             <span class="mx-1">and</span>
@@ -608,7 +655,7 @@ a.guide-link {
 
 .v-form {
   & .v-card {
-    box-shadow: 0px 10px 55px rgba(0, 0, 0, 0.14);
+    box-shadow: 0px 10px 55px transparent;
     padding: 4%;
     margin: 0 0 40px;
     border-radius: 12px;

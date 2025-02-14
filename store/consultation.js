@@ -4,8 +4,8 @@ import consultationMeta from "~/utils/site-content/consultation-services-meta.js
 export const useConsultationStore = defineStore({
   id: 'consultation',
   state: () => ({
-    price: 60,
-    priceNGN: 30000,
+    price_usd: 60,
+    price_ngn: 30000,
     availableDates: {},
     services: consultationMeta,
   }),

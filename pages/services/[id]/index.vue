@@ -79,7 +79,7 @@ useSeoMeta({
           type="submit"
           class="submit"
           elevation="0"
-          @click="$router.push(`/book-consultation/${service.slug}`)"
+          @click="$router.push(`/consultations/bookings/${service.slug}`)"
         >
           Book Consultation
         </v-btn>

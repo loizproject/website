@@ -41,7 +41,9 @@ const setService = () => {
 };
 
 const openConsultationForm = () => {
-  router.push(`/book-consultation/visa-services?subservice_id=${props.subservice?.id}`);
+  router.push(
+    `/consultations/bookings/visa-services?subservice_id=${props.subservice?.id}`
+  );
 };
 
 const addToBasket = async () => {
@@ -119,9 +121,12 @@ const goToCheckout = async () => {
             {{ item }}
           </li>
         </ul>
-        <p v-if="service && service.extra_features">{{ service.extra_features }}</p>
+        <p v-if="service && service.extra_features">
+          {{ service.extra_features }}
+        </p>
         <p v-if="service && service.price">
-          This visa costs <span class="active">${{ service.price }} per applicant</span>
+          This visa costs
+          <span class="active">${{ service.price }} per applicant</span>
         </p>
         <!-- <h3 class="mt-6">Purchase Service</h3>
         <v-row class="mt-2 mb-6">

@@ -10,8 +10,7 @@ const toggleDropdown = (state) => {
   installment.value = state;
 };
 
-
-const activeInstallment= ref(null)
+const activeInstallment = ref(null);
 
 const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
 const route = useRoute();
@@ -27,136 +26,72 @@ const showConsultationSchedule = ref(false);
 const updatingService = ref(null);
 
 const services = computed(() => contentStore.services);
-const consultationPrice = computed(() => consultationStore.price);
-const consultationPriceNGN = computed(() => consultationStore.priceNGN);
+const consultationPrice = computed(() => consultationStore.price_usd);
+const consultationPriceNGN = computed(() => consultationStore.price_ngn);
 const availableDates = computed(() => consultationStore.availableDates);
 const rate = computed(() => store.rate);
 
-const basket = computed(() => basketStore.basket  );
+const basket = computed(() => basketStore.basket);
 
-const basketRef = ref({})
+const basketRef = ref({});
 
 watch(basket, async (newBasket, oldBasket) => {
   if (newBasket) {
     const res = basketStore.basket.map((item) => {
-    switch (item.type) {
-      case "consultation":
-        return item;
+      switch (item.type) {
+        case "consultation":
+          return {
+            price: isNigerian.value
+              ? consultationPriceNGN.value
+              : consultationPrice.value,
+            ...item
+          }
 
-      case "trip":
-        return {
-          paymentOption:
-            item.type === "trip" && { type: "", firstTranch: "", period: "" }, 
-            
-            installments:{
+        case "trip":
+          return {
+            paymentOption: item.type === "trip" && {
+              type: "",
+              firstTranch: "",
+              period: "",
+            },
+
+            installments: {
               first: {
-                price: isNigerian.value ? item.installments.ngn.first : item.installments.usd.first,
-                isSelected: false
+                price: isNigerian.value
+                  ? item.installments.ngn.first
+                  : item.installments.usd.first,
+                isSelected: false,
               },
               second: {
-                price: isNigerian.value ? item.installments.ngn.second : item.installments.usd.second,
-              isSelected: false}
+                price: isNigerian.value
+                  ? item.installments.ngn.second
+                  : item.installments.usd.second,
+                isSelected: false,
+              },
             },
-          ...item,
-        };
+            ...item,
+          };
 
-      default:
-        item.parentService = contentStore.getSubservicesById(
-          item.options.subservice_id
-        );
-    }
-    // items.value.push()
-    // return item;
-  })
-  basketRef.value = res
+        default:
+          item.parentService = contentStore.getSubservicesById(
+            item.options.subservice_id
+          );
+      }
+      // items.value.push()
+      // return item;
+    });
+    basketRef.value = res;
   }
-})
+});
 
-
-// const basket = computed(() => 
-//   basketStore.basket.map((item) => {
-//     switch (item.type) {
-//       case "consultation":
-        
-//         return item;
-
-//       case "trip":
-//         const hasInstallments = item.paymentOption && item.paymentOption.type === "installments";
-        
-//         const paymentDetails = hasInstallments
-//           ? {
-//               paymentOption: item.paymentOption,
-//               installments: {
-//                 first: {
-//                   price: item.paymentOption.firstTranch,
-//                   isSelected: false,
-//                 },
-//                 second: {
-//                   price: item.price - item.paymentOption.firstTranch,
-//                   isSelected: false,
-//                 }
-//               }
-//             }
-//           : {
-//               paymentOption: item.paymentOption || { type: "onetime" },
-//               installments: null 
-//             };
-        
-//         return {
-//           ...item,  
-//           ...paymentDetails 
-//         };
-
-//       default:
-        
-//         const parentService = item.options && item.options.subservice_id 
-//           ? contentStore.getSubservicesById(item.options.subservice_id) 
-//           : null;
-
-//         return {
-//           ...item,
-//           parentService: parentService
-//         };
-//     }
-//   })
-// );
-
-
-// const transformedBasket = ref([]);
-
-// watchEffect(() => {
-//   transformedBasket.value = basketStore.basket.map((item) => {
-//     const paymentPlan = item.type === 'trip' ? { type: '', initialamount: '' } : 'onetime';
-
-//     if (item.type !== 'consultation' && item.type !== 'trip') {
-//       item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
-//     }
-
-//     return { ...item, paymentPlan };
-//   });
-// });
-
-// const basket = computed(() => {
-//   return basketStore.basket.map((item) => {
-//     // Initialize paymentPlan based on the type of item
-//     const paymentPlan = item.type === 'trip' ? { type: '', initialamount: '' } : 'onetime';
-
-//     // Handle each item type, add parentService if applicable
-//     if (item.type !== 'consultation' && item.type !== 'trip') {
-//       item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
-//     }
-
-//     // Return a new object with added paymentPlan and other properties
-//     return {
-//       ...item,
-//       paymentPlan,
-//     };
-//   });
-// });
+function formatCurrency(currency, amount, locale = "en-NG") {
+  return new Intl.NumberFormat(locale, { style: "currency", currency }).format(
+    amount
+  );
+}
 
 const isNigerian = computed(() => store.location.countryCode === "NG");
 const totalPrice = computed(() => basketStore.getSubTotal);
-const totalPriceNgn = computed(() => basketStore.getNgnSubTotal);
 const paths = computed(() => route.path.split("/"));
 
 function consultationExpired(consltn) {
@@ -194,7 +129,6 @@ const expiredConsultationInBasket = computed(() => {
   });
   return resp.includes(true);
 });
-console.log( expiredConsultationInBasket );
 
 async function removeItem(item) {
   await basketStore.removeFromBasket(item);
@@ -241,7 +175,6 @@ async function updateConsultationDetails(args) {
     useErrorHandler(error);
   }
 }
-
 
 function formatDate(date) {
   if (!date) return null;
@@ -433,19 +366,37 @@ useSeoMeta({
                       </div>
 
                       <div class="prices tw-flex tw-flex-col tw-gap-6">
-                        <div class="tw-w-full tw-flex tw-justify-between tw-items-center" @click="item.installments.isSelected = true">
+                        <div
+                          class="tw-w-full tw-flex tw-justify-between tw-items-center"
+                          @click="item.installments.isSelected = true"
+                        >
                           <div class="tw-flex tw-flex-col">
                             <p class="tw-font-bold tw-text-lg">
-                              {{item.installments.first?.price}} first, then {{ item.installments.second?.price }} 
+                              {{ item.installments.first?.price }} first, then
+                              {{ item.installments.second?.price }}
                             </p>
-                            
-                            <p class="tw-font-light tw-text-[#404040] tw-text-lg">
+
+                            <p
+                              class="tw-font-light tw-text-[#404040] tw-text-lg"
+                            >
                               Over the first month
                             </p>
                           </div>
-                          <div :class="item.installments.first.isSelected ? 'tw-bg-green-500 tw-border-green-500' : ''" @click="() =>{item.installments.first.isSelected=true ; item.installments.second.isSelected=false}" class="tw-w-7 tw-h-7 tw-border tw-border-zinc-600 tw-rounded-full"></div>
+                          <div
+                            :class="
+                              item.installments.first.isSelected
+                                ? 'tw-bg-green-500 tw-border-green-500'
+                                : ''
+                            "
+                            @click="
+                              () => {
+                                item.installments.first.isSelected = true;
+                                item.installments.second.isSelected = false;
+                              }
+                            "
+                            class="tw-w-7 tw-h-7 tw-border tw-border-zinc-600 tw-rounded-full"
+                          ></div>
                         </div>
-
                       </div>
 
                       <div class="horizontal-line"></div>
@@ -453,7 +404,8 @@ useSeoMeta({
                       <p class="tw-font-light tw-text-lg">
                         Payment plans cover only the transportation cost
                         (BaseFare+Taxes+Fees) any additional cost will be
-                        charged separately when your booking is confirmed. Note fees aren't refunded.
+                        charged separately when your booking is confirmed. Note
+                        fees aren't refunded.
                       </p>
 
                       <div
@@ -466,7 +418,6 @@ useSeoMeta({
                         </div>
                         <div
                           class="tw-border-2 tw-border-pink-300 tw-rounded-2xl tw-p-2"
-
                         >
                           <button>Save</button>
                         </div>
@@ -533,10 +484,10 @@ useSeoMeta({
                   <span v-if="lgAndUp"> Change Date/Time </span>
                 </v-btn>
                 <p v-if="isNigerian" class="d-none d-md-block ml-2">
-                  ₦{{ useAmtToString(consultationPriceNGN) }}
+                  {{ formatCurrency("NGN", consultationPriceNGN) }}
                 </p>
                 <p v-else class="d-none d-md-block ml-2">
-                  ${{ consultationPrice }}
+                  {{ formatCurrency("USD", consultationPrice, "en-US") }}
                 </p>
               </div>
               <div
@@ -553,10 +504,10 @@ useSeoMeta({
 
                   <div class="d-flex justify-space-between">
                     <p v-if="isNigerian" class="details__price mr-2 d-md-none">
-                      ₦{{ useAmtToString(consultationPriceNGN) }}
+                      {{ formatCurrency('NGN',consultationPriceNGN) }}
                     </p>
                     <p v-else class="details__price mr-2 d-md-none">
-                      ${{ item.price * item.qty }}
+                      {{ formatCurrency('USD', item.price * item.qty, 'en-US') }}
                     </p>
                     <button
                       class="clear-basket d-flex align-center"
@@ -580,7 +531,7 @@ useSeoMeta({
               <p>Subtotal</p>
               <p class="summary__price">
                 <span v-if="isNigerian">
-                  <b>₦{{ useAmtToString(totalPriceNgn) }}</b>
+                  <b>₦{{ useAmtToString(totalPrice) }}</b>
                 </span>
                 <span v-else> ${{ useAmtToString(totalPrice) }} </span>
               </p>
