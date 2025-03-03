@@ -17,8 +17,8 @@ const router = useRouter();
 const config = useRuntimeConfig();
 
 const countries = computed(() => contentStore.countries);
-const price = computed(() => consultationStore.price);
-const priceNGN = computed(() => consultationStore.priceNGN);
+const price = computed(() => consultationStore.price_usd);
+const priceNGN = computed(() => consultationStore.price_ngn);
 const availableDates = computed(() => consultationStore.availableDates);
 const basket = computed(() => basketStore.basket);
 const rate = computed(() => store.rate);
@@ -79,7 +79,7 @@ const disclaimerMsg = computed(() => {
       `A fee of ${
         isNigerian.value
           ? `₦${useAmtToString(priceNGN.value)}`
-          : `$${useAmtToString(price.value) / rate.value}`
+          : `$${useAmtToString(price.value)}`
       } will be charged for this consultation session. This fee is non-refundable`,
       "Only Paid fees validate the date and Time for consultation session",
       "Consultation session is a one-off and it is for 45 minutes",
@@ -162,7 +162,6 @@ const openDisclaimer = async () => {
 
 const setDateTime = (args) => {
   form.value.booked_date = args.date;
-  form.value.booked_date_formatted = args.formattedDate;
   form.value.booked_time = args.time;
   form.value.booked_time_formatted = args.formattedTime;
   form.value.date_time = convertToUTC(form.value);
@@ -185,6 +184,7 @@ const convertToUTC = (dateTimeObject) => {
   dateTimeObject.utcDateTime = utcString;
   return utcString;
 };
+
 
 const pad = (value) => {
   return value < 10 ? `0${value}` : value;
@@ -230,7 +230,29 @@ const bookConsultation = async () => {
           type: "consultation",
           attributes: {
             id: ulid(),
-            requestDetails: form.value,
+            requestDetails: {
+              service: {
+                id: form.value.service.id,
+                name: form.value.service.text,
+                subservice: form.value.subservice
+              },
+              options: {
+                customer: {
+                  title: form.value.title,
+                  first_name: form.value.fName,
+                  middle_name: form.value.mName,
+                  last_name: form.value.lName,
+                  phone_number: phoneResult.value.number,
+                  email: user.value.email,
+                  nationality: location.value,
+                },
+                country_of_interest: form.value.countryOfInterest,
+                booked_date: form.value.booked_date,
+                booked_time: form.value.booked_time,
+                visa_type: form.value.visaType,
+                enquiry: form.value.misc
+              }
+            },
           },
         };
         const res = await basketStore.addToBasket(data);
@@ -544,7 +566,7 @@ onMounted(async () => {
             Select Consultation Date and Time
           </label>
           <p v-else>
-            {{ form.booked_date_formatted }}
+            {{ form.booked_date }}
             <i>({{ form.booked_time_formatted }})</i>
           </p>
           <v-icon class="ml-2"> mdi-calendar-month </v-icon>

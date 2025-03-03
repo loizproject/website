@@ -43,7 +43,6 @@ export const useBasketStore = defineStore({
         }
       });
 
-      console.log(total, "the total amount");
       return total;
     },
   },

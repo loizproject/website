@@ -91,11 +91,11 @@ const itinerary = computed(() => {
         </div>
 
         <div class="tw-mt-8">
-          <img
+          <!-- <img
             :src="intro.url"
             alt=""
             class="tw-rounded-md tw-w-[100%] tw-mx-auto"
-          />
+          /> -->
         </div>
 
         <div class="tw-flex tw-items-center tw-justify-center tw-mt-4">
@@ -162,7 +162,7 @@ const itinerary = computed(() => {
         </div>
 
         <div class="tw-mt-8">
-          <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full" />
+          <!-- <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full" /> -->
         </div>
 
         <div class="tw-flex tw-flex-col tw-mt-8">

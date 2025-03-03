@@ -8,7 +8,9 @@ export const useStore = defineStore({
     likeWatchVideo: false,
     authToken: null,
     toast: false,
+    alert: false,
     toastMeta: {},
+    alertMeta: {},
     rate: 900,
     location: {
       countryName: "",
@@ -47,6 +49,20 @@ export const useStore = defineStore({
         payload && payload.duration ? payload.duration : 5000
       );
     },
+    setAlert(text, payload) {
+      this.alertMeta = {
+        title: text,
+        type: payload.type || "info",
+        closable: payload.closable || false,
+      };
+      this.alert = true;
+      setTimeout(
+        () => {
+          this.alert = false;
+        },
+        payload && payload.duration ? payload.duration : 5000
+      );
+    },
     async fetchRates() {
       try {
         const res = await useAxiosFetch("/rates");
@@ -81,9 +97,7 @@ export const useStore = defineStore({
           console.log(country, "country information and response");
           this.location.countryName = country.name;
           this.location.countryCode = res.data.data.location.countryCode;
-        }
-        else
-        {
+        } else {
           this.location = res.data.data.location;
         }
       } catch (error) {

@@ -91,35 +91,62 @@ const submitForm = async () => {
     usd: {
       first: props.trip.installments.usd.first,
       second: props.trip.installments.usd.second,
-    }
-  }
+    },
+  };
 
   if (valid) {
-    const reqData = {
-      qty: 1,
-      price: props.trip?.ngnPrice,
-      type: "trip",
-      attributes: {
-        id: ulid(),
-        requestDetails: {
-          customer,
-          country,
-          vacationDate,
-          trip: {
-            id: props.trip.id,
-            title: props.trip.title,
-            type: props.trip.type,
-            payment_option: formData.value.payment_option === "Pay in Full" ? "onetime" : "installments",
-            installmentOptions: props.trip.type === "foreign" && formData.value.payment_option === "" ? installmentOptions.usd : installmentOptions.ngn,
+    const reqData =
+      props.trip.type === "foreign"
+        ? {
+            qty: 1,
+            price: props.trip?.ngnPrice,
+            type: "trip",
+            attributes: {
+              id: ulid(),
+              requestDetails: {
+                customer: { ...customer, country },
+                trip: {
+                  title: props.trip.title,
+                  trip_type: "foreign",
+                  expected_trip_month: "",
+                  payment_type:
+                    formData.value.payment_option === "Pay in Full"
+                      ? "onetime"
+                      : "installments",
+                  selected_consultation_date: formData.value.booked_date,
+                  selected_consultation_time: formData.value.booked_time,
+                  destination: props.trip.locations[0].country,
+                },
+              },
             },
-          },
-        },
-      }
-      basketStore.addToBasket(reqData);
-    };
-
-    router.push("/basket");
-  };
+          }
+        : {
+            qty: 1,
+            price: props.trip?.ngnPrice,
+            type: "trip",
+            attributes: {
+              id: ulid(),
+              requestDetails: {
+                customer: {...customer, 
+                  country
+                },
+                trip: {
+                  title: props.trip.title,
+                  trip_type: props.trip.type,
+                  expected_trip_month: "",
+                  payment_type:
+                    formData.value.payment_option === "Pay in Full"
+                      ? "onetime"
+                      : "installments"
+                },
+              },
+            },
+        };
+    console.log( reqData );
+    basketStore.addToBasket(reqData);
+  }
+  router.push("/basket");
+};
 
 // Props to control modal visibility
 const props = defineProps({
@@ -143,7 +170,7 @@ onMounted(() => {
 <template>
   <div v-if="isModalOpen" class="modal-overlay" @click="closeModal"></div>
 
-  <div v-if="isModalOpen" class="modal modal-content">
+  <div v-if="isModalOpen" class="modal modal-content tw-md:w-5/6 tw-w-5/6">
     <div class="tw-rounded-lg tw-max-h-screen">
       <div
         class="tw-bg-[#131313] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center"
@@ -164,7 +191,7 @@ onMounted(() => {
         ref="formHtml"
         @submit.prevent="submitForm"
         lazy-validation
-        class="tw-p-10 tw-overflow-y-auto tw-h-[50vh] md:tw-h-[50vh]"
+        class="tw-p-10 tw-overflow-y-auto tw-h-[80vh] md:tw-h-[50vh] tw-w-full"
       >
         <p>Please fill out the form</p>
 
@@ -237,15 +264,15 @@ onMounted(() => {
               variant="outlined"
             ></v-text-field>
 
-            <v-select
-              label="Payment Option"
-              v-model="formData.payment_option"
-              :items="['Pay in Full', 'Pay in Installments']"
-              type="string"
-              required
-              :rules="[(v) => !!v || 'Payment Option is required']"
-              variant="outlined"
-            ></v-select>
+            <!-- <v-file-upload
+            label="International Data Page"
+            accept=".pdf"
+            :rules="[(v) =>!!v || 'Please upload your International Data Page']"
+            required
+            variant="outlined"
+            @change="uploadFile"
+            v-if='props.trip.type === "foreign"'
+            ></v-file-upload> -->
           </v-col>
 
           <!-- Right Column -->
@@ -367,6 +394,17 @@ onMounted(() => {
             </div>
           </v-col>
         </v-row>
+        <v-row>
+          <v-select
+            label="Payment Option"
+            v-model="formData.payment_option"
+            :items="['Pay in Full', 'Pay in Installments']"
+            type="string"
+            required
+            :rules="[(v) => !!v || 'Payment Option is required']"
+            variant="outlined"
+          ></v-select>
+        </v-row>
 
         <!-- Form actions -->
         <v-row class="d-flex justify-end">
@@ -436,7 +474,6 @@ onMounted(() => {
   background: white;
   border-radius: 8px;
   z-index: 20;
-  width: 65%;
   max-height: 90vh;
   max-width: auto;
   overflow: hidden;
