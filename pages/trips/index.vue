@@ -1,10 +1,11 @@
 <script setup>
+import slides from "~/utils/site-content/sliderData.json";
 //Script for the cnpards
 import { ref, onMounted } from "vue";
 import { formatDate } from "~/utils/lib";
 
 const sliderTrips = computed(() => {
-  return trips.value.filter((item) => item.banner_url);
+  return slides.filter((item) => item.image);
 });
 
 const fetchCardData = async () => {
@@ -18,8 +19,8 @@ const fetchCardData = async () => {
 onMounted(fetchCardData);
 
 // Fetch the data
-const { data: apires } = await useAxiosFetch("/trips");
-const trips = ref(apires.data.trips || []); // This makes the function trips reactive
+const res = await useAxiosFetch("/trips");
+const trips = ref(res.data.data.trips || []); // This makes the function trips reactive
 // Search query
 const search = ref("");
 // Toggle for future or past trips (true = future, false = past)
@@ -67,7 +68,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
 <template>
   <main>
     <div>
-      <Slider :sliderTrips="sliderTrips" />
+      <Slider :sliderTrips="slides" />
     </div>
 
     <section
@@ -127,11 +128,11 @@ const banner = (images) => images.find((image) => image.type === "banner");
             class="card"
           >
             <div class="image-hover-effect">
-              <img
+              <!-- <img
                 :src="banner(card.images).url"
                 :alt="card.title"
                 class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
-              />
+              /> -->
             </div>
             <div class="tw-flex tw-justify-between tw-items-center">
               <h4

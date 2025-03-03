@@ -1,8 +1,8 @@
-@ -1,145 +0,0 @@
 <script setup>
 import { useConsultationStore } from "~/store/consultation";
 
 const route = useRoute();
+const router = useRouter();
 const rules = useFormRules;
 const consultationStore = useConsultationStore();
 
@@ -56,12 +56,13 @@ async function submit() {
       message.value = {
         title: "Consultation Rescheduled Succesfully",
         text:
-          "Your consultation session has been rescheduled sucessfully! Redirecting in 5seconds...",
+          "Your consultation session has been rescheduled sucessfully! Redirecting in 5 seconds...",
       };
       modal.value = true;
       submitting.value = false;
       setTimeout(() => {
-        router.push("/");
+        modal.value = false;
+        router.push(`/`);
       }, 5000);
     } catch (error) {
       submitting.value = false;
@@ -124,7 +125,7 @@ definePageMeta({
         </div>
       </v-form>
     </div>
-    <SuccessModal v-if="modal" @close="modal = !modal" :message="message" login />
+    <InfoModal v-if="modal" @close="modal = !modal" :message="message" :loading="submitting" />
   </section>
 </template>
 

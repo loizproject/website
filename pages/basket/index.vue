@@ -41,13 +41,13 @@ function consultationExpired(consltn) {
   const dates = availableDates.value;
   const date = consltn.options.booked_date;
   const time = consltn.options.booked_time;
-  const inputDate = new Date(date).getTime();
-  const inputDateTimeString = date + "T" + time; 
-  const inputDateTime = new Date(inputDateTimeString);
+  const inputDateTime = new Date( date );
+  const [ hours, minutes ] = time.split( ":" );
+  inputDateTime.setHours(hours);
+  inputDateTime.setMinutes( minutes );
   const currentDate = new Date();
   const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); 
   const datePast = inputDateTime < next24Hours;
-
   let obj = {
     times: [],
   };

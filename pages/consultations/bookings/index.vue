@@ -6,8 +6,8 @@ const router = useRouter();
 const store = useStore();
 const consultationStore = useConsultationStore();
 
-const priceNGN = computed(() => consultationStore.priceNGN);
-const price = computed(() => consultationStore.price);
+const priceNGN = computed(() => consultationStore.price_ngn);
+const price = computed(() => consultationStore.price_usd);
 const isNigerian = computed(() => store.location.countryCode === "NG");
 
 const form = ref({});
@@ -29,7 +29,7 @@ const meta = {
   description:
     "Whether you're planning your next adventure or seeking assistance with visa services, flights, or tours, trust Loiz Tours & Travels to make your travel experience unforgettable. Join us on our journey as we redefine the standards of excellence in the travel industry. Discover the world with Loiz Tours & Travels – Where Every Journey Begins with Excellence!",
   image:
-    "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
+    "https://res.cloudinary.com/loiztours/image/upload/v1684709026/site-media/img/atikh-bana.png",
   keywords:
     "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in nigeria",
 };

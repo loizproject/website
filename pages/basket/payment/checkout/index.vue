@@ -60,14 +60,17 @@ const errorMsg = ref({
 
 const basket = computed(() => {
   const bas = basketStore.basket;
-  const price = isNigerian ? consultationPriceNGN.value : consultationPrice.value;
+  const price = isNigerian
+    ? consultationPriceNGN.value
+    : consultationPrice.value;
   bas.forEach((item) => {
-    item.type !== 'consultation'
+    item.type !== "consultation"
       ? (item.parentService = contentStore.getSubservicesById(
           item.options.subservice_id
         ))
       : "";
-       item.price = item.type === 'consultation' ? price : item.parentService.price;
+    item.price =
+      item.type === "consultation" ? price : item.parentService.price;
   });
   return bas;
 });
@@ -161,16 +164,24 @@ async function payWithPaystack(e) {
       amount: config.public.APP_ENV === "uat" ? 10000 : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
-        msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
-        success.value = true;
-        await basketStore.clearBasket();
-        await useAxiosPost(
+        // a loadin spinner here while the payment is being confirmed
+        store.setAlert("Verifying Transaction. Please wait...", {
+          type: "info",
+          duration: 4000,
+        });
+        // verify the transaction on the server
+        const res = await useAxiosPost(
           `/orders/paystack/payments/${transaction.reference}/verify`,
           {
             status: "success",
           }
         );
-        await consultationStore.fetchAvailableDates();
+        if (res.status === 200) {
+          await basketStore.clearBasket();
+          await consultationStore.fetchAvailableDates();
+          msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
+          success.value = true;
+        }
       },
       onClose: async () => {
         errorMsg.value.info = `LTT Transaction Reference: ${newTrx.reference}`;
