@@ -35,6 +35,8 @@ const basket = computed(() => basketStore.basket);
 
 const basketRef = ref({});
 
+// Add Travel Health Insurrance of NGN50k
+
 watch(basket, async (newBasket, oldBasket) => {
   if (newBasket) {
     const res = basketStore.basket.map((item) => {
