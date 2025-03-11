@@ -23,6 +23,7 @@ const router = useRouter();
 const formHtml = ref(null);
 const success = ref(false);
 const error = ref(false);
+const infoStatus = ref(false);
 const searchTerm = ref(null);
 const phoneResult = ref(null);
 const mazPhoneKey = ref(1);
@@ -52,21 +53,26 @@ const form = ref({
 
 const msg = ref({
   title: "Payment made succesfully!",
-  text:
-    "Thank you for your payment! Your transaction has been successfully processed. If you have any questions or require further assistance, please don't hesitate to reach out to us via the contact page. We'll be happy to help.",
+  text: "Thank you for your payment! Your transaction has been successfully processed. If you have any questions or require further assistance, please don't hesitate to reach out to us via the contact page. We'll be happy to help.",
+});
+
+const info = ref({
+  title: "Your payment is being processed!",
+  text: "Thank you for your payment! Your transaction is being processed. Please standby...",
 });
 
 const errorMsg = ref({
   title: "An error occoured.",
-  text:
-    "Unfortunately, we were unable to process your payment at this time. Please double-check the payment information you provided and ensure that there are sufficient funds available. If the issue persists, you can contact our customer support for assistance. We apologize for any inconvenience this may have caused.",
+  text: "Unfortunately, we were unable to process your payment at this time. Please double-check the payment information you provided and ensure that there are sufficient funds available. If the issue persists, you can contact our customer support for assistance. We apologize for any inconvenience this may have caused.",
 });
 
 const basket = computed(() => {
   const bas = basketStore.basket;
   bas.forEach((item) => {
     !item.consultation
-      ? (item.parentService = contentStore.getSubservicesById(item.options.subservice_id))
+      ? (item.parentService = contentStore.getSubservicesById(
+          item.options.subservice_id
+        ))
       : "";
   });
   return bas;
@@ -77,7 +83,9 @@ const filteredCountries = computed(() => {
     return countries;
   } else {
     return countries.filter((country) => {
-      return country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1;
+      return (
+        country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1
+      );
     });
   }
 });
@@ -120,11 +128,14 @@ function generateREF() {
   if (window.performance && typeof window.performance.now === "function") {
     d += performance.now();
   }
-  let ref = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    let r = (d + Math.random() * 16) % 16 | 0;
-    d = Math.floor(d / 16);
-    return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-  });
+  let ref = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      let r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+    }
+  );
   return ref;
 }
 
@@ -152,13 +163,26 @@ async function payWithPaystack(e) {
       amount: config.public.APP_ENV === "uat" ? 10000 : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
-        msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
-        success.value = true;
-        await basketStore.clearBasket();
-        await useAxiosPost(`/orders/paystack/payments/${transaction.reference}/verify`, {
-          status: "success",
+        // display a loading indicator to the user
+        info.value.info = `Processing Transaction. Please wait...`;
+        infoStatus.value = true;
+        store.setToast("Processing Transaction. Please wait...", {
+          type: "info",
+          duration: 1500,
         });
-        await consultationStore.fetchAvailableDates();
+        const res = await useAxiosPost(
+          `/orders/paystack/payments/${transaction.reference}/verify`,
+          {
+            status: "success",
+          }
+        );
+        if (res.status === 200) {
+          infoStatus.value = false;
+          msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
+          success.value = true;
+          await consultationStore.fetchAvailableDates();
+          await basketStore.clearBasket();
+        }
       },
       onClose: async () => {
         errorMsg.value.info = `LTT Transaction Reference: ${newTrx.reference}`;
@@ -208,12 +232,15 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        await useAxiosPost(`/orders/flutterwave/payments/${payment.tx_ref}/verify`, {
-          status: "success",
-          payment_id: payment.transaction_id
-        });
-        await basketStore.clearBasket();
-        await consultationStore.fetchAvailableDates();
+        await useAxiosPost(
+          `/orders/flutterwave/payments/${payment.tx_ref}/verify`,
+          {
+            status: "success",
+            payment_id: payment.transaction_id,
+          }
+        );
+        // await basketStore.clearBasket();
+        // await consultationStore.fetchAvailableDates();
       },
       onclose: async function (incomplete) {
         if (incomplete) {
@@ -232,7 +259,8 @@ async function initPayPal() {
   if (
     !(
       isNigerian.value &&
-      (config.public.APP_ENV === "uat" || config.public.APP_ENV === "production")
+      (config.public.APP_ENV === "uat" ||
+        config.public.APP_ENV === "production")
     )
   ) {
     try {
@@ -293,7 +321,8 @@ async function payWithPayPal(paypal) {
                 orderData,
                 JSON.stringify(orderData, null, 2)
               );
-              const transaction = orderData.purchase_units[0].payments.captures[0];
+              const transaction =
+                orderData.purchase_units[0].payments.captures[0];
               msg.value.info = `LTT Transaction ${transaction.status}: ${transaction.id}.`;
               success.value = true;
               await basketStore.clearBasket();
@@ -468,6 +497,7 @@ useHead({
         </v-row>
       </div>
     </v-container>
+    <InfoModal v-if="infoStatus" :message="info" @close="infoStatus = false" />
     <SuccessModal v-if="success" :message="msg" @close="handleSuccessClose" />
     <FailureModal v-if="error" :message="errorMsg" @close="error = false" />
   </div>

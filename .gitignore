@@ -27,3 +27,4 @@ logs
 # Application  Updates
 .staging.rc
 .uat.rc
+.qodo
