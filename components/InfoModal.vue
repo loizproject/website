@@ -3,14 +3,6 @@ const props = defineProps({
   message: {
     type: Object,
     default: () => {},
-  },
-  resendMail: {
-    type: Boolean,
-    default: false,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
   }
 });
 const emit = defineEmits(["close", "submit"]);
@@ -34,15 +26,10 @@ const modal = ref(true);
         class="success-info d-flex align-center justify-space-between my-2 py-5 px-5 mx-n12 w-full"
       >
         <span>{{ message.info }}</span>
-        <v-icon class="ml-3" @click="useCopyText(message.info)">mdi-content-copy</v-icon>
+        <!-- <v-icon class="ml-3" @click="useCopyText(message.info)">mdi-content-copy</v-icon> -->
       </p>
       <p class="py-4">
         {{ message.text }}
-      </p>
-      <p v-if="loading" class="">
-        <span class="resend-email ml-2">
-          <v-progress-circular indeterminate color="#C40977" />
-        </span>
       </p>
     </v-card>
   </v-dialog>
@@ -59,13 +46,7 @@ const modal = ref(true);
   }
   .icon {
     font-size: 60px;
-    color: red;
-  }
-  .info{
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
-    color: lightblue;
+    color: gray;
   }
   p {
     font-size: 0.85rem;
@@ -81,7 +62,7 @@ const modal = ref(true);
   }
   .success-info {
     width: 100%;
-    background-color: #fab0ae;
+    background-color: lightblue;
     color: #000;
     font-weight: 500;
     border-radius: 6px;

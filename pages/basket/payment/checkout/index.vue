@@ -23,6 +23,7 @@ const router = useRouter();
 const formHtml = ref(null);
 const success = ref(false);
 const error = ref(false);
+const infoStatus = ref(false);
 const searchTerm = ref(null);
 const phoneResult = ref(null);
 const mazPhoneKey = ref(1);
@@ -51,6 +52,11 @@ const form = ref({
 const msg = ref({
   title: "Payment made succesfully!",
   text: "Thank you for your payment! Your transaction has been successfully processed. If you have any questions or require further assistance, please don't hesitate to reach out to us via the contact page. We'll be happy to help.",
+});
+
+const info = ref({
+  title: "Your payment is being processed!",
+  text: "Thank you for your payment! Your transaction is being processed. Please standby...",
 });
 
 const errorMsg = ref({
@@ -164,12 +170,7 @@ async function payWithPaystack(e) {
       amount: config.public.APP_ENV === "uat" ? 10000 : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
-        // a loadin spinner here while the payment is being confirmed
-        store.setAlert("Verifying Transaction. Please wait...", {
-          type: "info",
-          duration: 4000,
-        });
-        // verify the transaction on the server
+        // display a loading indicator to the user
         const res = await useAxiosPost(
           `/orders/paystack/payments/${transaction.reference}/verify`,
           {
@@ -177,10 +178,11 @@ async function payWithPaystack(e) {
           }
         );
         if (res.status === 200) {
-          await basketStore.clearBasket();
-          await consultationStore.fetchAvailableDates();
+          infoStatus.value = false;
           msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
           success.value = true;
+          await consultationStore.fetchAvailableDates();
+          await basketStore.clearBasket();
         }
       },
       onClose: async () => {
@@ -500,6 +502,7 @@ useHead({
         </v-row>
       </div>
     </v-container>
+    <InfoModal v-if="infoStatus" :message="info" @close="infoStatus = false" />
     <SuccessModal v-if="success" :message="msg" @close="handleSuccessClose" />
     <FailureModal v-if="error" :message="errorMsg" @close="error = false" />
   </div>
