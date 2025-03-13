@@ -3,14 +3,6 @@ const props = defineProps({
   message: {
     type: Object,
     default: () => {},
-  },
-  resendMail: {
-    type: Boolean,
-    default: false,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
   }
 });
 const emit = defineEmits(["close", "submit"]);
@@ -38,11 +30,6 @@ const modal = ref(true);
       </p>
       <p class="py-4">
         {{ message.text }}
-      </p>
-      <p v-if="loading" class="">
-        <span class="resend-email ml-2">
-          <v-progress-circular indeterminate color="#C40977" />
-        </span>
       </p>
     </v-card>
   </v-dialog>

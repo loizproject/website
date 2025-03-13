@@ -33,6 +33,7 @@ const contentStore = useContentStore();
 const countries = computed(() => contentStore.countries);
 const hello = countries.value;
 const isNigerian = computed(() => store.location.countryCode === "NG");
+const file = ref(null);
 
 const showConsultationSchedule = ref(false);
 const setDateTime = (args) => {
@@ -88,12 +89,12 @@ const submitForm = async () => {
 
   if ( formData.value.payment_option === "Pay in Full" )
   {
-    price = isNigerian.value ? props.trip?.ngn_price : props.trip?.usd_price
-    payment_type = "onetime"
-  }
-  else
-  {
-    price = isNigerian.value ? props.trip?.installments.ngn.first : props.trip?.installments.usd.first;
+    price = isNigerian.value ? props.trip?.ngn_price : props.trip?.usd_price;
+    payment_type = "onetime";
+  } else {
+    price = isNigerian.value
+      ? props.trip?.installments.ngn.first
+      : props.trip?.installments.usd.first;
     payment_type = "installments";
   }
 
@@ -127,23 +128,49 @@ const submitForm = async () => {
             attributes: {
               id: ulid(),
               requestDetails: {
-                customer: {...customer, 
-                  country
-                },
+                customer: { ...customer, country },
                 trip: {
                   title: props.trip.title,
                   trip_type: props.trip.type,
                   expected_trip_month: "",
-                  payment_type
+                  payment_type,
                 },
               },
             },
-        };
-    console.log( request_data );
+          };
     basketStore.addToBasket(request_data);
   }
-  // router.push("/basket");
+  router.push("/basket");
 };
+
+function uploadFile(uploadedFile) {
+  const formData = new FormData();
+  formData.append("file", uploadedFile.target.value); // Take the first file
+  const file = formData.get("file");
+}
+
+// const handleFileUpload = async () => {
+//   if (!file.value) {
+//     alert("Please select a file!");
+//     return;
+//   }
+
+//   const formData = new FormData();
+//   formData.append("file", file.value[0]); // Take the first file
+//   console.log( formData );
+
+//   try {
+//     // const response = await fetch("/api/upload", {
+//     //   method: "POST",
+//     //   body: formData,
+//     // });
+
+//     // const data = await response.json();
+//     // alert(data.message);
+//   } catch (error) {
+//     console.error("Upload failed:", error);
+//   }
+// };
 
 // Props to control modal visibility
 const props = defineProps({
@@ -262,13 +289,15 @@ onMounted(() => {
             ></v-text-field>
 
             <v-file-upload
-            label="International Data Page"
-            accept=".pdf"
-            :rules="[(v) =>!!v || 'Please upload your International Data Page']"
-            required
-            variant="outlined"
-            @change="uploadFile"
-            v-if='props.trip.type === "foreign"'
+              label="International Data Page"
+              accept=".pdf"
+              :rules="[
+                (v) => !!v || 'Please upload your International Data Page',
+              ]"
+              required
+              variant="outlined"
+              @change="uploadFile"
+              v-if="props.trip.type === 'foreign'"
             ></v-file-upload>
           </v-col>
 
@@ -403,14 +432,17 @@ onMounted(() => {
           ></v-select>
 
           <!-- Here the customer will upload the data page for their passport -->
-            <v-file-upload
-              label="Passport Data Page"
-              accept=".pdf"
-              :rules="[(v) =>!!v || 'Please upload your passport']"
-              required
-              v-if="props.trip.type === 'foreign'"
-              variant="outlined"
-            ></v-file-upload>
+          <v-file-input
+            label="Passport Data Page"
+            accept=".pdf"
+            :rules="[(v) => !!v || 'Please upload your passport']"
+            required
+            v-if="props.trip.type === 'foreign'"
+            @change="uploadFile"
+            v-model="file"
+            variant="outlined"
+            show-size
+          ></v-file-input>
         </v-row>
 
         <!-- Form actions -->

@@ -70,6 +70,20 @@ function formatCurrency(currency, amount, locale = "en-NG") {
   );
 }
 
+function checkTripconsultationExpiry(trip) {
+  const { selected_consultation_date: date, selected_consultation_time: time } =
+    trip.options.trip_details.consultation_details;
+
+  const inputDateTime = new Date(date);
+  const [hours, minutes] = time.split(":");
+  inputDateTime.setHours(hours);
+  inputDateTime.setMinutes(minutes);
+  const currentDate = new Date();
+  const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+  const datePast = inputDateTime < next24Hours;
+  return datePast;
+}
+
 const isNigerian = computed(() => store.location.countryCode === "NG");
 const totalPrice = computed(() => basketStore.getSubTotal);
 const paths = computed(() => route.path.split("/"));
@@ -301,133 +315,118 @@ useSeoMeta({
                   {{ formatCurrency("NGN", item.price * item.qty) }}
                 </p>
                 <p v-else class="ml-2 d-none d-md-block">
-                  {{ formatCurrency("USD",item.price * item.qty, "en-US") }}
+                  {{ formatCurrency("USD", item.price * item.qty, "en-US") }}
                 </p>
               </div>
 
               <div
-                class="details__body d-md-flex flex-wrap align-center justify-space-between"
+                class="details__body d-md-flex tw-flex align-center justify-space-between tw-border tw-p-6 tw-shadow-md tw-border-[#e7028e] tw-rounded-md"
               >
-                <div class="tw-w-full">
-                  <p v-if="item && item.parentService">
-                    {{ item.parentService.title }}
-                  </p>
-
-                  <div
-                    class="tw-flex tw-flex-col tw-gap-4 tw-bg-[#FEF3F9] tw-p-4 tw-rounded-2xl tw-justify-between"
-                  >
-                    <div
-                      v-if="installment"
-                      class="tw-gap-4 tw-flex tw-flex-col"
-                    >
-                      <div class="tw-flex tw-justify-between">
-                        <div class="">
-                          <p class="tw-font-bold tw-text-lg">
-                            2 Installment payment available
-                          </p>
+                <div class="tw-flex tw-justify-between">
+                  <div>
+                    <div class="tw-flex tw-flex-col">
+                      <div
+                        class="tw-flex tw-flex-col tw-gap-2"
+                        v-if="item.options.trip_details.trip_type === 'foreign'"
+                      >
+                        <div class="tw-flex tw-gap-x-10">
+                          <h4>
+                            Consultation Details
+                            <v-tooltip
+                              v-if="checkTripconsultationExpiry(item)"
+                              right
+                              max-width="400px"
+                              content-class="tooltip"
+                            >
+                              <template v-slot:activator="{ props }">
+                                <v-icon color="red" dark v-bind="props">
+                                  mdi-alert-circle-outline
+                                </v-icon>
+                              </template>
+                              <span>
+                                The selected date or time for this consultation
+                                has expired. Please select another date/time.
+                              </span>
+                            </v-tooltip>
+                          </h4>
+                          <v-btn
+                            small
+                            class="consultation-date elevation-0"
+                            @click="updateConsultationDate(item)"
+                          >
+                            <v-icon class="mr-lg-2">mdi-calendar-edit</v-icon>
+                            <span v-if="lgAndUp"> Change Date/Time </span>
+                          </v-btn>
                         </div>
+                        <p>
+                          <span class="tw-font-bold"
+                            >Selected Consultation Date:</span
+                          >
+                          {{
+                            formatDate(
+                              item.options.trip_details.consultation_details
+                                .selected_consultation_date
+                            )
+                          }}
+                        </p>
+                        <p>
+                          <span class="tw-font-bold"
+                            >Selected Consultation Time:</span
+                          >
+                          {{
+                            formatTime(
+                              item.options.trip_details.consultation_details
+                                .selected_consultation_time
+                            )
+                          }}
+                        </p>
+                      </div>
+                      <p v-if="item && item.type === 'third_party'">
+                        Third Party Service
+                      </p>
+                      <div class="tw-flex tw-gap-4">
+                        <p>{{ item.country || item.options.country }}</p>
+                        <p>{{ item.qty }} Person(s)</p>
+                      </div>
+                    </div>
+                    <div class="tw-flex tw-gap-4 tw-mt-4">
+                      <button
+                        class="clear-basket d-flex align-center tw-gap-1"
+                        @click="removeItem(item)"
+                      >
                         <client-only
                           ><iconify-icon
-                            icon="iconamoon:arrow-up-6-circle-light"
-                            class="tw-text-2xl"
-                            @click="() => toggleDropdown(false)"
+                            icon="mdi:cancel-circle-outline"
+                            class="tw-text-xl tw-text-[#EB5757]"
                           ></iconify-icon
                         ></client-only>
-                      </div>
-                      {{console.log(item)}}
-                      <div>
-                        <p class="tw-font-light tw-text-lg">
-                          Pick a payment plan
-                        </p>
-                        <p class="tw-font-thin tw-text-[16px]">
-                          Choose the best way to pay for this trip overtime
-                        </p>
-                        <div class="horizontal-line tw-mt-2"></div>
-                      </div>
-
-                      <div class="prices tw-flex tw-flex-col tw-gap-6">
-                        <div
-                          class="tw-w-full tw-flex tw-justify-between tw-items-center"
-                        >
-                          <div class="tw-flex tw-flex-col">
-                            <p class="tw-font-bold tw-text-lg">
-                              {{ item.installments.first?.price }} first, then
-                              {{ item.installments.second?.price }}
-                            </p>
-
-                            <p
-                              class="tw-font-light tw-text-[#404040] tw-text-lg"
-                            >
-                              Over the first month
-                            </p>
-                          </div>
-                          <div
-                            :class="
-                              item.installments.first.isSelected
-                                ? 'tw-bg-green-500 tw-border-green-500'
-                                : ''
-                            "
-                            @click="
-                              () => {
-                                item.installments.first.isSelected = true;
-                                item.installments.second.isSelected = false;
-                              }
-                            "
-                            class="tw-w-7 tw-h-7 tw-border tw-border-zinc-600 tw-rounded-full"
-                          ></div>
-                        </div>
-                      </div>
-
-                      <div class="horizontal-line"></div>
-
-                      <p class="tw-font-light tw-text-lg">
-                        Payment plans cover only the transportation cost
-                        (BaseFare+Taxes+Fees) any additional cost will be
-                        charged separately when your booking is confirmed. Note
-                        fees aren't refunded.
-                      </p>
-
-                      <div
-                        class="tw-flex tw-gap-4 tw-items-center tw-justify-end tw-text-[#EB0C8F]"
+                        Remove
+                      </button>
+                      <button
+                        :to="`${item.slug}`"
+                        class="clear-basket d-flex tw-align-center tw-gap-1"
                       >
-                        <div class="">
-                          <button @click="() => toggleDropdown(false)">
-                            Cancel
-                          </button>
-                        </div>
-                        <div
-                          class="tw-border-2 tw-border-pink-300 tw-rounded-2xl tw-p-2"
-                        >
-                          <button>Save</button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div
-                      v-if="!installment"
-                      class="tw-justify-between tw-flex tw-items-center"
-                    >
-                      <p class="tw-font-bold tw-text-lg">
-                        2 Installments payment available
-                      </p>
-
-                      <div
-                        @click="() => toggleDropdown(!installment)"
-                        class="tw-border tw-border-pink-500 tw-p-2 tw-relative tw-inline-block tw-rounded-xl hover:tw-bg-black hover:tw-text-white hover:tw-border-none hover:tw-border-b"
-                      >
-                        <button>Select Installment Payment Plan</button>
-                      </div>
+                        <client-only
+                          ><iconify-icon
+                            icon="iconoir:eye-solid"
+                            class="tw-text-xl tw-text-[#EB5757]"
+                          ></iconify-icon
+                        ></client-only>
+                        View
+                      </button>
                     </div>
                   </div>
-                </div>
 
-                <div class="d-flex align-center justify-space-between">
-                  <p v-if="isNigerian" class="details__price mr-2 d-md-none">
-                    ₦{{ useAmtToString(item.price * item.qty) }}
-                  </p>
-                  <p v-else class="details__price mr-2 d-md-none">
-                    ${{ item.price * item.qty }}
-                  </p>
+                  <div class="align-center justify-space-between">
+                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">
+                      {{ formatCurrency("NGN", item.price * item.qty) }}
+                    </p>
+                    <p v-else class="details__price mr-2 d-md-none">
+                      {{
+                        formatCurrency("USD", item.price * item.qty, "en-US")
+                      }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -483,17 +482,24 @@ useSeoMeta({
 
                   <div class="d-flex justify-space-between">
                     <p v-if="isNigerian" class="details__price mr-2 d-md-none">
-                      {{ formatCurrency('NGN',consultationPriceNGN) }}
+                      {{ formatCurrency("NGN", consultationPriceNGN) }}
                     </p>
                     <p v-else class="details__price mr-2 d-md-none">
-                      {{ formatCurrency('USD', item.price * item.qty, 'en-US') }}
+                      {{
+                        formatCurrency("USD", item.price * item.qty, "en-US")
+                      }}
                     </p>
                     <button
-                      class="clear-basket d-flex align-center"
+                      class="clear-basket d-flex align-center tw-gap-1"
                       @click="removeItem(item)"
                     >
+                      <client-only
+                        ><iconify-icon
+                          icon="mdi:cancel-circle-outline"
+                          class="tw-text-xl tw-text-[#EB5757]"
+                        ></iconify-icon
+                      ></client-only>
                       Remove
-                      <v-icon class="ml-2">mdi-close</v-icon>
                     </button>
                   </div>
                 </div>

@@ -22,6 +22,7 @@ const router = useRouter();
 
 const formHtml = ref(null);
 const success = ref(false);
+const info = ref(false);
 const error = ref(false);
 const searchTerm = ref(null);
 const phoneResult = ref(null);
@@ -53,27 +54,16 @@ const msg = ref({
   text: "Thank you for your payment! Your transaction has been successfully processed. If you have any questions or require further assistance, please don't hesitate to reach out to us via the contact page. We'll be happy to help.",
 });
 
+const infoMsg = ref({
+  title: "Your transaction is processing, please standby...",
+});
+
 const errorMsg = ref({
   title: "An error occoured.",
   text: "Unfortunately, we were unable to process your payment at this time. Please double-check the payment information you provided and ensure that there are sufficient funds available. If the issue persists, you can contact our customer support for assistance. We apologize for any inconvenience this may have caused.",
 });
 
-const basket = computed(() => {
-  const bas = basketStore.basket;
-  const price = isNigerian
-    ? consultationPriceNGN.value
-    : consultationPrice.value;
-  bas.forEach((item) => {
-    item.type !== "consultation"
-      ? (item.parentService = contentStore.getSubservicesById(
-          item.options.subservice_id
-        ))
-      : "";
-    item.price =
-      item.type === "consultation" ? price : item.parentService.price;
-  });
-  return bas;
-});
+const basket = computed(() => basketStore.basket);
 
 function formatCurrency(currency, amount, locale = "en-NG") {
   return new Intl.NumberFormat(locale, { style: "currency", currency }).format(
@@ -152,24 +142,18 @@ async function payWithPaystack(e) {
   store.setToast("Initializing Transaction. Please wait...", { type: "info" });
   const newTrx = {
     reference,
-    form: form.value,
-    basket: basket.value,
+    form: form.value
   };
   try {
-    await useAxiosPost("/orders/checkout", newTrx);
+    const res = await useAxiosPost("/orders/checkout", newTrx);
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
       reference,
-      amount: config.public.APP_ENV === "uat" ? 10000 : amount * 100,
+      amount: config.public.APP_ENV !== "production" ? 10000 : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
-        // a loadin spinner here while the payment is being confirmed
-        store.setAlert("Verifying Transaction. Please wait...", {
-          type: "info",
-          duration: 4000,
-        });
-        // verify the transaction on the server
+        info.value = true;
         const res = await useAxiosPost(
           `/orders/paystack/payments/${transaction.reference}/verify`,
           {
@@ -181,6 +165,7 @@ async function payWithPaystack(e) {
           await consultationStore.fetchAvailableDates();
           msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
           success.value = true;
+          info.value = false;
         }
       },
       onClose: async () => {
@@ -427,18 +412,19 @@ useHead({
                 </p>
                 <p v-else>
                   <strong
-                    >${{
+                    >{{
                       formatCurrency("USD", consultationPrice, "en-US")
                     }}</strong
                   >
                 </p>
               </div>
               <div v-else class="d-flex align-start justify-space-between mb-3">
-                <p>{{ n.name }}</p>
+                {{console.log(n)}}
+                <p>{{ n.title }}</p>
                 <p v-if="isNigerian" class="ml-5">
-                  <strong> ₦{{ useAmtToString(n.price * n.qty) }} </strong>
+                  <strong> {{ formatCurrency("NGN", n.price * n.qty) }} </strong>
                 </p>
-                <p v-else class="ml-5">${{ n.price * n.qty }}</p>
+                <p v-else class="ml-5">{{ formatCurrency("USD", n.price * n.qty, "en-US") }}</p>
               </div>
             </div>
             <div class="d-flex align-end justify-space-between mt-5">
@@ -500,6 +486,7 @@ useHead({
         </v-row>
       </div>
     </v-container>
+    <InfoModal v-if="info" :message="infoMsg" @close="info = false" />
     <SuccessModal v-if="success" :message="msg" @close="handleSuccessClose" />
     <FailureModal v-if="error" :message="errorMsg" @close="error = false" />
   </div>

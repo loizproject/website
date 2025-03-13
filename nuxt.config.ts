@@ -39,8 +39,8 @@ export default defineNuxtConfig({
   },
 
   modules: [// ...
-  '@pinia/nuxt', '@nuxt/image', '@nuxtjs/google-fonts', "nuxt-lodash", // "nuxt-graphql-request",
-  "maz-ui/nuxt"],
+    '@pinia/nuxt', '@nuxt/image', '@nuxtjs/google-fonts', "nuxt-lodash", // "nuxt-graphql-request",
+    "maz-ui/nuxt", "@nuxtjs/cloudinary"],
 
   mazUi: {
     injectComponents: true,

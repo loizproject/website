@@ -11,6 +11,9 @@ importers:
       '@nuxt/image':
         specifier: ^1.1.0
         version: 1.1.0(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.24.3)
+      '@nuxtjs/cloudinary':
+        specifier: ^4.0.0
+        version: 4.0.0(magicast@0.3.5)(rollup@4.24.3)(typescript@5.6.2)
       '@nuxtjs/google-fonts':
         specifier: ^3.0.2
         version: 3.0.2(magicast@0.3.5)(rollup@4.24.3)
@@ -322,6 +325,24 @@ packages:
   '@cloudflare/kv-asset-handler@0.3.4':
     resolution: {integrity: sha512-YLPHc8yASwjNkmcDMQMY35yiWjoKAKnhUbPRszBRS0YgH+IXtsMp61j+yTcnCE3oO2DgP0U3iejLC8FTtKDC8Q==}
     engines: {node: '>=16.13'}
+
+  '@cloudinary-util/types@1.6.0':
+    resolution: {integrity: sha512-YLpAkvrlQO9nmwA5poiOYYSXP0pMGIBX9IjHOqfU1kGf1ZBR5EwnHlY3b0er7H7uw/f+WlOlko5gE22JCma+TA==}
+
+  '@cloudinary-util/types@2.0.0-beta.1':
+    resolution: {integrity: sha512-HULoiceazjiboetlFRnE6Qo3Ax8oKpJxn37+pQCVerNmr6uXNj8Q/ppQkcDXH/tr7tvD/qRjtK4JfV08ZqMriA==}
+
+  '@cloudinary-util/url-loader@6.0.0':
+    resolution: {integrity: sha512-nlwV6d8uvJPPt4IBPVkhs2YwuT4mXDheIY9Me04bz82u3W0gIhsxWPyr78kC52A2jxt5Lx6+cZi3Po/sy8ykUA==}
+
+  '@cloudinary-util/util@4.1.0':
+    resolution: {integrity: sha512-01k2FWwxhVSauFGi3yJhz20WJ7M/l4ytJDHaBVDTIJlxQLNs36p24kynppgE44jn0dNa1DgYhCXB6BFmqUmfJA==}
+
+  '@cloudinary/transformation-builder-sdk@1.16.1':
+    resolution: {integrity: sha512-Mh1qYMkoDxSAzbt0qY9NJaZrdH/vFBcrpeVWmbTXbPVDZHLaaLyJ2+RDFGger5lycbrehPLoNp2hh22BvhkvbQ==}
+
+  '@cloudinary/url-gen@1.15.0':
+    resolution: {integrity: sha512-bjU67eZxLUgoRy/Plli4TQio7q6P31OYqnEgXxeN9TKXrzr6h0DeEdIUhKI9gy3HkEBWXWWJIPh7j7gkOJPnyA==}
 
   '@esbuild/aix-ppc64@0.20.2':
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -860,6 +881,9 @@ packages:
     peerDependencies:
       vue: ^3.3.4
 
+  '@nuxtjs/cloudinary@4.0.0':
+    resolution: {integrity: sha512-2OUKTW+eUsippiOteUomv99G7rWyE3ukkcvTUNohd6hh2G/0HDKIQNrH9YWrXsEr7qW0O4R5BoaGLBQKAVCydQ==}
+
   '@nuxtjs/google-fonts@3.0.2':
     resolution: {integrity: sha512-9DY0NcBnx/I6+3Lr7NeB64k5A7GbqCN1pqVgU9ld00NEXSpDUht2+lG8mcC5UnmpTi8KCdCJckDbD/bqW3ncYg==}
 
@@ -1178,6 +1202,12 @@ packages:
     resolution: {integrity: sha512-v6ddp4YEQCNILhYrx37Yt0GKRIFeTrb3VSmTbjh+URT+ua1mwgmNFTfl2ZldtTtri3tEkwSG1/5wLRq20ma70g==}
     peerDependencies:
       vue: '>=2.7 || >=3'
+
+  '@unpic/core@0.0.47':
+    resolution: {integrity: sha512-h8Jage7Jh4PS7j77syB/qQR75eDzF0aTJc7mkDfWwqp5HKDfLb7L/3i7ta8Iasg6qZzfySWX/hzy+kLuOJS5XA==}
+
+  '@unpic/vue@0.0.48':
+    resolution: {integrity: sha512-HQssz6cEG+doyWxaCiyGxocZfqOUC7LMtlv4TL7v+PoZ6PVEo7ZHi6SyW5odJ/wG1tyvZu3VmbArTXSylZJkQw==}
 
   '@vercel/nft@0.26.5':
     resolution: {integrity: sha512-NHxohEqad6Ra/r4lGknO52uc/GrWILXAMs1BB4401GTqww0fw1bAqzpG1XHuDO+dprg4GvsD9ZLLSsdo78p9hQ==}
@@ -3610,6 +3640,9 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
+  unpic@3.22.0:
+    resolution: {integrity: sha512-NFhB8HgHHWkNzTxwWg6KHx8+3RZnhWFm4Axdqp9iI176iY3wskzfP16NRSJ2SSTfXzyK4W6GsBqs8iOOdvOB3g==}
+
   unplugin-vue-router@0.10.8:
     resolution: {integrity: sha512-xi+eLweYAqolIoTRSmumbi6Yx0z5M0PLvl+NFNVWHJgmE2ByJG1SZbrn+TqyuDtIyln20KKgq8tqmL7aLoiFjw==}
     peerDependencies:
@@ -4347,6 +4380,26 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
+  '@cloudinary-util/types@1.6.0': {}
+
+  '@cloudinary-util/types@2.0.0-beta.1': {}
+
+  '@cloudinary-util/url-loader@6.0.0':
+    dependencies:
+      '@cloudinary-util/types': 1.6.0
+      '@cloudinary-util/util': 4.1.0
+      '@cloudinary/url-gen': 1.15.0
+
+  '@cloudinary-util/util@4.1.0': {}
+
+  '@cloudinary/transformation-builder-sdk@1.16.1':
+    dependencies:
+      '@cloudinary/url-gen': 1.15.0
+
+  '@cloudinary/url-gen@1.15.0':
+    dependencies:
+      '@cloudinary/transformation-builder-sdk': 1.16.1
+
   '@esbuild/aix-ppc64@0.20.2':
     optional: true
 
@@ -4894,6 +4947,20 @@ snapshots:
       - vue-tsc
       - webpack-sources
 
+  '@nuxtjs/cloudinary@4.0.0(magicast@0.3.5)(rollup@4.24.3)(typescript@5.6.2)':
+    dependencies:
+      '@cloudinary-util/types': 2.0.0-beta.1
+      '@cloudinary-util/url-loader': 6.0.0
+      '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.24.3)
+      '@unpic/vue': 0.0.48(typescript@5.6.2)
+      defu: 6.1.4
+    transitivePeerDependencies:
+      - magicast
+      - rollup
+      - supports-color
+      - typescript
+      - webpack-sources
+
   '@nuxtjs/google-fonts@3.0.2(magicast@0.3.5)(rollup@4.24.3)':
     dependencies:
       '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.24.3)
@@ -5178,6 +5245,17 @@ snapshots:
       unhead: 1.11.10
       vue: 3.5.12(typescript@5.6.2)
 
+  '@unpic/core@0.0.47':
+    dependencies:
+      unpic: 3.22.0
+
+  '@unpic/vue@0.0.48(typescript@5.6.2)':
+    dependencies:
+      '@unpic/core': 0.0.47
+      vue: 3.5.12(typescript@5.6.2)
+    transitivePeerDependencies:
+      - typescript
+
   '@vercel/nft@0.26.5':
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
@@ -5364,7 +5442,7 @@ snapshots:
 
   '@vue/shared@3.5.12': {}
 
-  '@vuetify/loader-shared@1.7.1(vue@3.5.12(typescript@5.6.2))(vuetify@3.7.3(typescript@5.6.2)(vite-plugin-vuetify@1.0.2)(vue@3.5.12(typescript@5.6.2)))':
+  '@vuetify/loader-shared@1.7.1(vue@3.5.12(typescript@5.6.2))(vuetify@3.7.3)':
     dependencies:
       find-cache-dir: 3.3.2
       upath: 2.0.1
@@ -7961,6 +8039,8 @@ snapshots:
 
   universalify@2.0.1: {}
 
+  unpic@3.22.0: {}
+
   unplugin-vue-router@0.10.8(rollup@4.24.3)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.2)))(vue@3.5.12(typescript@5.6.2)):
     dependencies:
       '@babel/types': 7.26.0
@@ -8123,7 +8203,7 @@ snapshots:
 
   vite-plugin-vuetify@1.0.2(vite@5.4.10(@types/node@22.8.6)(sass@1.80.5)(terser@5.36.0))(vue@3.5.12(typescript@5.6.2))(vuetify@3.7.3):
     dependencies:
-      '@vuetify/loader-shared': 1.7.1(vue@3.5.12(typescript@5.6.2))(vuetify@3.7.3(typescript@5.6.2)(vite-plugin-vuetify@1.0.2)(vue@3.5.12(typescript@5.6.2)))
+      '@vuetify/loader-shared': 1.7.1(vue@3.5.12(typescript@5.6.2))(vuetify@3.7.3)
       debug: 4.3.7
       upath: 2.0.1
       vite: 5.4.10(@types/node@22.8.6)(sass@1.80.5)(terser@5.36.0)
