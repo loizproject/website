@@ -50,29 +50,7 @@ watch(basket, async (newBasket, oldBasket) => {
           }
 
         case "trip":
-          return {
-            paymentOption: item.type === "trip" && {
-              type: "",
-              firstTranch: "",
-              period: "",
-            },
-
-            installments: {
-              first: {
-                price: isNigerian.value
-                  ? item.installments.ngn.first
-                  : item.installments.usd.first,
-                isSelected: false,
-              },
-              second: {
-                price: isNigerian.value
-                  ? item.installments.ngn.second
-                  : item.installments.usd.second,
-                isSelected: false,
-              },
-            },
-            ...item,
-          };
+          return item;
 
         default:
           item.parentService = contentStore.getSubservicesById(
@@ -318,12 +296,12 @@ useSeoMeta({
               <div
                 class="details__head d-flex align-center justify-space-between"
               >
-                <h4>{{ item.name }}</h4>
+                <h4>{{ item.title }}</h4>
                 <p v-if="isNigerian" class="ml-2 d-none d-md-block">
-                  ₦{{ useAmtToString(item.price * item.qty) }}
+                  {{ formatCurrency("NGN", item.price * item.qty) }}
                 </p>
                 <p v-else class="ml-2 d-none d-md-block">
-                  ${{ item.price * item.qty }}
+                  {{ formatCurrency("USD",item.price * item.qty, "en-US") }}
                 </p>
               </div>
 
@@ -356,7 +334,7 @@ useSeoMeta({
                           ></iconify-icon
                         ></client-only>
                       </div>
-
+                      {{console.log(item)}}
                       <div>
                         <p class="tw-font-light tw-text-lg">
                           Pick a payment plan
@@ -370,7 +348,6 @@ useSeoMeta({
                       <div class="prices tw-flex tw-flex-col tw-gap-6">
                         <div
                           class="tw-w-full tw-flex tw-justify-between tw-items-center"
-                          @click="item.installments.isSelected = true"
                         >
                           <div class="tw-flex tw-flex-col">
                             <p class="tw-font-bold tw-text-lg">
