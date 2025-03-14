@@ -5,7 +5,6 @@ import { useContentStore } from "~/store/content";
 import { useConsultationStore } from "~/store/consultation";
 import { useBasketStore } from "~/store/basket";
 
-
 const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
 const route = useRoute();
 const router = useRouter();
@@ -27,7 +26,9 @@ const rate = computed(() => store.rate);
 
 const basket = computed(() => {
   basketStore.basket.map((item) => {
-     item.parentService = contentStore.getSubservicesById(item.options.subservice_id);
+    item.parentService = contentStore.getSubservicesById(
+      item.options.subservice_id
+    );
     return item;
   });
   return basketStore.basket;
@@ -41,24 +42,38 @@ function consultationExpired(consltn) {
   const dates = availableDates.value;
   const date = consltn.options.booked_date;
   const time = consltn.options.booked_time;
-  const inputDateTime = new Date( date );
-  const [ hours, minutes ] = time.split( ":" );
+  const inputDateTime = new Date(date);
+  const [hours, minutes] = time.split(":");
   inputDateTime.setHours(hours);
-  inputDateTime.setMinutes( minutes );
+  inputDateTime.setMinutes(minutes);
   const currentDate = new Date();
-  const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); 
+  const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
   const datePast = inputDateTime < next24Hours;
   let obj = {
     times: [],
   };
   for (const date in dates) {
-    const times = dates[date]; 
+    const times = dates[date];
     if (consltn.options.booked_date === date) {
       obj = { date, times };
     }
   }
   // return true;
   return !obj.times.includes(time) || datePast;
+}
+
+function checkTripconsultationExpiry(trip) {
+  const { selected_consultation_date: date, selected_consultation_time: time } =
+    trip.options.trip_details.consultation_details;
+
+  const inputDateTime = new Date(date);
+  const [hours, minutes] = time.split(":");
+  inputDateTime.setHours(hours);
+  inputDateTime.setMinutes(minutes);
+  const currentDate = new Date();
+  const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+  const datePast = inputDateTime < next24Hours;
+  return datePast;
 }
 
 const expiredConsultationInBasket = computed(() => {
@@ -134,7 +149,9 @@ function formatTime(time24) {
   const period = hours >= 12 ? "PM" : "AM";
 
   // Convert to 12-hour format
-  const hours12 = (hours % 12 === 0 ? 12 : hours % 12).toString().padStart(2, "0");
+  const hours12 = (hours % 12 === 0 ? 12 : hours % 12)
+    .toString()
+    .padStart(2, "0");
   const minutesPadded = minutes.toString().padStart(2, "0");
 
   // Construct the formatted time string
@@ -150,11 +167,11 @@ function proceedToPayment() {
   }
 }
 
-function formatCurrency( currency, amount, locale = 'en-NG' ){
-  return new Intl.NumberFormat( locale, {
+function formatCurrency(currency, amount, locale = "en-NG") {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
-  } ).format( amount );
+  }).format(amount);
 }
 
 onMounted(async () => {
@@ -192,13 +209,14 @@ useSeoMeta({
 </script>
 
 <template>
-
   <div id="payment" class="mb-10">
-
     <div class="header d-flex align-center py-4">
       <v-container class="d-flex align-center">
-
-        <button v-if="mdAndUp" class="d-flex align-center action__btn" @click="router.go(-1)">
+        <button
+          v-if="mdAndUp"
+          class="d-flex align-center action__btn"
+          @click="router.go(-1)"
+        >
           <v-icon color="#e7028e" class="mr-2"> mdi-chevron-left</v-icon>
           Back
         </button>
@@ -206,39 +224,44 @@ useSeoMeta({
         <v-spacer></v-spacer>
 
         <div class="navigation d-flex align-center">
-
           <nuxt-link to="/">Home</nuxt-link>
 
           <v-icon color="#555" class="mx-2 mt-1">mdi-chevron-right</v-icon>
           <div v-for="(item, index) in paths" :key="index">
-            <nuxt-link v-if="item !== 'services'" :to="getPageRoute(item, index)"
-              :style="index === paths.length - 1 ? 'color: #e7028e' : ''">
+            <nuxt-link
+              v-if="item !== 'services'"
+              :to="getPageRoute(item, index)"
+              :style="index === paths.length - 1 ? 'color: #e7028e' : ''"
+            >
               {{
                 item && item.length > textLimit
                   ? `${_StartCase(_ToLower(item.substring(0, textLimit)))}...`
                   : _StartCase(_ToLower(item))
               }}
             </nuxt-link>
-            <v-icon v-if="item !== 'services' && showHeaderIcon(index)" color="#555"
-              class="mx-2">mdi-chevron-right</v-icon>
+            <v-icon
+              v-if="item !== 'services' && showHeaderIcon(index)"
+              color="#555"
+              class="mx-2"
+              >mdi-chevron-right</v-icon
+            >
           </div>
-
         </div>
 
         <v-spacer></v-spacer>
-        <button v-if="mdAndUp" class="d-flex align-center action__btn"
-          @click="basket.length > 0 ? router.go(+1) : null">
+        <button
+          v-if="mdAndUp"
+          class="d-flex align-center action__btn"
+          @click="basket.length > 0 ? router.go(+1) : null"
+        >
           Next
           <v-icon color="#e7028e" class="ml-2"> mdi-chevron-right</v-icon>
         </button>
       </v-container>
-
     </div>
-
 
     <v-container class="d-md-flex align-start justify-center">
       <div id="billing-details" class="billing tile pa-5 mx-auto">
-
         <div class="d-flex align-center justify-space-between">
           <h3>Basket ({{ basket.length }})</h3>
           <button class="clear-basket d-flex align-center" @click="clearBasket">
@@ -247,100 +270,210 @@ useSeoMeta({
           </button>
         </div>
 
-
         <div class="details mt-8">
-          <v-card v-for="(item, index) in basket" :key="index" flat class="pa-6 my-2">
-            <div v-if="item.type !== 'consultation'" class="w-full">
-              <div class="details__head d-flex align-center justify-space-between">
-                <h4>{{ item.name }}</h4>
+          <v-card
+            v-for="(item, index) in basket"
+            :key="index"
+            flat
+            class="pa-6 my-2"
+          >
+            <div v-if="item.type === 'trip'" class="w-full">
+              <div
+                class="details__head d-flex align-center justify-space-between"
+              >
+                <h4>{{ item.title }}</h4>
                 <p v-if="isNigerian" class="ml-2 d-none d-md-block">
-                  {{ formatCurrency('NGN', item.ngnPrice * item.qty) }}
+                  {{ formatCurrency("NGN", item.price * item.qty) }}
                 </p>
-                <p v-else class="ml-2 d-none d-md-block">{{ formatCurrency('USD', item.usdPrice * item.qty, 'en-US') }}</p>
+                <p v-else class="ml-2 d-none d-md-block">
+                  {{ formatCurrency("USD", item.price * item.qty, "en-US") }}
+                </p>
               </div>
 
-              <div class="details__body d-md-flex tw-flex align-center justify-space-between">
-                <div class=" tw-flex tw-justify-between">
+              <div
+                class="details__body d-md-flex tw-flex align-center justify-space-between tw-border tw-p-6 tw-shadow-md tw-border-[#e7028e] tw-rounded-md"
+              >
+                <div class="tw-flex tw-justify-between">
                   <div>
-                    <p v-if="item && item.parentService">{{ item.parentService.title }}</p>
-                    <div class=" tw-flex tw-flex-col">
-                      <p v-if="item && item.type === 'third_party'">Third Party Service</p>
+                    <div class="tw-flex tw-flex-col">
+                      <div
+                        class="tw-flex tw-flex-col tw-gap-2"
+                        v-if="item.options.trip_details.trip_type === 'foreign'"
+                      >
+                        <div class="tw-flex tw-gap-x-10">
+                          <h4>
+                            Consultation Details
+                            <v-tooltip
+                              v-if="checkTripconsultationExpiry(item)"
+                              right
+                              max-width="400px"
+                              content-class="tooltip"
+                            >
+                              <template v-slot:activator="{ props }">
+                                <v-icon color="red" dark v-bind="props">
+                                  mdi-alert-circle-outline
+                                </v-icon>
+                              </template>
+                              <span>
+                                The selected date or time for this consultation
+                                has expired. Please select another date/time.
+                              </span>
+                            </v-tooltip>
+                          </h4>
+                          <v-btn
+                            small
+                            class="consultation-date elevation-0"
+                            @click="updateConsultationDate(item)"
+                          >
+                            <v-icon class="mr-lg-2">mdi-calendar-edit</v-icon>
+                            <span v-if="lgAndUp"> Change Date/Time </span>
+                          </v-btn>
+                        </div>
+                        <p>
+                          <span class="tw-font-bold"
+                            >Selected Consultation Date:</span
+                          >
+                          {{
+                            formatDate(
+                              item.options.trip_details.consultation_details
+                                .selected_consultation_date
+                            )
+                          }}
+                        </p>
+                        <p>
+                          <span class="tw-font-bold"
+                            >Selected Consultation Time:</span
+                          >
+                          {{
+                            formatTime(
+                              item.options.trip_details.consultation_details
+                                .selected_consultation_time
+                            )
+                          }}
+                        </p>
+                      </div>
+                      <p v-if="item && item.type === 'third_party'">
+                        Third Party Service
+                      </p>
                       <div class="tw-flex tw-gap-4">
                         <p>{{ item.country || item.options.country }}</p>
                         <p>{{ item.qty }} Person(s)</p>
                       </div>
-
                     </div>
-                    <div class=" tw-flex tw-gap-4 tw-mt-4">
-                      <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)">
-                        <client-only><iconify-icon icon="mdi:cancel-circle-outline"
-                            class="tw-text-xl tw-text-[#EB5757]"></iconify-icon></client-only>
+                    <div class="tw-flex tw-gap-4 tw-mt-4">
+                      <button
+                        class="clear-basket d-flex align-center tw-gap-1"
+                        @click="removeItem(item)"
+                      >
+                        <client-only
+                          ><iconify-icon
+                            icon="mdi:cancel-circle-outline"
+                            class="tw-text-xl tw-text-[#EB5757]"
+                          ></iconify-icon
+                        ></client-only>
                         Remove
                       </button>
-                      <button :to="`${item.slug}`" class="clear-basket d-flex tw-align-center tw-gap-1">
-                        <client-only><iconify-icon icon="iconoir:eye-solid"
-                            class="tw-text-xl tw-text-[#EB5757]"></iconify-icon></client-only>
+                      <button
+                        :to="`${item.slug}`"
+                        class="clear-basket d-flex tw-align-center tw-gap-1"
+                      >
+                        <client-only
+                          ><iconify-icon
+                            icon="iconoir:eye-solid"
+                            class="tw-text-xl tw-text-[#EB5757]"
+                          ></iconify-icon
+                        ></client-only>
                         View
                       </button>
                     </div>
                   </div>
 
                   <div class="align-center justify-space-between">
-                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">₦{{ useAmtToString(item.price * item.qty)
-                      }}</p>
-                    <p v-else class="details__price mr-2 d-md-none"> ${{ item.price * item.qty }}</p>
+                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">
+                      {{ formatCurrency("NGN", item.price * item.qty) }}
+                    </p>
+                    <p v-else class="details__price mr-2 d-md-none">
+                      {{
+                        formatCurrency("USD", item.price * item.qty, "en-US")
+                      }}
+                    </p>
                   </div>
-
                 </div>
-
               </div>
-
-
             </div>
             <div v-else>
-              <div class="details__head d-flex align-center justify-space-between">
+              <div
+                class="details__head d-flex align-center justify-space-between"
+              >
                 <h4>
                   Consultation session
-                  <v-tooltip v-if="consultationExpired(item)" right max-width="400px" content-class="tooltip">
+                  <v-tooltip
+                    v-if="consultationExpired(item)"
+                    right
+                    max-width="400px"
+                    content-class="tooltip"
+                  >
                     <template v-slot:activator="{ props }">
                       <v-icon color="red" dark v-bind="props">
                         mdi-alert-circle-outline
                       </v-icon>
                     </template>
                     <span>
-                      The selected date or time for this consultation has expired. Please
-                      select another date/time.
+                      The selected date or time for this consultation has
+                      expired. Please select another date/time.
                     </span>
                   </v-tooltip>
                 </h4>
-                <v-btn small class="consultation-date elevation-0" @click="updateConsultationDate(item)">
+                <v-btn
+                  small
+                  class="consultation-date elevation-0"
+                  @click="updateConsultationDate(item)"
+                >
                   <v-icon class="mr-lg-2">mdi-calendar-edit</v-icon>
                   <span v-if="lgAndUp"> Change Date/Time </span>
                 </v-btn>
                 <p v-if="isNigerian" class="d-none d-md-block ml-2">
-                  {{ formatCurrency('NGN',consultationPriceNGN) }}
+                  {{ formatCurrency("NGN", consultationPriceNGN) }}
                 </p>
-                <p v-else class="d-none d-md-block ml-2">{{ formatCurrency('USD', consultationPrice, 'en-US') }}</p>
+                <p v-else class="d-none d-md-block ml-2">
+                  {{ formatCurrency("USD", consultationPrice, "en-US") }}
+                </p>
               </div>
-              <div class="details__body d-md-flex flex-wrap justify-space-between">
-                <div class=" tw-flex tw-flex-col tw-gap-4">
+              <div
+                class="details__body d-md-flex flex-wrap justify-space-between"
+              >
+                <div class="tw-flex tw-flex-col tw-gap-4">
                   <p>{{ item.name }}</p>
-                  <p>{{ formatDate(item.options.booked_date) }},<i>{{ formatTime(item.options.booked_time) }}</i></p>
+                  <p>
+                    {{ formatDate(item.options.booked_date) }},<i>{{
+                      formatTime(item.options.booked_time)
+                    }}</i>
+                  </p>
                   <!-- <p>1 Person</p> -->
 
-                  <div class="d-flex  justify-space-between">
-                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">{{ formatCurrency('NGN',consultationPriceNGN)
-                      }}</p>
-                    <p v-else class="details__price mr-2 d-md-none">{{ formatCurrency('USD', item.price * item.qty, 'en-US') }}</p>
-                    <button class="clear-basket d-flex align-center tw-gap-1" @click="removeItem(item)">
-                      <client-only><iconify-icon icon="mdi:cancel-circle-outline"
-                          class="tw-text-xl tw-text-[#EB5757]"></iconify-icon></client-only>
+                  <div class="d-flex justify-space-between">
+                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">
+                      {{ formatCurrency("NGN", consultationPriceNGN) }}
+                    </p>
+                    <p v-else class="details__price mr-2 d-md-none">
+                      {{
+                        formatCurrency("USD", item.price * item.qty, "en-US")
+                      }}
+                    </p>
+                    <button
+                      class="clear-basket d-flex align-center tw-gap-1"
+                      @click="removeItem(item)"
+                    >
+                      <client-only
+                        ><iconify-icon
+                          icon="mdi:cancel-circle-outline"
+                          class="tw-text-xl tw-text-[#EB5757]"
+                        ></iconify-icon
+                      ></client-only>
                       Remove
                     </button>
                   </div>
-
                 </div>
-
               </div>
             </div>
           </v-card>
@@ -359,16 +492,22 @@ useSeoMeta({
                 <span v-else> ${{ useAmtToString(totalPrice) }} </span>
               </p>
             </div>
-
           </div>
-          <v-btn large class="submit mt-10 d-flex align-center justify-space-between"
-            :disabled="expiredConsultationInBasket" @click="proceedToPayment">Proceed to Payment
+          <v-btn
+            large
+            class="submit mt-10 d-flex align-center justify-space-between"
+            :disabled="expiredConsultationInBasket"
+            @click="proceedToPayment"
+            >Proceed to Payment
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </div>
       </div>
-      <ConsultationSchedule v-if="showConsultationSchedule" @close="showConsultationSchedule = false"
-        @submit="updateConsultationDetails" />
+      <ConsultationSchedule
+        v-if="showConsultationSchedule"
+        @close="showConsultationSchedule = false"
+        @submit="updateConsultationDetails"
+      />
     </v-container>
   </div>
 </template>

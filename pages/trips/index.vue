@@ -3,24 +3,20 @@ import slides from "~/utils/site-content/sliderData.json";
 //Script for the cnpards
 import { ref, onMounted } from "vue";
 import { formatDate } from "~/utils/lib";
+let trips = ref([]);
 
-const sliderTrips = computed(() => {
-  return slides.filter((item) => item.image);
-});
+const tripsSlides = computed(() => slides.filter((item) => item.image));
 
-const fetchCardData = async () => {
-  try {
-    cardsData = trips;
-  } catch (error) {
-    console.error("Failed to load slider data", error);
-  }
-};
 // Fetch the data when the component is mounted
-onMounted(fetchCardData);
-
-// Fetch the data
-const res = await useAxiosFetch("/trips");
-const trips = ref(res.data.data.trips || []); // This makes the function trips reactive
+onMounted(async () => {
+  try {
+    // Fetch the data
+    const res = await useAxiosFetch("/trips");
+    trips.value.push(...res.data.data.trips); // This makes the function trips reactive
+  } catch (error) {
+    console.error(error);
+  }
+});
 // Search query
 const search = ref("");
 // Toggle for future or past trips (true = future, false = past)
@@ -37,30 +33,29 @@ const clearDateFilter = () => {
 };
 // Computed property to filter trips based on search and/or date
 const currentShowingCards = computed(() => {
-  const currentDate = new Date().toISOString().split("T")[0]; // Get today’s date in YYYY-MM-DD format
+  // const currentDate = new Date().toISOString().split("T")[0]; // Get today’s date in YYYY-MM-DD format
   let res = [];
 
   trips.value.forEach((item) => {
-    const itemDate = item.date || item.startDate;
-    const isFutureTrip = itemDate >= currentDate;
-
-    const isDateMatch =
-      showFutureTrips.value === null ||
-      (showFutureTrips.value && isFutureTrip) ||
-      (!showFutureTrips.value && !isFutureTrip);
+    const enabled = item.enabled;
 
     const isSearchMatch =
       !search.value ||
-      [item.title, item.text, item.location, item.date].some((field) =>
+      [item.title, item.text].some((field) =>
         field?.toUpperCase().includes(search.value.toUpperCase())
       );
 
-    if (isDateMatch && isSearchMatch) {
+    if (enabled && isSearchMatch) {
+      res.push(item);
+    } else if (enabled) {
       res.push(item);
     }
   });
+
   return res;
-});
+} );
+
+   console.log(trips.value, "populated trips information");
 
 const banner = (images) => images.find((image) => image.type === "banner");
 </script>
@@ -68,7 +63,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
 <template>
   <main>
     <div>
-      <Slider :sliderTrips="slides" />
+      <Slider :sliderTrips="tripsSlides" />
     </div>
 
     <section
@@ -123,16 +118,16 @@ const banner = (images) => images.find((image) => image.type === "banner");
           <!-- Trips Display -->
           <!-- Trips Display -->
           <div
-            v-for="(card, index) in currentShowingCards"
+            v-for="(card, index) in trips"
             :key="index"
             class="card"
           >
             <div class="image-hover-effect">
-              <!-- <img
+              <img
                 :src="banner(card.images).url"
                 :alt="card.title"
                 class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
-              /> -->
+              />
             </div>
             <div class="tw-flex tw-justify-between tw-items-center">
               <h4
@@ -147,10 +142,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
                     class="tw-text-2xl tw-text-black"
                   ></iconify-icon>
                 </client-only>
-                <span class="card-title tw-text-sm"
-                  >{{ formatDate(card.startDate) }} -
-                  {{ formatDate(card.endDate) }}</span
-                >
+                
               </div>
             </div>
             <p class="card-text tw-font-normal tw-text-left">

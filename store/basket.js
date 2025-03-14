@@ -32,12 +32,9 @@ export const useBasketStore = defineStore({
             }
             break;
           case "trip":
-            if (country === "Nigeria") {
-              total += item.ngnPrice * item.qty;
-            } else {
-              total += item.usdPrice * item.qty;
-            }
+            total += item.price * item.qty;
             break;
+          
           default:
             break;
         }

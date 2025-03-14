@@ -33,6 +33,7 @@ const contentStore = useContentStore();
 const countries = computed(() => contentStore.countries);
 const hello = countries.value;
 const isNigerian = computed(() => store.location.countryCode === "NG");
+const file = ref(null);
 
 const showConsultationSchedule = ref(false);
 const setDateTime = (args) => {
@@ -83,23 +84,26 @@ const submitForm = async () => {
   const { valid } = await formHtml.value.validate(); // Validate form
 
   const { country, vacationDate, ...customer } = formData.value;
-  const installmentOptions = {
-    ngn: {
-      first: props.trip.installments.ngn.first,
-      second: props.trip.installments.ngn.second,
-    },
-    usd: {
-      first: props.trip.installments.usd.first,
-      second: props.trip.installments.usd.second,
-    },
-  };
+  let price = 0;
+  let payment_type = "";
+
+  if ( formData.value.payment_option === "Pay in Full" )
+  {
+    price = isNigerian.value ? props.trip?.ngn_price : props.trip?.usd_price;
+    payment_type = "onetime";
+  } else {
+    price = isNigerian.value
+      ? props.trip?.installments.ngn.first
+      : props.trip?.installments.usd.first;
+    payment_type = "installments";
+  }
 
   if (valid) {
-    const reqData =
+    const request_data =
       props.trip.type === "foreign"
         ? {
             qty: 1,
-            price: props.trip?.ngnPrice,
+            price,
             type: "trip",
             attributes: {
               id: ulid(),
@@ -109,44 +113,64 @@ const submitForm = async () => {
                   title: props.trip.title,
                   trip_type: "foreign",
                   expected_trip_month: "",
-                  payment_type:
-                    formData.value.payment_option === "Pay in Full"
-                      ? "onetime"
-                      : "installments",
+                  payment_type,
                   selected_consultation_date: formData.value.booked_date,
                   selected_consultation_time: formData.value.booked_time,
-                  destination: props.trip.locations[0].country,
+                  destination: props.trip.destinations[0].country,
                 },
               },
             },
           }
         : {
             qty: 1,
-            price: props.trip?.ngnPrice,
+            price,
             type: "trip",
             attributes: {
               id: ulid(),
               requestDetails: {
-                customer: {...customer, 
-                  country
-                },
+                customer: { ...customer, country },
                 trip: {
                   title: props.trip.title,
                   trip_type: props.trip.type,
                   expected_trip_month: "",
-                  payment_type:
-                    formData.value.payment_option === "Pay in Full"
-                      ? "onetime"
-                      : "installments"
+                  payment_type,
                 },
               },
             },
-        };
-    console.log( reqData );
-    basketStore.addToBasket(reqData);
+          };
+    basketStore.addToBasket(request_data);
   }
   router.push("/basket");
 };
+
+function uploadFile(uploadedFile) {
+  const formData = new FormData();
+  formData.append("file", uploadedFile.target.value); // Take the first file
+  const file = formData.get("file");
+}
+
+// const handleFileUpload = async () => {
+//   if (!file.value) {
+//     alert("Please select a file!");
+//     return;
+//   }
+
+//   const formData = new FormData();
+//   formData.append("file", file.value[0]); // Take the first file
+//   console.log( formData );
+
+//   try {
+//     // const response = await fetch("/api/upload", {
+//     //   method: "POST",
+//     //   body: formData,
+//     // });
+
+//     // const data = await response.json();
+//     // alert(data.message);
+//   } catch (error) {
+//     console.error("Upload failed:", error);
+//   }
+// };
 
 // Props to control modal visibility
 const props = defineProps({
@@ -173,7 +197,7 @@ onMounted(() => {
   <div v-if="isModalOpen" class="modal modal-content tw-md:w-5/6 tw-w-5/6">
     <div class="tw-rounded-lg tw-max-h-screen">
       <div
-        class="tw-bg-[#131313] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center"
+        class="tw-bg-[#C40977] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center"
       >
         <h4>{{ props.trip.title }}</h4>
         <button>
@@ -264,15 +288,17 @@ onMounted(() => {
               variant="outlined"
             ></v-text-field>
 
-            <!-- <v-file-upload
-            label="International Data Page"
-            accept=".pdf"
-            :rules="[(v) =>!!v || 'Please upload your International Data Page']"
-            required
-            variant="outlined"
-            @change="uploadFile"
-            v-if='props.trip.type === "foreign"'
-            ></v-file-upload> -->
+            <v-file-upload
+              label="International Data Page"
+              accept=".pdf"
+              :rules="[
+                (v) => !!v || 'Please upload your International Data Page',
+              ]"
+              required
+              variant="outlined"
+              @change="uploadFile"
+              v-if="props.trip.type === 'foreign'"
+            ></v-file-upload>
           </v-col>
 
           <!-- Right Column -->
@@ -296,7 +322,7 @@ onMounted(() => {
               variant="outlined"
             ></v-select>
 
-            <div class="tw-w-2/5 tw-max-w-auto tw-flex tw-pb-8">
+            <div class="tw-w-min-1/5 tw-max-w-auto tw-flex tw-pb-8">
               <MazPhoneNumberInput
                 label="Phone Number"
                 v-model="formData.phone"
@@ -341,8 +367,8 @@ onMounted(() => {
 
             <div>
               <v-text-field
-                v-if="trip.type === 'foreign'"
-                label="Preferred Month of Vacation "
+                v-if="trip.type === 'domestic'"
+                label="Select your Intended Trip Date "
                 v-model="formData.vacationDate"
                 type="date"
                 :rules="[(v) => !!v || 'Date is required']"
@@ -404,6 +430,19 @@ onMounted(() => {
             :rules="[(v) => !!v || 'Payment Option is required']"
             variant="outlined"
           ></v-select>
+
+          <!-- Here the customer will upload the data page for their passport -->
+          <v-file-input
+            label="Passport Data Page"
+            accept=".pdf"
+            :rules="[(v) => !!v || 'Please upload your passport']"
+            required
+            v-if="props.trip.type === 'foreign'"
+            @change="uploadFile"
+            v-model="file"
+            variant="outlined"
+            show-size
+          ></v-file-input>
         </v-row>
 
         <!-- Form actions -->

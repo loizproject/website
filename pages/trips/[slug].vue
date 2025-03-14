@@ -6,19 +6,12 @@ const route = useRoute();
 const store = useStore();
 const isNigerian = computed(() => store.location.countryCode === "NG");
 
-// Fetch card data from the JSON file
-const fetchCardData = async () => {
-  try {
-    cardsData = trips;
-  } catch (error) {
-    console.error("Failed to load slider data", error);
-  }
-};
-// Fetch the data when the component is mounted
-onMounted(fetchCardData);
+
 //Fetching the api
 const { data: apires } = await useAxiosFetch(`/trips/${route.params.slug}`);
 const trip = apires.data.trip;
+
+console.log(trip, "trip from the backend request");
 
 const intro = trip.images.find((image) => image.type === "intro");
 const images = trip.images.filter((image) => image.type === "caption");
@@ -42,16 +35,6 @@ function formatCurrency(currency, amount, locale = "en-NG") {
     currency: currency,
   }).format(amount);
 }
-
-let NGNaira = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "NGN",
-});
-
-let USDollar = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
 
 const itinerary = computed(() => {
   // if the description is an array then loop over it
@@ -91,19 +74,19 @@ const itinerary = computed(() => {
         </div>
 
         <div class="tw-mt-8">
-          <!-- <img
+          <img
             :src="intro.url"
             alt=""
             class="tw-rounded-md tw-w-[100%] tw-mx-auto"
-          /> -->
+          />
         </div>
 
         <div class="tw-flex tw-items-center tw-justify-center tw-mt-4">
           <h6 class="tw-text-3xl tw-font-normal" v-if="isNigerian">
-            {{ formatCurrency("NGN", trip.ngnPrice) }}
+            {{ formatCurrency("NGN", trip.ngn_price) }}
           </h6>
           <h6 class="tw-text-3xl tw-font-normal" v-else>
-            {{ formatCurrency("USD", trip.usdPrice, "en-US") }}
+            {{ formatCurrency("USD", trip.usd_price, "en-US") }}
           </h6>
         </div>
 
@@ -145,9 +128,9 @@ const itinerary = computed(() => {
           </ul>
         </div>
 
-        <div class="tw-mt-8 tw-flex tw-flex-col tw-max-w-[70%] tw-mx-auto">
+        <div class="tw-mt-8 tw-flex tw-flex-col tw-max-w-[70%] tw-mx-auto" v-if="trip.included">
           <div class="horizontal-line"></div>
-          <p class="tw-font-semibold tw-m-0">{{ trip.info }}</p>
+          <p class="tw-font-semibold tw-m-0 tw-text-center">Included in the package are {{ trip.included.join(", ") }}</p>
           <div class="horizontal-line"></div>
         </div>
 
@@ -162,10 +145,10 @@ const itinerary = computed(() => {
         </div>
 
         <div class="tw-mt-8">
-          <!-- <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full" /> -->
+          <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full" />
         </div>
 
-        <div class="tw-flex tw-flex-col tw-mt-8">
+        <div class="tw-flex tw-flex-col tw-mt-8" v-if="trip.tips.length > 0">
           <p class="tw-font-semibold">Tips for the Tour</p>
           <ul class="styled-list tw-ml-4">
             <li
@@ -195,15 +178,35 @@ const itinerary = computed(() => {
 
         <div
           class="tw-mt-8 tw-flex tw-flex-col tw-text-center tw-max-w-[95%] tw-mx-auto tw-bg-[#F9DAED] tw-rounded-md"
-        >
-          <p class="tw-mb-0 tw-p-3">{{ trip.pricing }}</p>
+        v-if="trip.not_included">
+        <p class="tw-font-semibold">The Package Does not include</p>
+          <p class="tw-mb-0 tw-p-3">{{ trip.not_included.join(", ") }}</p>
+        </div>
+
+        <div class="tw-flex tw-flex-col tw-pt-8" v-if="trip.booking_requirements.length > 0">
+          <p class="tw-font-semibold">Booking Requirements</p>
+          <ul class="styled-list tw-ml-4">
+            <li
+              v-for="(bullet, index) in trip.booking_requirements"
+              :key="index"
+              class="tw-flex tw-items-start tw-gap-2"
+            >
+              <client-only>
+                <iconify-icon
+                  icon="teenyicons:tick-circle-outline"
+                  class="tw-text-xl tw-mt-1"
+                ></iconify-icon>
+              </client-only>
+              <p>{{ bullet }}</p>
+            </li>
+          </ul>
         </div>
 
         <div class="tw-flex tw-flex-col tw-pt-8">
           <p class="tw-font-semibold">Payment Plan/Discount Offers</p>
           <ul class="styled-list tw-ml-4">
             <li
-              v-for="(bullet, index) in trip.plans"
+              v-for="(bullet, index) in trip.payment_plans"
               :key="index"
               class="tw-flex tw-items-start tw-gap-2"
             >

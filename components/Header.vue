@@ -241,7 +241,7 @@ const setActiveRoute = (routeName) => {
                   <div>
                     <h4>Consultation Session</h4>
                     <p>
-                      <i>{{ item.name }}</i>
+                      <i>{{ item.name ? item.name : item.title }}</i>
                     </p>
                   </div>
                   <p v-if="isNigerian" class="ml-2">
@@ -251,7 +251,7 @@ const setActiveRoute = (routeName) => {
                 </div>
                 <div v-else class="d-flex items-center justify-space-between">
                   <div>
-                    <h4>{{ item.name }}</h4>
+                    <h4>{{ item.title }}</h4>
                     <p>
                       <i v-if="item.third_party">Third party Service</i>
                       <i v-else>
@@ -259,8 +259,9 @@ const setActiveRoute = (routeName) => {
                       </i>
                     </p>
                   </div>
-                  <p class="ml-2">{{ formatCurrency('USD', item.price * item.qty, 'en-US') }}</p>
                 </div>
+                <p class="ml-2" v-if="isNigerian">{{ formatCurrency('NGN', item.price * item.qty, 'en-NG') }}</p>
+                <p class="ml-2" v-else>{{ formatCurrency('USD', item.price * item.qty, 'en-US') }}</p>
                 <v-divider></v-divider>
               </div>
             </v-card>

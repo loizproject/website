@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^1.1.0",
+    "@nuxtjs/cloudinary": "^4.0.0",
     "@nuxtjs/google-fonts": "^3.0.2",
     "@paypal/paypal-js": "^8.0.5",
     "@pinia/nuxt": "^0.5.1",
