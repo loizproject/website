@@ -41,7 +41,7 @@ export const useBasketStore = defineStore({
       });
 
       return total;
-    },
+    }
   },
   actions: {
     setBasket(payload) {

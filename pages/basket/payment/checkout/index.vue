@@ -31,7 +31,9 @@ const mazPhoneKey = ref(1);
 const textLimit = computed(() => (xs.value ? 12 : 25));
 const payPalReady = ref(false);
 
-const subTotal = computed(() => basketStore.getSubTotal);
+const subTotal = computed( () => basketStore.getSubTotal );
+const vat = computed( () => subTotal.value * 0.075 );
+const total = computed( () => subTotal.value + vat.value );
 const user = computed(() => authStore.user);
 const services = computed(() => contentStore.services);
 const countries = computed(() => contentStore.countries);
@@ -43,7 +45,7 @@ const paths = computed(() => route.path.split("/"));
 
 const form = ref({
   email: computed(() => (authStore.user ? authStore.user.email : null)).value,
-  amount: subTotal.value,
+  amount: total.value,
   country: userLocation.value,
   fName: null,
   lName: null,
@@ -135,7 +137,7 @@ function generateREF() {
 
 async function payWithPaystack(e) {
   e.preventDefault();
-  const amount = parseFloat(Number(subTotal.value));
+  const amount = parseFloat(Number(total.value));
   const paystack = new PaystackPop();
   const reference = generateREF();
   form.value.amount = amount;
@@ -143,7 +145,7 @@ async function payWithPaystack(e) {
   store.setToast("Initializing Transaction. Please wait...", { type: "info" });
   const newTrx = {
     reference,
-    form: form.value
+    form: form.value,
   };
   try {
     const res = await useAxiosPost("/orders/checkout", newTrx);
@@ -182,7 +184,7 @@ async function payWithPaystack(e) {
 
 async function payWithRave(e) {
   e.preventDefault();
-  const amount = parseFloat(Number(subTotal.value));
+  const amount = parseFloat(Number(total.value));
   const tx_ref = generateREF();
   form.value.amount = amount;
   form.value.country = userLocation.value;
@@ -267,7 +269,7 @@ async function initPayPal() {
 }
 
 async function payWithPayPal(paypal) {
-  const amount = parseFloat(Number(subTotal.value));
+  const amount = parseFloat(Number(total.value));
   form.value.amount = amount;
   form.value.country = userLocation.value;
   const reference = generateREF();
@@ -419,7 +421,6 @@ useHead({
                 </p>
               </div>
               <div v-else class="d-flex align-start justify-space-between mb-3">
-                {{ console.log(n) }}
                 <p>{{ n.title }}</p>
                 <p v-if="isNigerian" class="ml-5">
                   <strong>
@@ -438,6 +439,24 @@ useHead({
               </p>
               <p v-else class="summary__price">
                 <strong>{{ formatCurrency("USD", subTotal, "en-US") }}</strong>
+              </p>
+            </div>
+            <div class="d-flex align-end justify-space-between mt-5">
+              <p><strong>VAT (7.5%)</strong></p>
+              <p v-if="isNigerian" class="summary__price">
+                <b> {{ formatCurrency("NGN", vat) }} </b>
+              </p>
+              <p v-else class="summary__price">
+                <strong>{{ formatCurrency("USD", vat, "en-US") }}</strong>
+              </p>
+            </div>
+            <div class="d-flex align-end justify-space-between mt-5 tw-font-bolder">
+              <p class="tw-text-3xl"><strong>Total</strong></p>
+              <p v-if="isNigerian" class="summary__price">
+                <b> {{ formatCurrency("NGN", total) }} </b>
+              </p>
+              <p v-else class="summary__price">
+                <strong>{{ formatCurrency("USD", total, "en-US") }}</strong>
               </p>
             </div>
             <!-- <div v-if="isNigerian" class="mt-2">
@@ -490,11 +509,7 @@ useHead({
         </v-row>
       </div>
     </v-container>
-    <<<<<<< HEAD
-    <InfoModal v-if="infoStatus" :message="info" @close="infoStatus = false" />
-    =======
     <InfoModal v-if="info" :message="infoMsg" @close="info = false" />
-    >>>>>>> staging
     <SuccessModal v-if="success" :message="msg" @close="handleSuccessClose" />
     <FailureModal v-if="error" :message="errorMsg" @close="error = false" />
   </div>

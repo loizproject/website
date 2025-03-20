@@ -23,7 +23,8 @@ const basketStore = useBasketStore();
 
 const textLimit = ref(xs.value ? 12 : sm.value ? 25 : 40);
 const showConsultationSchedule = ref(false);
-const updatingService = ref(null);
+const updatingService = ref( null );
+const showDetails = ref( false );
 
 const services = computed(() => contentStore.services);
 const consultationPrice = computed(() => consultationStore.price_usd);
@@ -46,8 +47,8 @@ watch(basket, async (newBasket, oldBasket) => {
             price: isNigerian.value
               ? consultationPriceNGN.value
               : consultationPrice.value,
-            ...item
-          }
+            ...item,
+          };
 
         case "trip":
           return item;
@@ -174,6 +175,18 @@ function formatDate(date) {
   if (!date) return null;
   const [year, month, day] = date.split("-");
   return `${day}-${month}-${year}`;
+}
+
+function futureDate( days ){
+  const today = new Date();
+  const futureDate = new Date(today);
+  futureDate.setDate(today.getDate() + days);
+  return futureDate.toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
 }
 
 function formatTime(time24) {
@@ -381,11 +394,59 @@ useSeoMeta({
                           }}
                         </p>
                       </div>
-                      <p v-if="item && item.type === 'third_party'">
-                        Third Party Service
-                      </p>
+                      <div
+                        v-if="item.options.payment_type === 'installments' && showDetails"
+                        class="tw-border tw-w-[30rem] tw-border-[#EB5757] tw-rounded-md tw-py-3 tw-px-1 my-2"
+                        :data-aos="fade-up"
+                      >
+                        <div class="tw-px-2">
+                          <h3>Payment Summary</h3>
+                          <p class="tw-flex tw-justify-between my-2">
+                            <span>Balance Due Today:</span>
+                            <span v-if="isNigerian">
+                              {{
+                                formatCurrency(
+                                  "NGN",
+                                  item.options.payment_details.ngn.first
+                                )
+                              }}
+                            </span>
+                            <span v-else>
+                              {{
+                                formatCurrency(
+                                  "USD",
+                                  item.options.payment_details.usd.first,
+                                  "en-US"
+                                )
+                              }}
+                            </span>
+                          </p>
+                          <p class="tw-flex tw-justify-between my-2">
+                            <span>Second Installment:</span>
+                            <span v-if="isNigerian">
+                              {{
+                                formatCurrency(
+                                  "NGN",
+                                  item.options.payment_details.ngn.second
+                                )
+                              }}
+                            </span>
+                            <span v-else>
+                              {{
+                                formatCurrency(
+                                  "USD",
+                                  item.options.payment_details.usd.second,
+                                  "en-US"
+                                )
+                              }}
+                            </span>
+                          </p>
+                          <p class="tw-italic tw-font-semibold">
+                            Please note that the second installment will be due on {{futureDate(90)}} if you make a payment today
+                          </p>
+                        </div>
+                      </div>
                       <div class="tw-flex tw-gap-4">
-                        <p>{{ item.country || item.options.country }}</p>
                         <p>{{ item.qty }} Person(s)</p>
                       </div>
                     </div>
@@ -403,7 +464,7 @@ useSeoMeta({
                         Remove
                       </button>
                       <button
-                        :to="`${item.slug}`"
+                        @click="showDetails = !showDetails"
                         class="clear-basket d-flex tw-align-center tw-gap-1"
                       >
                         <client-only
@@ -412,7 +473,9 @@ useSeoMeta({
                             class="tw-text-xl tw-text-[#EB5757]"
                           ></iconify-icon
                         ></client-only>
-                        View
+                        {{
+                          showDetails ? "Hide Details" : "Show Details"
+                        }}
                       </button>
                     </div>
                   </div>
@@ -516,9 +579,18 @@ useSeoMeta({
               <p>Subtotal</p>
               <p class="summary__price">
                 <span v-if="isNigerian">
-                  <b>₦{{ useAmtToString(totalPrice) }}</b>
+                  <b>{{ formatCurrency("NGN",totalPrice) }}</b>
                 </span>
-                <span v-else> ${{ useAmtToString(totalPrice) }} </span>
+                <span v-else> {{ formatCurrency("USD", totalPrice, "en-US") }} </span>
+              </p>
+            </div>
+            <div class="d-flex align-center justify-space-between tw-my-2">
+              <p>VAT (7.5%)</p>
+              <p class="summary__price">
+                <span v-if="isNigerian">
+                  <b>{{ formatCurrency("NGN",totalPrice * 0.075) }}</b>
+                </span>
+                <span v-else> {{ formatCurrency("USD", totalPrice * 0.075, "en-US") }} </span>
               </p>
             </div>
             <!-- <div v-if="isNigerian" class="mt-4">

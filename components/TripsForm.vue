@@ -63,7 +63,7 @@ const formData = ref({
   phone: "",
   age: "",
   gender: "",
-  country: "",
+  country_of_residence: "",
   vacationDate: "",
   booked_date: "",
   booked_time: "",
@@ -81,13 +81,26 @@ const setSearchterm = () => {
 
 // Form submission
 const submitForm = async () => {
+
+  const emptyFields = Object.entries(formData.value)
+    .filter( ( [ key, value ] ) =>
+    {
+      if(props.trip.type !== "domestic" && key === "vacationDate") return false;
+      return value === "" || value === null || value === undefined
+    } )
+  .map(([key]) => key);
+  
+  // if form fields are empty return
+  if (emptyFields.length !== 0) return;
+
   const { valid } = await formHtml.value.validate(); // Validate form
 
-  const { country, vacationDate, ...customer } = formData.value;
+  const { country_of_residence, vacationDate, ...customer } = formData.value;
   let price = 0;
   let payment_type = "";
 
-  if ( formData.value.payment_option === "Pay in Full" )
+
+  if ( formData.value.payment_option === "Full Payment" )
   {
     price = isNigerian.value ? props.trip?.ngn_price : props.trip?.usd_price;
     payment_type = "onetime";
@@ -108,7 +121,7 @@ const submitForm = async () => {
             attributes: {
               id: ulid(),
               requestDetails: {
-                customer: { ...customer, country },
+                customer: { ...customer, country_of_residence, location: isNigerian ? "Nigeria": "Other"  },
                 trip: {
                   title: props.trip.title,
                   trip_type: "foreign",
@@ -329,6 +342,7 @@ onMounted(() => {
                 class="tw-w-full"
                 default-country-code="NG"
                 variant="outlined"
+                required
               />
             </div>
 
@@ -342,7 +356,7 @@ onMounted(() => {
             ></v-select>
 
             <v-select
-              v-model="formData.country"
+              v-model="formData.country_of_residence"
               :items="hello"
               item-title="name"
               variant="outlined"
@@ -359,6 +373,7 @@ onMounted(() => {
                     placeholder="Search"
                     variant="outlined"
                     class="mx-3 mt-4"
+                    required
                   />
                 </div>
                 <v-divider class="mt-2"></v-divider>
@@ -424,7 +439,7 @@ onMounted(() => {
           <v-select
             label="Payment Option"
             v-model="formData.payment_option"
-            :items="['Pay in Full', 'Pay in Installments']"
+            :items="['Full Payment', 'Installmental Payment']"
             type="string"
             required
             :rules="[(v) => !!v || 'Payment Option is required']"
