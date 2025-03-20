@@ -138,14 +138,14 @@ const setActiveRoute = (routeName) => {
                   <v-row>
                     <v-col cols="4">
                       <nuxt-link
-                        to="/consultations"
+                        to="/consultations/bookings"
                         class="sub-header__title d-flex align-center"
                       >
                         Book Consultation
                       </nuxt-link>
                     </v-col>
                     <v-col cols="4" v-for="n in services" :key="n.id">
-                      <nuxt-link :to="`/bookings/${n.slug}`">
+                      <nuxt-link :to="`/consultations/bookings/${n.slug}`">
                         {{ n.title }}
                       </nuxt-link>
                     </v-col>
