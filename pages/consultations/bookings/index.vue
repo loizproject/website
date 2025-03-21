@@ -49,7 +49,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="consultationn mx-auto">
+  <div class="mx-auto">
     <v-container>
       <div class="d-flex align-center justify-space-between">
         <h1>Book a consultation</h1>
