@@ -83,7 +83,8 @@ const basket = computed(() => {
 const logout = async () => {
   try {
     await authStore.logout();
-    store.setToast("Logged out succesfully", { type: "success" });
+    store.setToast( "Logged out succesfully", { type: "success" } );
+    router.push("/");
   } catch (error) {
     useErrorHandler(error);
   }
