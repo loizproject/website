@@ -373,18 +373,6 @@ useSeoMeta({
                         ></client-only>
                         Remove
                       </button>
-                      <button
-                        :to="`${item.slug}`"
-                        class="clear-basket d-flex tw-align-center tw-gap-1"
-                      >
-                        <client-only
-                          ><iconify-icon
-                            icon="iconoir:eye-solid"
-                            class="tw-text-xl tw-text-[#EB5757]"
-                          ></iconify-icon
-                        ></client-only>
-                        View
-                      </button>
                     </div>
                   </div>
 

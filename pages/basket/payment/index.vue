@@ -16,6 +16,8 @@ const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
 const route = useRoute();
 const router = useRouter();
 
+const installment_reference = route.params.installment;
+
 const store = useStore();
 const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
@@ -214,6 +216,11 @@ function proceedCheckout() {
   } else {
     store.setToast("You have no item in your basket!", { type: "info" });
   }
+}
+
+function updateBasketPrice ()
+{
+  
 }
 
 onMounted(async () => {

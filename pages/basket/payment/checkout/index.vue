@@ -29,7 +29,10 @@ const searchTerm = ref(null);
 const phoneResult = ref(null);
 const mazPhoneKey = ref(1);
 const textLimit = computed(() => (xs.value ? 12 : 25));
-const payPalReady = ref(false);
+const payPalReady = ref( false );
+const sellectdInstallment = route.query.installment;
+
+
 
 const subTotal = computed( () => basketStore.getSubTotal );
 const vat = computed( () => subTotal.value * 0.075 );
@@ -50,6 +53,7 @@ const form = ref({
   fName: null,
   lName: null,
   phone: null,
+  installment: null
 });
 
 const msg = ref({
@@ -117,6 +121,7 @@ function autofill() {
   form.value.fName = firstName;
   form.value.lName = lastName;
   form.value.phone = phoneNumber;
+  form.value.installment = sellectdInstallment;
 }
 
 function generateREF() {
@@ -132,7 +137,7 @@ function generateREF() {
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
     }
   );
-  return ref;
+  return sellectdInstallment ? sellectdInstallment : ref;
 }
 
 async function payWithPaystack(e) {
@@ -148,7 +153,7 @@ async function payWithPaystack(e) {
     form: form.value,
   };
   try {
-    const res = await useAxiosPost("/orders/checkout", newTrx);
+    !sellectdInstallment && await useAxiosPost("/orders/checkout", newTrx);
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
@@ -168,7 +173,7 @@ async function payWithPaystack(e) {
           msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
           success.value = true;
           await consultationStore.fetchAvailableDates();
-          await basketStore.clearBasket();
+          res.data.order.status === "completed" && await basketStore.clearBasket();
           info.value = false;
         }
       },
