@@ -223,15 +223,21 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        await useAxiosPost(
+        const res = await useAxiosPost(
           `/orders/flutterwave/payments/${payment.tx_ref}/verify`,
           {
             status: "success",
             payment_id: payment.transaction_id,
           }
         );
-        await basketStore.clearBasket();
-        await consultationStore.fetchAvailableDates();
+         if (res.status === 200) {
+          infoStatus.value = false;
+          msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
+          success.value = true;
+          await consultationStore.fetchAvailableDates();
+          res.data.order.status === "completed" && await basketStore.clearBasket();
+          info.value = false;
+        }
       },
       onclose: async function (incomplete) {
         if (incomplete) {
@@ -245,98 +251,100 @@ async function payWithRave(e) {
   }
 }
 
-async function initPayPal() {
-  let paypal;
-  if (
-    !(
-      isNigerian.value &&
-      (config.public.APP_ENV === "uat" ||
-        config.public.APP_ENV === "production")
-    )
-  ) {
-    try {
-      paypal = await loadScript({
-        clientId: config.public.PAYPAL_CLIENT_ID,
-        currency: "USD",
-      });
-    } catch (error) {
-      console.error("failed to load the PayPal JS SDK script", error);
-    }
-  }
+// This implementation has been descoped since October 2024
+// async function initPayPal() {
+//   let paypal;
+//   if (
+//     !(
+//       isNigerian.value &&
+//       (config.public.APP_ENV === "uat" ||
+//         config.public.APP_ENV === "production")
+//     )
+//   ) {
+//     try {
+//       paypal = await loadScript({
+//         clientId: config.public.PAYPAL_CLIENT_ID,
+//         currency: "USD",
+//       });
+//     } catch (error) {
+//       console.error("failed to load the PayPal JS SDK script", error);
+//     }
+//   }
 
-  if (paypal) {
-    try {
-      await payWithPayPal(paypal);
-    } catch (error) {
-      console.error("failed to render the PayPal Buttons", error);
-    }
-  }
-}
+//   if (paypal) {
+//     try {
+//       await payWithPayPal(paypal);
+//     } catch (error) {
+//       console.error("failed to render the PayPal Buttons", error);
+//     }
+//   }
+// }
+// async function payWithPayPal(paypal) {
+//   const amount = parseFloat(Number(total.value));
+//   form.value.amount = amount;
+//   form.value.country = userLocation.value;
+//   const reference = generateREF();
+//   const newTrx = {
+//     reference,
+//     form: form.value,
+//     basket: basket.value,
+//   };
+//   try {
+//     paypal
+//       .Buttons({
+//         style: {
+//           layout: "vertical",
+//           color: "silver",
+//           shape: "rect",
+//           label: "paypal",
+//           tagline: false,
+//         },
+//         createOrder() {
+//           return useAxiosPost("/payments/paypal-checkout", newTrx)
+//             .then((response) => response.data.data.order)
+//             .catch((error) => useErrorHandler(error));
+//         },
+//         onApprove(data) {
+//           return useAxiosPost("/payments/paypal-checkout-capture", {
+//             orderID: data.orderID,
+//           })
+//             .then((response) => {
+//               console.log(response);
+//               return response;
+//             })
+//             .then(async (orderData) => {
+//               console.log(
+//                 "Capture result",
+//                 orderData,
+//                 JSON.stringify(orderData, null, 2)
+//               );
+//               const transaction =
+//                 orderData.purchase_units[0].payments.captures[0];
+//               msg.value.info = `LTT Transaction ${transaction.status}: ${transaction.id}.`;
+//               success.value = true;
+//               await basketStore.clearBasket();
+//               await consultationStore.fetchAvailableDates();
+//             })
+//             .catch((error) => useErrorHandler(error));
+//         },
+//       })
+//       .render("#paypal-button-container");
+//   } catch (error) {
+//     console.log(error);
+//     useErrorHandler(error);
+//   }
+// }
 
-async function payWithPayPal(paypal) {
-  const amount = parseFloat(Number(total.value));
-  form.value.amount = amount;
-  form.value.country = userLocation.value;
-  const reference = generateREF();
-  const newTrx = {
-    reference,
-    form: form.value,
-    basket: basket.value,
-  };
-  try {
-    paypal
-      .Buttons({
-        style: {
-          layout: "vertical",
-          color: "silver",
-          shape: "rect",
-          label: "paypal",
-          tagline: false,
-        },
-        createOrder() {
-          return useAxiosPost("/payments/paypal-checkout", newTrx)
-            .then((response) => response.data.data.order)
-            .catch((error) => useErrorHandler(error));
-        },
-        onApprove(data) {
-          return useAxiosPost("/payments/paypal-checkout-capture", {
-            orderID: data.orderID,
-          })
-            .then((response) => {
-              console.log(response);
-              return response;
-            })
-            .then(async (orderData) => {
-              console.log(
-                "Capture result",
-                orderData,
-                JSON.stringify(orderData, null, 2)
-              );
-              const transaction =
-                orderData.purchase_units[0].payments.captures[0];
-              msg.value.info = `LTT Transaction ${transaction.status}: ${transaction.id}.`;
-              success.value = true;
-              await basketStore.clearBasket();
-              await consultationStore.fetchAvailableDates();
-            })
-            .catch((error) => useErrorHandler(error));
-        },
-      })
-      .render("#paypal-button-container");
-  } catch (error) {
-    console.log(error);
-    useErrorHandler(error);
-  }
-}
-
-const handleSuccessClose = () => {
+const handleSuccessClose = async () => {
   success.value = false;
+  await basketStore.fetchBasket();
   router.push("/");
 };
 
 onMounted(async () => {
   await store.fetchRates();
   await basketStore.fetchBasket();
+  // Paypal implementation has been descoped
   // initPayPal();
   autofill();
 });
