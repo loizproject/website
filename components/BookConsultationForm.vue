@@ -83,7 +83,7 @@ const disclaimerMsg = computed(() => {
       } will be charged for this consultation session. This fee is non-refundable`,
       "Only Paid fees validate the date and Time for consultation session",
       "Consultation session is a one-off and it is for 45 minutes",
-      "You can only re-schedule 72hours to booked consultation date",
+      "You can only re-schedule 72 hours to booked consultation date",
       "The company can request a customer to change their booked date and time of a consultation",
     ],
   };
