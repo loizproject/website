@@ -143,6 +143,7 @@ function generateREF() {
 async function payWithPaystack(e) {
   e.preventDefault();
   const amount = parseFloat(Number(total.value));
+  const testAmount = isNigerian ===  true ? 10000 : 100;
   const paystack = new PaystackPop();
   const reference = generateREF();
   form.value.amount = amount;
@@ -158,7 +159,7 @@ async function payWithPaystack(e) {
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
       reference,
-      amount: config.public.APP_ENV !== "production" ? 10000 : amount * 100,
+      amount: config.public.APP_ENV !== "production" ? testAmount : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
         info.value = true;
@@ -190,6 +191,7 @@ async function payWithPaystack(e) {
 async function payWithRave(e) {
   e.preventDefault();
   const amount = parseFloat(Number(total.value));
+  const testAmount = isNigerian ===  true ? 100 : 1;
   const tx_ref = generateREF();
   form.value.amount = amount;
   form.value.country = userLocation.value;
@@ -207,7 +209,7 @@ async function payWithRave(e) {
     FlutterwaveCheckout({
       public_key: config.public.FLW_PUBLIC_KEY,
       tx_ref,
-      amount: config.public.APP_ENV === "uat" ? 100 : amount,
+      amount: config.public.APP_ENV === "uat" ? testAmount : amount,
       currency: isNigerian.value ? "NGN" : "USD",
       payment_options: "card, ussd, bank",
       customer: {
