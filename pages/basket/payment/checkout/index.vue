@@ -29,14 +29,12 @@ const searchTerm = ref(null);
 const phoneResult = ref(null);
 const mazPhoneKey = ref(1);
 const textLimit = computed(() => (xs.value ? 12 : 25));
-const payPalReady = ref( false );
+const payPalReady = ref(false);
 const sellectdInstallment = route.query.installment;
 
-
-
-const subTotal = computed( () => basketStore.getSubTotal );
-const vat = computed( () => subTotal.value * 0.075 );
-const total = computed( () => subTotal.value + vat.value );
+const subTotal = computed(() => basketStore.getSubTotal);
+const vat = computed(() => subTotal.value * 0.075);
+const total = computed(() => subTotal.value + vat.value);
 const user = computed(() => authStore.user);
 const services = computed(() => contentStore.services);
 const countries = computed(() => contentStore.countries);
@@ -53,7 +51,7 @@ const form = ref({
   fName: null,
   lName: null,
   phone: null,
-  installment: null
+  installment: null,
 });
 
 const msg = ref({
@@ -143,7 +141,7 @@ function generateREF() {
 async function payWithPaystack(e) {
   e.preventDefault();
   const amount = parseFloat(Number(total.value));
-  const testAmount = isNigerian ===  true ? 10000 : 100;
+  const testAmount = isNigerian.value === true ? 10000 : 100;
   const paystack = new PaystackPop();
   const reference = generateREF();
   form.value.amount = amount;
@@ -154,27 +152,29 @@ async function payWithPaystack(e) {
     form: form.value,
   };
   try {
-    !sellectdInstallment && await useAxiosPost("/orders/checkout", newTrx);
+    !sellectdInstallment && (await useAxiosPost("/orders/checkout", newTrx));
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
       reference,
-      amount: config.public.APP_ENV !== "production" ? testAmount : amount * 100,
+      amount:
+        config.public.APP_ENV !== "production" ? testAmount : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
         info.value = true;
-        const res = await useAxiosPost(
+        const { data, status } = await useAxiosPost(
           `/orders/paystack/payments/${transaction.reference}/verify`,
           {
             status: "success",
           }
         );
-        if (res.status === 200) {
+        if (status === 200) {
           infoStatus.value = false;
           msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
           success.value = true;
           await consultationStore.fetchAvailableDates();
-          res.data.order.status === "completed" && await basketStore.clearBasket();
+          data.data.order.status === "completed" &&
+            (await basketStore.clearBasket());
           info.value = false;
         }
       },
@@ -191,7 +191,7 @@ async function payWithPaystack(e) {
 async function payWithRave(e) {
   e.preventDefault();
   const amount = parseFloat(Number(total.value));
-  const testAmount = isNigerian ===  true ? 100 : 1;
+  const testAmount = isNigerian.value === true ? 100 : 1;
   const tx_ref = generateREF();
   form.value.amount = amount;
   form.value.country = userLocation.value;
@@ -225,19 +225,20 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        const res = await useAxiosPost(
+        const { data, status } = await useAxiosPost(
           `/orders/flutterwave/payments/${payment.tx_ref}/verify`,
           {
             status: "success",
             payment_id: payment.transaction_id,
           }
         );
-         if (res.status === 200) {
+        if (status === 200) {
           infoStatus.value = false;
           msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
           success.value = true;
           await consultationStore.fetchAvailableDates();
-          res.data.order.status === "completed" && await basketStore.clearBasket();
+          data.data.order.status === "completed" &&
+            (await basketStore.clearBasket());
           info.value = false;
         }
       },
@@ -465,7 +466,9 @@ useHead({
                 <strong>{{ formatCurrency("USD", vat, "en-US") }}</strong>
               </p>
             </div>
-            <div class="d-flex align-end justify-space-between mt-5 tw-font-bolder">
+            <div
+              class="d-flex align-end justify-space-between mt-5 tw-font-bolder"
+            >
               <p class="tw-text-3xl"><strong>Total</strong></p>
               <p v-if="isNigerian" class="summary__price">
                 <b> {{ formatCurrency("NGN", total) }} </b>
