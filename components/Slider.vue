@@ -48,7 +48,7 @@ onMounted(() => {
           <div class="slide-content">
             <p class=" tw-text-[32px]">{{ slide.title }}</p>
             <p class=" tw-text-md">{{ slide.desc}}</p>
-            <v-btn :to="`/trips/${slide.link}`" class=" submit tw-rounded-lg">
+            <v-btn :to="`/trips/${slide.slug}`" class=" submit tw-rounded-lg">
               Book Now
             </v-btn>
           </div>

@@ -7,7 +7,7 @@
       "country": "United Kingdom" ,
       "image": "http://res.cloudinary.com/loiztours/image/upload/v1730379396/Windsor_castle.jpg",
       "desc2": "Discover the World on Your Terms With Loiz Tours & Solo Trip Package",
-      "link": "/biannual-solo-trip-united-kingdom"
+      "slug": "biannual-solo-trip-united-kingdom"
     },
 
 
@@ -19,7 +19,7 @@
       "country": "United Kingdom",
       "image": "https://res.cloudinary.com/loiztours/image/upload/v1743650062/trips/slides/q1gxauu17geehwnsg5yu.jpg",
       "desc2": "Experience a fun-filled Winter getaway with your family!",
-      "link": "/london-december-family-getaway-united-kingdom"
+      "slug": "london-december-family-getaway-united-kingdom"
     },
   
 
@@ -31,7 +31,7 @@
       "country": "United Kingdom",
       "image": "https://res.cloudinary.com/loiztours/image/upload/v1743652349/trips/slides/jclrjsm5oxhddlia8pwf.jpg",
       "desc2": "",
-      "link": "/world-travel-and-international-eventcentral-london-tour-united-kingdom"
+      "slug": "world-travel-and-international-eventcentral-london-tour-united-kingdom"
       }
   ]
   
