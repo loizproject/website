@@ -88,7 +88,7 @@
   "resources": [
     {
       "name": "Blog",
-      "route": "/"
+      "route": "/blog"
     },
     {
       "name": "Testimonials",
