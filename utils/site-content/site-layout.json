@@ -40,7 +40,7 @@
     },
     {
       "name": "Book Paid Consultation",
-      "route": "/book-consultation"
+      "route": "/consultations/bookings"
     },
     {
       "name": "Holiday Packages",

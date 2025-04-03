@@ -19,6 +19,7 @@ const { xs, mdAndUp } = useDisplay();
 const config = useRuntimeConfig();
 const route = useRoute();
 const router = useRouter();
+const installment_reference = route.params.installment;
 
 const formHtml = ref(null);
 const success = ref(false);
@@ -135,6 +136,7 @@ function generateREF() {
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
     }
   );
+  // fetch the reference for the basket item
   return sellectdInstallment ? sellectdInstallment : ref;
 }
 

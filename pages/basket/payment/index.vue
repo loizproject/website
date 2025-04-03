@@ -16,8 +16,6 @@ const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
 const route = useRoute();
 const router = useRouter();
 
-const installment_reference = route.params.installment;
-
 const store = useStore();
 const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
