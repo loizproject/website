@@ -1,37 +1,37 @@
 [
     {
       "id": 1,
-      "title": "Are you ready to embark on an unforgettable journey of self-discovery, adventure and freedom?",
-      "desc": " Our Solo Travel Adventure Package is designed for the intrepid explorer who thrives on independence and seeks to experience the world uniquely, personally.",
-      "text": "Solo Trip",
-      "country": "" ,
-      "image": "/Campaign1.png",
+      "title": "Soak up the thrills, seaside charm, and breathtaking experiences with our exclusive package to this iconic UK destination",
+      "desc": "Dive into the Ultimate Adventure at Blackpool and enjoy memorable and awesome thrills and seaside delights in our quarterly packaged Solo trip to this stunning destination in the United Kingdom.",
+      "text": "Biannual Solo Trip",
+      "country": "United Kingdom" ,
+      "image": "http://res.cloudinary.com/loiztours/image/upload/v1730379396/Windsor_castle.jpg",
       "desc2": "Discover the World on Your Terms With Loiz Tours & Solo Trip Package",
-      "link": ""
+      "link": "/biannual-solo-trip-united-kingdom"
     },
 
 
     {
       "id": 2,
-      "title": "Embark on an unforgettable journey to Spain and Barcelona with our exclusive travel package.",
-      "desc": "Get ready to experience the trip of a lifetime, filled with luxury, discovery, and unparalleled memories!",
-      "text": " Trip for Two",
-      "country": "",
-      "image": "/Campaign2.png",
-      "desc2": "Experience the timeless charm of Madrid. Book your journey.",
-      "link": ""
+      "title": "Unwind, explore, and enjoy thrilling tours of London, one of the world’s top travel destinations!",
+      "desc": "A 'fun-tastic' Winter Holiday for your family to relax and unwind with exhilarating travel experiences, and amazing tours of London, one of the most popular tourist destinations in the world.",
+      "text": "London December Family Getaway",
+      "country": "United Kingdom",
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1743650062/trips/slides/q1gxauu17geehwnsg5yu.jpg",
+      "desc2": "Experience a fun-filled Winter getaway with your family!",
+      "link": "/london-december-family-getaway-united-kingdom"
     },
   
 
     {
       "id": 3,
-      "title": "Explore the ancient lands of Abeokuta with our Bi-Monthly Daycation package.",
-      "desc": "Don't miss the chance to watch history unfold in the most adventurous manner you can imagine, and capture memorable photos at key landmarks and scenic viewpoints.",
-      "text": " Trip for Two",
-      "country": "",
-      "image": "/Campaign3.png",
-      "desc2": " Abeokuta Bi-monthly Daycation (Every Two Months).",
-      "link": ""
+      "title": "Connect with global leaders in travel, tourism, software, and more at this exclusive London networking event!",
+      "desc": "Explore new opportunities, gain industry insights, and expand your network in a dynamic group setting. ",
+      "text": "World Travel Market International Event",
+      "country": "United Kingdom",
+      "image": "https://res.cloudinary.com/loiztours/image/upload/v1743650489/trips/slides/pgyt7janxt1gtsvdj7lp.jpg",
+      "desc2": "",
+      "link": "/world-travel-and-international-eventcentral-london-tour-united-kingdom"
       }
   ]
   

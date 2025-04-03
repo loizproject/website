@@ -55,8 +55,6 @@ const currentShowingCards = computed(() => {
   return res;
 } );
 
-   console.log(trips.value, "populated trips information");
-
 const banner = (images) => images.find((image) => image.type === "banner");
 </script>
 

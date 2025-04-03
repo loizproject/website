@@ -11,7 +11,6 @@ const currentIndex = ref(0)
 // Fetch data from the JSON file
 const fetchSlides = async () => {
   try {
-    console.log(props.sliderTrips);
     slides.value = props.sliderTrips
   } catch (error) {
     console.error('Failed to load slider data', error)
@@ -45,11 +44,11 @@ onMounted(() => {
     <div class="slider" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
       
       <div v-for="(slide, index) in slides" :key="index" class="slide" 
-        :style="{ backgroundImage: `url(${slide.banner_url})` }">
+        :style="{ backgroundImage: `url(${slide.image})` }">
           <div class="slide-content">
             <p class=" tw-text-[32px]">{{ slide.title }}</p>
-            <p class=" tw-text-md">{{ slide.caption}}</p>
-            <v-btn :to="`/trips/${slide.slug}`" class=" submit tw-rounded-lg">
+            <p class=" tw-text-md">{{ slide.desc}}</p>
+            <v-btn :to="`/trips/${slide.link}`" class=" submit tw-rounded-lg">
               Book Now
             </v-btn>
           </div>
