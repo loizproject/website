@@ -167,7 +167,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
                     v-for="destination in card.destinations"
                     :key="destination.city"
                     class="tw-m-0 tw-text-[#eb0c8f]"
-                    >{{ destination.city }}</span
+                    >{{ destination.state }}</span
                   >
                 </div>
               </div>
