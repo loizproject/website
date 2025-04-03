@@ -140,7 +140,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
                     class="tw-text-2xl tw-text-black"
                   ></iconify-icon>
                 </client-only>
-                
+                {{ formatDate(card.start_date) }} - {{ formatDate(card.end_date) }}
               </div>
             </div>
             <p class="card-text tw-font-normal tw-text-left">
@@ -164,10 +164,10 @@ const banner = (images) => images.find((image) => image.type === "banner");
                   class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#fef3f9] tw-rounded-2xl"
                 >
                   <span
-                    v-for="location in card.locations"
-                    :key="location.city"
+                    v-for="destination in card.destinations"
+                    :key="destination.city"
                     class="tw-m-0 tw-text-[#eb0c8f]"
-                    >{{ location.city }}</span
+                    >{{ destination.city }}</span
                   >
                 </div>
               </div>
