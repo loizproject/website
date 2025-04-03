@@ -25,7 +25,6 @@ const startAutoSlide = () => {
 }
 
 
-
 const goToSlide = (index) => {
   currentIndex.value = index
 }

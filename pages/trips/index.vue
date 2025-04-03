@@ -133,7 +133,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
               >
                 {{ card.title }}
               </h4>
-              <div class="tw-gap-2 tw-flex tw-items-center">
+              <div class="tw-gap-2 tw-flex tw-items-center" v-if="card.start_date && card.end_date">
                 <client-only>
                   <iconify-icon
                     icon="oui:token-date"
