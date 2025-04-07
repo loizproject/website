@@ -414,6 +414,7 @@ onMounted(() => {
                 v-model="intendedDateModal"
                 width="85%"
                 max-width="500px"
+                variant="outlined"
               >
                 <v-card class="select-date pa-6">
                   <v-row no-gutters justify="center">
@@ -425,6 +426,7 @@ onMounted(() => {
                           :allowed-dates="allowedDates"
                           color="#02aace"
                           class="mt-4 ma"
+                          variant="outlined"
                           @update:model-value="intendedDateModal = false"
                         ></v-date-picker>
                       </div>
@@ -449,7 +451,7 @@ onMounted(() => {
           <!-- Here the customer will upload the data page for their passport -->
           <v-file-input
             label="Passport Data Page"
-            accept=".pdf"
+            accept=".pdf|.png"
             :rules="[(v) => !!v || 'Please upload your passport']"
             required
             v-if="props.trip.type === 'foreign'"
