@@ -451,7 +451,7 @@ onMounted(() => {
           <!-- Here the customer will upload the data page for their passport -->
           <v-file-input
             label="Passport Data Page"
-            accept=".pdf|.png"
+            accept=".pdf"
             :rules="[(v) => !!v || 'Please upload your passport']"
             required
             v-if="props.trip.type === 'foreign'"
