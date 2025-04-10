@@ -256,6 +256,8 @@ async function payWithRave(e) {
   }
 }
 
+function showPaymentType() {}
+
 // This implementation has been descoped since October 2024
 // async function initPayPal() {
 //   let paypal;
@@ -354,6 +356,16 @@ onMounted(async () => {
   autofill();
 });
 
+function displayPaymentType ( type )
+{
+  if ( type === "installments" )
+  {
+    return "Installment Payment";
+  }
+
+  return "Full Payment";
+}
+
 definePageMeta({
   middleware: ["auth"],
 });
@@ -439,13 +451,24 @@ useHead({
                 </p>
               </div>
               <div v-else class="d-flex align-start justify-space-between mb-3">
-                <p>{{ n.title }}</p>
+                <p>
+                  {{ n.title }} 
+                  <span
+                    class="tw-w-full tw-p-1 text-center tw-rounded-full tw-border-2 tw-border-[#e7028e] tw-ml-2"
+                  >
+                    {{ displayPaymentType(n.options.payment_type) }}
+                  </span></p>
                 <p v-if="isNigerian" class="ml-5">
                   <strong>
                     {{ formatCurrency("NGN", n.price * n.qty) }}
                   </strong>
                 </p>
                 <p v-else class="ml-5">
+                  <span
+                    class="tw-w-16 tw-rounded-full tw-border tw-border-[#e7028e]"
+                  >
+                    {{ n.options.payment_type }}
+                  </span>
                   {{ formatCurrency("USD", n.price * n.qty, "en-US") }}
                 </p>
               </div>

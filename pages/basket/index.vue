@@ -24,6 +24,11 @@ const consultationPriceNGN = computed(() => consultationStore.price_ngn);
 const availableDates = computed(() => consultationStore.availableDates);
 const rate = computed(() => store.rate);
 
+function navigateToDetails ( item )
+{
+  router.push( `/trips/${item.slug}` );
+}
+
 const basket = computed(() => {
   basketStore.basket.map((item) => {
     item.parentService = contentStore.getSubservicesById(
@@ -372,6 +377,18 @@ useSeoMeta({
                           ></iconify-icon
                         ></client-only>
                         Remove
+                      </button>
+                      <button
+                        class="clear-basket d-flex align-center tw-gap-1"
+                        @click="navigateToDetails(item)"
+                      >
+                        <client-only
+                          ><iconify-icon
+                            icon="iconoir:eye-solid"
+                            class="tw-text-xl tw-text-[#EB5757]"
+                          ></iconify-icon
+                        ></client-only>
+                        View
                       </button>
                     </div>
                   </div>

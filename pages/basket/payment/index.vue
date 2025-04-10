@@ -10,6 +10,19 @@ const toggleDropdown = (state) => {
   installment.value = state;
 };
 
+const viewRefs = ref( [] );
+const activeRef = ref( null );
+
+const setViewRefs = ( index ) => (el) =>
+{
+  if ( el ) viewRefs.value[ index ] = el;
+}
+
+const setActiveViewRef = ( index ) =>
+{
+  activeRef.value = index;
+}
+
 const activeInstallment = ref(null);
 
 const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
@@ -216,11 +229,6 @@ function proceedCheckout() {
   }
 }
 
-function updateBasketPrice ()
-{
-  
-}
-
 onMounted(async () => {
   await basketStore.fetchBasket();
   await consultationStore.fetchAvailableDates();
@@ -400,9 +408,10 @@ useSeoMeta({
                         </p>
                       </div>
                       <div
-                        v-if="item.options.payment_type === 'installments' && showDetails"
+                        v-if="item.options.payment_type === 'installments' && activeRef === index"
                         class="tw-border tw-w-[30rem] tw-border-[#EB5757] tw-rounded-md tw-py-3 tw-px-1 my-2"
                         :data-aos="fade-up"
+                        :ref="setViewRefs(index)"
                       >
                         <div class="tw-px-2">
                           <h3>Payment Summary</h3>
@@ -447,7 +456,7 @@ useSeoMeta({
                             </span>
                           </p>
                           <p class="tw-italic tw-font-semibold">
-                            Please note that the second installment will be due on {{futureDate(90)}} if you make a payment today
+                            Please note that the second installment will be due on {{futureDate(30)}} if you make a payment today
                           </p>
                         </div>
                       </div>
@@ -469,7 +478,7 @@ useSeoMeta({
                         Remove
                       </button>
                       <button
-                        @click="showDetails = !showDetails"
+                        @click="setActiveViewRef(index)"
                         class="clear-basket d-flex tw-align-center tw-gap-1"
                       >
                         <client-only
@@ -479,7 +488,7 @@ useSeoMeta({
                           ></iconify-icon
                         ></client-only>
                         {{
-                          showDetails ? "Hide Details" : "Show Details"
+                          activeRef === index ? "Hide Details" : "Show Details"
                         }}
                       </button>
                     </div>
