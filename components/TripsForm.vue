@@ -34,6 +34,7 @@ const countries = computed(() => contentStore.countries);
 const hello = countries.value;
 const isNigerian = computed(() => store.location.countryCode === "NG");
 const file = ref(null);
+const fileUrl = ref(null);
 
 const showConsultationSchedule = ref(false);
 const setDateTime = (args) => {
@@ -68,6 +69,7 @@ const formData = ref({
   booked_date: "",
   booked_time: "",
   payment_option: "",
+  passport_biodata_page: "",
 });
 
 definePageMeta({
@@ -81,15 +83,14 @@ const setSearchterm = () => {
 
 // Form submission
 const submitForm = async () => {
-
   const emptyFields = Object.entries(formData.value)
-    .filter( ( [ key, value ] ) =>
-    {
-      if(props.trip.type !== "domestic" && key === "vacationDate") return false;
-      return value === "" || value === null || value === undefined
-    } )
-  .map(([key]) => key);
-  
+    .filter(([key, value]) => {
+      if (props.trip.type !== "domestic" && key === "vacationDate")
+        return false;
+      return value === "" || value === null || value === undefined;
+    })
+    .map(([key]) => key);
+
   // if form fields are empty return
   if (emptyFields.length !== 0) return;
 
@@ -99,9 +100,7 @@ const submitForm = async () => {
   let price = 0;
   let payment_type = "";
 
-
-  if ( formData.value.payment_option === "Full Payment" )
-  {
+  if (formData.value.payment_option === "Full Payment") {
     price = isNigerian.value ? props.trip?.ngn_price : props.trip?.usd_price;
     payment_type = "onetime";
   } else {
@@ -121,7 +120,11 @@ const submitForm = async () => {
             attributes: {
               id: ulid(),
               requestDetails: {
-                customer: { ...customer, country_of_residence, location: isNigerian ? "Nigeria": "Other"  },
+                customer: {
+                  ...customer,
+                  country_of_residence,
+                  location: isNigerian ? "Nigeria" : "Other",
+                },
                 trip: {
                   title: props.trip.title,
                   trip_type: "foreign",
@@ -156,10 +159,23 @@ const submitForm = async () => {
   router.push("/basket");
 };
 
-function uploadFile(uploadedFile) {
-  const formData = new FormData();
-  formData.append("file", uploadedFile.target.value); // Take the first file
-  const file = formData.get("file");
+async function uploadFile() {
+  if (!file.value) return;
+
+  const uploadData = new FormData();
+  uploadData.append("file", file.value); // Take the first file
+
+  const { data } = await useAxiosPost("/biodata/upload", uploadData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  if ( data )
+  {
+    formData.value.passport_biodata_page = data?.url;
+  } else {
+    alert("File upload failed");
+  }
 }
 
 // const handleFileUpload = async () => {
@@ -452,7 +468,7 @@ onMounted(() => {
           <v-file-input
             label="Passport Data Page"
             accept=".pdf"
-            :rules="[(v) => !!v || 'Please upload your passport']"
+            :rules="[(v) => !!v || 'Please upload your passport biodata page']"
             required
             v-if="props.trip.type === 'foreign'"
             @change="uploadFile"

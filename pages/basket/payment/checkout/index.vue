@@ -19,7 +19,7 @@ const { xs, mdAndUp } = useDisplay();
 const config = useRuntimeConfig();
 const route = useRoute();
 const router = useRouter();
-const installment_reference = route.params.installment;
+const installment_reference = route.query.installment;
 
 const formHtml = ref(null);
 const success = ref(false);
@@ -32,6 +32,7 @@ const mazPhoneKey = ref(1);
 const textLimit = computed(() => (xs.value ? 12 : 25));
 const payPalReady = ref(false);
 const sellectdInstallment = route.query.installment;
+
 
 const subTotal = computed(() => basketStore.getSubTotal);
 const vat = computed(() => subTotal.value * 0.075);
@@ -137,7 +138,7 @@ function generateREF() {
     }
   );
   // fetch the reference for the basket item
-  return sellectdInstallment ? sellectdInstallment : ref;
+  return sellectdInstallment ? installment_reference : ref;
 }
 
 async function payWithPaystack(e) {
@@ -154,7 +155,8 @@ async function payWithPaystack(e) {
     form: form.value,
   };
   try {
-    !sellectdInstallment && (await useAxiosPost("/orders/checkout", newTrx));
+    console.log( installment_reference, "installment reference" );
+    !installment_reference && (await useAxiosPost("/orders/checkout", newTrx));
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
@@ -175,8 +177,6 @@ async function payWithPaystack(e) {
           msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
           success.value = true;
           await consultationStore.fetchAvailableDates();
-          data.data.order.status === "completed" &&
-            (await basketStore.clearBasket());
           info.value = false;
         }
       },
@@ -207,7 +207,7 @@ async function payWithRave(e) {
     basket: basket.value,
   };
   try {
-    await useAxiosPost("/orders/checkout", newTrx);
+    !installment_reference && await useAxiosPost("/orders/checkout", newTrx);
     FlutterwaveCheckout({
       public_key: config.public.FLW_PUBLIC_KEY,
       tx_ref,
@@ -239,8 +239,6 @@ async function payWithRave(e) {
           msg.value.info = `LTT Transaction Reference: ${transaction.reference}`;
           success.value = true;
           await consultationStore.fetchAvailableDates();
-          data.data.order.status === "completed" &&
-            (await basketStore.clearBasket());
           info.value = false;
         }
       },
