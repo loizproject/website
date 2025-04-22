@@ -155,7 +155,6 @@ async function payWithPaystack(e) {
     form: form.value,
   };
   try {
-    console.log( installment_reference, "installment reference" );
     !installment_reference && (await useAxiosPost("/orders/checkout", newTrx));
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
