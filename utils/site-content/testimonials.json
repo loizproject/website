@@ -1,6 +1,15 @@
 [
   {
     "id": 0,
+    "name": "Elizabeth",
+    "imgUrl": "elizabeth.png",
+    "location": "Lagos, Nigeria",
+    "date": "March 2025",
+    "content": "I am beyond thrilled to have successfully obtained my United Kingdom visa with the expert guidance of Loiz Tours & Travels Ltd. Their team demonstrated exceptional professionalism, efficiency, and support throughout the entire process. From our initial consultation to the final approval, they meticulously guided me, ensuring that all my documents were in order and that I was well-prepared for the application process. I highly recommend Loiz Tours & Travels Ltd to anyone seeking assistance with visa applications. Their expertise and dedication are truly unparalleled.",
+    "aos": "fade-left"
+  },
+  {
+    "id": 1,
     "name": "Adaobi",
     "imgUrl": "adaobi-24.png",
     "location": "Abuja, Nigeria",
@@ -9,7 +18,7 @@
     "aos": "zoom-out"
   },
   {
-    "id": 1,
+    "id": 2,
     "name": "Zino",
     "imgUrl": "zino.jpg",
     "location": "Benin City, Nigeria",
@@ -18,7 +27,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 2,
+    "id": 3,
     "name": "Nkechi",
     "imgUrl": "nkechi.jpg",
     "location": "Lagos, Nigeria",
@@ -27,7 +36,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 3,
+    "id": 4,
     "name": "Adaobi",
     "imgUrl": "adaobi.png",
     "location": "Abuja, Nigeria",
@@ -36,7 +45,7 @@
     "aos": "zoom-out"
   },
   {
-    "id": 4,
+    "id": 5,
     "name": "Nosa",
     "imgUrl": "nosa.png",
     "location": "Lagos, Nigeria",
@@ -45,7 +54,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 5,
+    "id": 6,
     "name": "Honourable Lucy",
     "imgUrl": "lucy.png",
     "location": "Edo State, Nigeria.",
@@ -54,7 +63,7 @@
     "aos": "zoom-in"
   },
   {
-    "id": 6,
+    "id": 7,
     "name": "Onose",
     "imgUrl": "nono.jpg",
     "location": "Ibadan, Nigeria",
@@ -63,7 +72,7 @@
     "aos": "zoom-in"
   },
   {
-    "id": 7,
+    "id": 8,
     "name": "Margaret",
     "imgUrl": "margaret.jpg",
     "location": "Lagos, Nigeria",
@@ -72,7 +81,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 8,
+    "id": 9,
     "name": "Ify",
     "imgUrl": "ify.png",
     "location": "Lagos, Nigeria",
@@ -81,7 +90,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 9,
+    "id": 10,
     "name": "Lauretta",
     "imgUrl": "lauretta.png",
     "location": "Asaba, Nigeria",
@@ -90,21 +99,12 @@
     "aos": "fade-right"
   },
   {
-    "id": 10,
+    "id": 11,
     "name": "Taiwo Family",
     "imgUrl": "taiwo.png",
     "location": "Lagos, Nigeria",
     "date": "December 2015",
     "content": "Our family holiday to the United States of America was packaged by Loiz Tours & Travels. We were given visas and had a swell time. We toured 10 American States all itineraries pre-planned by the indigenous Nigerian Company. Thanks Loiz Tours & Travels, you obviously have repeat customers here",
-    "aos": "fade-left"
-  },
-  {
-    "id": 11,
-    "name": "Elizabeth",
-    "imgUrl": "elizabeth.png",
-    "location": "Lagos, Nigeria",
-    "date": "December 2015",
-    "content": "I am beyond thrilled to have successfully obtained my United Kingdom visa with the expert guidance of Loiz Tours & Travels Ltd. Their team demonstrated exceptional professionalism, efficiency, and support throughout the entire process. From our initial consultation to the final approval, they meticulously guided me, ensuring that all my documents were in order and that I was well-prepared for the application process. I highly recommend Loiz Tours & Travels Ltd to anyone seeking assistance with visa applications. Their expertise and dedication are truly unparalleled.",
     "aos": "fade-left"
   }
 ]
