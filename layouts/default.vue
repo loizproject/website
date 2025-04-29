@@ -12,6 +12,7 @@ const router = useRouter();
 
 const drawer = ref(false);
 const showScrollToTop = ref(false);
+const menuOpen = ref(false);
 
 const services = computed(() => contentStore.services);
 const premiumServices = computed(() => contentStore.premiumServices);
@@ -34,6 +35,15 @@ const scrollFunction = () => {
   }
 };
 
+const closeMenu = () => {
+  menuOpen.value = false;
+};
+
+const navigateToConsultation = (slug) => {
+  router.push(`/consultations/bookings/${useGetSlug(slug)}`);
+  closeMenu();
+};
+
 onMounted(async () => {
   window.onscroll = () => {
     scrollFunction();
@@ -54,9 +64,9 @@ onMounted(async () => {
           <v-container>
             <nav class="d-flex justify-start justify-md-space-between mx-auto">
               <v-menu
+                v-model="menuOpen"
                 offset-y
                 content-class="services-menu"
-                :close-on-content-click="false"
                 min-width="300"
               >
                 <template v-slot:activator="{ props }">
@@ -87,11 +97,7 @@ onMounted(async () => {
                     <v-list-item-title>
                       <p
                         class="tw-text-base tw-w-full mb-0"
-                        @click="
-                          router.push(
-                            `/consultations/bookings/${useGetSlug(item.text)}`
-                          )
-                        "
+                        @click="navigateToConsultation(item.text)"
                       >
                         {{ item.text }}
                       </p>
