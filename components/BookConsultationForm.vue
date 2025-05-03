@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from "~/store";
-import { useAuthStore } from "~/store/auth";
-import { useBasketStore } from "~/store/basket";
-import { useConsultationStore } from "~/store/consultation";
-import { useContentStore } from "~/store/content";
-import { ulid } from "ulid";
+import {useStore} from "~/store";
+import {useAuthStore} from "~/store/auth";
+import {useBasketStore} from "~/store/basket";
+import {useConsultationStore} from "~/store/consultation";
+import {useContentStore} from "~/store/content";
+import {ulid} from "ulid";
 
 const store = useStore();
 const authStore = useAuthStore();
@@ -37,7 +37,7 @@ const subservice = computed(() => {
 });
 
 const form = ref({
-  service: { fields: [] },
+  service: {fields: []},
   booked_date: null,
   booked_time: null,
   subservice: subservice.value?.id ? subservice.value : null,
@@ -66,7 +66,7 @@ const filteredCountries = computed(() => {
   } else {
     const result = countries.value.filter((country) => {
       return (
-        country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1
+          country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1
       );
     });
     return result;
@@ -77,9 +77,9 @@ const disclaimerMsg = computed(() => {
     title: "Disclaimer!",
     items: [
       `A fee of ${
-        isNigerian.value
-          ? `₦${useAmtToString(priceNGN.value)}`
-          : `$${useAmtToString(price.value)}`
+          isNigerian.value
+              ? `₦${useAmtToString(priceNGN.value)}`
+              : `$${useAmtToString(price.value)}`
       } will be charged for this consultation session. This fee is non-refundable`,
       "Only Paid fees validate the date and Time for consultation session",
       "Consultation session is a one-off and it is for 45 minutes",
@@ -95,7 +95,8 @@ const storageKey = computed(() => {
     if (form.value.service && form.value.service.id) {
       res = `cnsltn_${user.value.email}_${form.value.service.id}`;
     }
-  } catch (error) {}
+  } catch (error) {
+  }
   return res;
 });
 
@@ -109,7 +110,7 @@ const getForm = () => {
 };
 
 const fetchAvailableDates = async () =>
-  await consultationStore.fetchAvailableDates();
+    await consultationStore.fetchAvailableDates();
 
 const allowedDates = (val) => {
   const currentDate = new Date();
@@ -119,12 +120,12 @@ const allowedDates = (val) => {
 
 const setService = () => {
   const service = consultationServices.value.filter(
-    (item) => _CamelCase(item.text) === _CamelCase(type.value)
+      (item) => _CamelCase(item.text) === _CamelCase(type.value)
   );
   service.length > 0 ? (form.value.service = service[0]) : "";
   form.value.service.id === 5
-    ? (form.value.countryOfInterest = "Nigeria")
-    : null;
+      ? (form.value.countryOfInterest = "Nigeria")
+      : null;
 };
 
 const changeService = () => {
@@ -134,12 +135,12 @@ const changeService = () => {
 
 const openDisclaimer = async () => {
   clearToast();
-  const { valid } = await formHtml.value.validate();
+  const {valid} = await formHtml.value.validate();
   if (
-    valid &&
-    form.value.booked_date &&
-    form.value.booked_time &&
-    phoneResult.value.isValid
+      valid &&
+      form.value.booked_date &&
+      form.value.booked_time &&
+      phoneResult.value.isValid
   ) {
     modal.value = true;
   } else if (!phoneResult.value.isValid) {
@@ -170,7 +171,7 @@ const setDateTime = (args) => {
 
 const convertToUTC = (dateTimeObject) => {
   const localDate = new Date(
-    `${dateTimeObject.booked_date}T${dateTimeObject.booked_time}`
+      `${dateTimeObject.booked_date}T${dateTimeObject.booked_time}`
   );
   const utcYear = localDate.getUTCFullYear();
   const utcMonth = localDate.getUTCMonth() + 1;
@@ -179,7 +180,7 @@ const convertToUTC = (dateTimeObject) => {
   const utcMinutes = localDate.getUTCMinutes();
   const utcSeconds = localDate.getUTCSeconds();
   const utcString = `${utcYear}-${pad(utcMonth)}-${pad(utcDay)}T${pad(
-    utcHours
+      utcHours
   )}:${pad(utcMinutes)}:${pad(utcSeconds)}Z`;
   dateTimeObject.utcDateTime = utcString;
   return utcString;
@@ -218,15 +219,15 @@ const bookConsultation = async () => {
   clearToast();
   try {
     form.value.nationality = location;
-    const { valid } = await formHtml.value.validate();
+    const {valid} = await formHtml.value.validate();
     if (valid) {
       if (phoneResult.value.isValid) {
         submitting.value = true;
         const data = {
           price:
-            location.value === "Nigeria"
-              ? Math.ceil(_CloneDeep(priceNGN.value))
-              : _CloneDeep(price.value),
+              location.value === "Nigeria"
+                  ? Math.ceil(_CloneDeep(priceNGN.value))
+                  : _CloneDeep(price.value),
           type: "consultation",
           attributes: {
             id: ulid(),
@@ -260,8 +261,8 @@ const bookConsultation = async () => {
         if (res) {
           clearForm();
           basket.value && basket.value.length > 0
-            ? router.push("/basket")
-            : null;
+              ? router.push("/basket")
+              : null;
         }
       } else {
         store.setToast("Please enter a valid phone number.", {
@@ -270,7 +271,7 @@ const bookConsultation = async () => {
         });
       }
     } else {
-      store.setToast("Please fill all required fields.", { type: "info" });
+      store.setToast("Please fill all required fields.", {type: "info"});
     }
   } catch (error) {
     useErrorHandler(error);
@@ -293,79 +294,79 @@ onMounted(async () => {
       <v-card v-if="form.service && form.service.text">
         <div class=""></div>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'title')"
-          v-model="form.title"
-          variant="outlined"
-          label="Title"
-          maxlength="10"
-          :rules="[
+            v-if="_Includes(form.service.fields, 'title')"
+            v-model="form.title"
+            variant="outlined"
+            label="Title"
+            maxlength="10"
+            :rules="[
             rules.required,
             (v) => /^[A-Za-z.]+$/.test(v) || 'Title must only contain letters',
           ]"
-          @change="save"
+            @change="save"
         ></v-text-field>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'first name')"
-          v-model="form.fName"
-          variant="outlined"
-          maxlength="20"
-          label="First Name"
-          :rules="[
+            v-if="_Includes(form.service.fields, 'first name')"
+            v-model="form.fName"
+            variant="outlined"
+            maxlength="20"
+            label="First Name"
+            :rules="[
             rules.required,
             rules.text,
             (v) =>
               /^[A-Za-z]+$/.test(v) || 'Firstname must only contain letters',
           ]"
-          @change="save"
+            @change="save"
         ></v-text-field>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'middle name')"
-          v-model="form.mName"
-          variant="outlined"
-          maxlength="20"
-          label="Middle Name"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'middle name')"
+            v-model="form.mName"
+            variant="outlined"
+            maxlength="20"
+            label="Middle Name"
+            @change="save"
         ></v-text-field>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'surname')"
-          v-model="form.lName"
-          variant="outlined"
-          label="Surname"
-          maxlength="20"
-          :rules="[rules.required, rules.text]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'surname')"
+            v-model="form.lName"
+            variant="outlined"
+            label="Surname"
+            maxlength="20"
+            :rules="[rules.required, rules.text]"
+            @change="save"
         ></v-text-field>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'email')"
-          v-model="form.email"
-          variant="outlined"
-          label="Email Address"
-          maxlength="30"
-          type="email"
-          :rules="[rules.required, rules.email]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'email')"
+            v-model="form.email"
+            variant="outlined"
+            label="Email Address"
+            maxlength="30"
+            type="email"
+            :rules="[rules.required, rules.email]"
+            @change="save"
         ></v-text-field>
         <MazPhoneNumberInput
-          v-if="_Includes(form.service.fields, 'phone')"
-          v-model="form.phone"
-          default-country-code="NG"
-          class="mb-6"
-          maxlength="20"
-          @update="phoneResult = $event"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'phone')"
+            v-model="form.phone"
+            default-country-code="NG"
+            :class="$vuetify.display.smAndDown ? 'mb-4' : 'mb-6'"
+            maxlength="20"
+            @update="phoneResult = $event"
+            @change="save"
         />
         <v-text-field
-          v-if="_Includes(form.service.fields, 'group name')"
-          v-model="form.noOfChildren"
-          variant="outlined"
-          label="Family/Group/Organisation Name"
-          :rules="[rules.required]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'group name')"
+            v-model="form.noOfChildren"
+            variant="outlined"
+            label="Family/Group/Organisation Name"
+            :rules="[rules.required]"
+            @change="save"
         ></v-text-field>
         <v-select
-          v-if="_Includes(form.service.fields, 'age')"
-          v-model="form.age"
-          :items="[
+            v-if="_Includes(form.service.fields, 'age')"
+            v-model="form.age"
+            :items="[
             '0-6',
             '7-12',
             '13-18',
@@ -375,63 +376,63 @@ onMounted(async () => {
             '51-65',
             '65+',
           ]"
-          type="number"
-          variant="outlined"
-          label="Age"
-          :rules="[rules.required, rules.string]"
-          @change="save"
+            type="number"
+            variant="outlined"
+            label="Age"
+            :rules="[rules.required, rules.string]"
+            @change="save"
         ></v-select>
         <v-select
-          v-if="
+            v-if="
             _Includes(form.service.fields, 'marital status') &&
             subserviceId != 8
           "
-          v-model="form.marital_status"
-          :items="['Single', 'Married', 'Divorced', 'Widowed', 'Others']"
-          variant="outlined"
-          label="Marital Status"
-          :rules="[rules.required, rules.text]"
-          @change="save"
+            v-model="form.marital_status"
+            :items="['Single', 'Married', 'Divorced', 'Widowed', 'Others']"
+            variant="outlined"
+            label="Marital Status"
+            :rules="[rules.required, rules.text]"
+            @change="save"
         ></v-select>
         <v-select
-          v-model="form.subservice"
-          :items="subservices"
-          item-text="title"
-          variant="outlined"
-          label="Subservice"
-          @change="save"
+            v-model="form.subservice"
+            :items="subservices"
+            item-text="title"
+            variant="outlined"
+            label="Subservice"
+            @change="save"
         ></v-select>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'educational qualification')"
-          v-model="form.qualification"
-          variant="outlined"
-          label="Current Educational Qualification"
-          :rules="[rules.required]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'educational qualification')"
+            v-model="form.qualification"
+            variant="outlined"
+            label="Current Educational Qualification"
+            :rules="[rules.required]"
+            @change="save"
         ></v-text-field>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'course')"
-          v-model="form.course"
-          variant="outlined"
-          label="Course of Study"
-          :rules="[rules.required]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'course')"
+            v-model="form.course"
+            variant="outlined"
+            label="Course of Study"
+            :rules="[rules.required]"
+            @change="save"
         ></v-text-field>
         <v-select
-          v-if="
+            v-if="
             _Includes(form.service.fields, 'desired educational qualification')
           "
-          v-model="form.categry_of_service"
-          :items="['First Degree', 'Masters', 'Diploma', 'Short Courses']"
-          variant="outlined"
-          label="Desired Educational Status"
-          :rules="[rules.required]"
-          @change="save"
+            v-model="form.categry_of_service"
+            :items="['First Degree', 'Masters', 'Diploma', 'Short Courses']"
+            variant="outlined"
+            label="Desired Educational Status"
+            :rules="[rules.required]"
+            @change="save"
         ></v-select>
         <v-select
-          v-if="_Includes(form.service.fields, 'visa type')"
-          v-model="form.visaType"
-          :items="[
+            v-if="_Includes(form.service.fields, 'visa type')"
+            v-model="form.visaType"
+            :items="[
             'Spouse',
             'Family',
             'Settlement',
@@ -442,126 +443,126 @@ onMounted(async () => {
             'Migrant Super Special visa',
             'Visiting visa',
           ]"
-          variant="outlined"
-          label="Visa Type"
-          :rules="[rules.required]"
-          @change="save"
+            variant="outlined"
+            label="Visa Type"
+            :rules="[rules.required]"
+            @change="save"
         ></v-select>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'no of dependants')"
-          v-model="form.noOfDependants"
-          variant="outlined"
-          type="number"
-          min="1"
-          inputmode="numeric"
-          label="No of Depenedants"
-          :rules="[rules.required]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'no of dependants')"
+            v-model="form.noOfDependants"
+            variant="outlined"
+            type="number"
+            min="1"
+            inputmode="numeric"
+            label="No of Depenedants"
+            :rules="[rules.required]"
+            @change="save"
         ></v-text-field>
         <v-select
-          v-if="_Includes(form.service.fields, 'holiday package type')"
-          v-model="form.visaType"
-          :items="['Parent', 'School owner', 'Other']"
-          variant="outlined"
-          label="Package Type"
-          :rules="[rules.required]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'holiday package type')"
+            v-model="form.visaType"
+            :items="['Parent', 'School owner', 'Other']"
+            variant="outlined"
+            label="Package Type"
+            :rules="[rules.required]"
+            @change="save"
         ></v-select>
         <v-text-field
-          v-if="_Includes(form.service.fields, 'no of children')"
-          v-model="form.noOfChildren"
-          variant="outlined"
-          type="number"
-          min="1"
-          label="No of children"
-          :rules="[rules.required]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'no of children')"
+            v-model="form.noOfChildren"
+            variant="outlined"
+            type="number"
+            min="1"
+            label="No of children"
+            :rules="[rules.required]"
+            @change="save"
         ></v-text-field>
         <v-select
-          v-if="_Includes(form.service.fields, 'job category')"
-          v-model="form.job_category"
-          :items="['Skilled Migrant', 'Highly Skilled Migrant']"
-          variant="outlined"
-          label="Job Category"
-          :rules="[rules.required]"
-          @change="save"
+            v-if="_Includes(form.service.fields, 'job category')"
+            v-model="form.job_category"
+            :items="['Skilled Migrant', 'Highly Skilled Migrant']"
+            variant="outlined"
+            label="Job Category"
+            :rules="[rules.required]"
+            @change="save"
         ></v-select>
         <v-select
-          v-if="_Includes(form.service.fields, 'country')"
-          v-model="form.country"
-          :items="filteredCountries"
-          item-title="name"
-          variant="outlined"
-          label="Country of Residence"
-          @update:model-value="setSearchterm"
-          :rules="[rules.required]"
+            v-if="_Includes(form.service.fields, 'country')"
+            v-model="form.country"
+            :items="filteredCountries"
+            item-title="name"
+            variant="outlined"
+            label="Country of Residence"
+            @update:model-value="setSearchterm"
+            :rules="[rules.required]"
         >
           <template v-slot:prepend-item>
             <div class="d-flex align-center justify-end">
               <v-text-field
-                v-model="searchTerm"
-                hide-details
-                type="text"
-                label="Search"
-                placeholder="Search"
-                variant="outlined"
-                class="mx-3 mt-4"
+                  v-model="searchTerm"
+                  hide-details
+                  type="text"
+                  label="Search"
+                  placeholder="Search"
+                  variant="outlined"
+                  class="mx-3 mt-4"
               />
             </div>
             <v-divider class="mt-2"></v-divider>
           </template>
         </v-select>
         <v-select
-          v-if="_Includes(form.service.fields, 'country of interest')"
-          v-model="form.countryOfInterest"
-          :items="filteredCountries"
-          item-title="name"
-          variant="outlined"
-          label="Country of Interest"
-          :rules="[rules.required]"
-          :disabled="form.service.id === 5"
-          @update:model-value="setSearchterm"
+            v-if="_Includes(form.service.fields, 'country of interest')"
+            v-model="form.countryOfInterest"
+            :items="filteredCountries"
+            item-title="name"
+            variant="outlined"
+            label="Country of Interest"
+            :rules="[rules.required]"
+            :disabled="form.service.id === 5"
+            @update:model-value="setSearchterm"
         >
           <template v-slot:prepend-item>
             <div class="d-flex align-center justify-end">
               <v-text-field
-                v-model="searchTerm"
-                hide-details
-                type="text"
-                label="Search"
-                placeholder="Search"
-                variant="outlined"
-                class="mx-3 mt-4"
+                  v-model="searchTerm"
+                  hide-details
+                  type="text"
+                  label="Search"
+                  placeholder="Search"
+                  variant="outlined"
+                  class="mx-3 mt-4"
               />
             </div>
             <v-divider class="mt-2"></v-divider>
           </template>
         </v-select>
         <div
-          v-if="_Includes(form.service.fields, 'travel date')"
-          class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
-          @click="intendedDateModal = true"
+            v-if="_Includes(form.service.fields, 'travel date')"
+            class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+            @click="intendedDateModal = true"
         >
           <label
-            v-if="!form.intended_trip_date"
-            style="color: rgba(0, 0, 0, 0.6)"
-            @click="intendedDateModal = true"
+              v-if="!form.intended_trip_date"
+              style="color: rgba(0, 0, 0, 0.6)"
+              @click="intendedDateModal = true"
           >
             Select Intended Date of Trip
           </label>
           <p v-else>
             {{ useDateFns(form.intended_trip_date, "dd-MM-yyyy") }}
           </p>
-          <v-icon class="ml-2"> mdi-calendar-month </v-icon>
+          <v-icon class="ml-2"> mdi-calendar-month</v-icon>
         </div>
         <div
-          class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
-          @click="showConsultationSchedule = true"
+            class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+            @click="showConsultationSchedule = true"
         >
           <label
-            v-if="!form.booked_date"
-            style="color: rgba(0, 0, 0, 0.6)"
-            @click="showConsultationSchedule = true"
+              v-if="!form.booked_date"
+              style="color: rgba(0, 0, 0, 0.6)"
+              @click="showConsultationSchedule = true"
           >
             Select Consultation Date and Time
           </label>
@@ -569,7 +570,7 @@ onMounted(async () => {
             {{ form.booked_date }}
             <i>({{ form.booked_time_formatted }})</i>
           </p>
-          <v-icon class="ml-2"> mdi-calendar-month </v-icon>
+          <v-icon class="ml-2"> mdi-calendar-month</v-icon>
         </div>
         <div v-if="_Includes(form.service.fields, 'misc')">
           <p class="misc">
@@ -578,37 +579,37 @@ onMounted(async () => {
             so we can ensure that our session is tailored to your needs.
           </p>
           <v-textarea
-            v-model="form.misc"
-            :rules="[rules.required, rules.miscLength]"
-            counter
-            variant="outlined"
-            rows="6"
-            no-resize
-            label="Let us know how we can help."
-            @keyup="setMisc"
-            @change="save"
+              v-model="form.misc"
+              :rules="[rules.required, rules.miscLength]"
+              counter
+              variant="outlined"
+              rows="6"
+              no-resize
+              label="Let us know how we can help."
+              @keyup="setMisc"
+              @change="save"
           ></v-textarea>
         </div>
         <v-checkbox
-          v-model="form.agreement"
-          :rules="[rules.required]"
-          class="terms-cond"
-          @change="save"
+            v-model="form.agreement"
+            :rules="[rules.required]"
+            class="terms-cond"
+            @change="save"
         >
           <template v-slot:label>
             <span class="mr-1"> I agree to Loiz Tours and Travels </span>
             <a
-              target="_blank"
-              :href="`${config.public.APP_URL}/terms`"
-              @click.stop
+                target="_blank"
+                :href="`${config.public.APP_URL}/terms`"
+                @click.stop
             >
               Terms & Conditions
             </a>
             <span class="mx-1">and</span>
             <a
-              target="_blank"
-              :href="`${config.public.APP_URL}/privacy-policy`"
-              @click.stop
+                target="_blank"
+                :href="`${config.public.APP_URL}/privacy-policy`"
+                @click.stop
             >
               Privacy Policy
             </a>
@@ -616,29 +617,29 @@ onMounted(async () => {
         </v-checkbox>
         <div class="d-flex align-center justify-center">
           <v-btn
-            large
-            type="submit"
-            class="submit"
-            elevation="0"
-            :disabled="submitting"
-            :loading="submitting"
+              large
+              type="submit"
+              class="submit"
+              elevation="0"
+              :disabled="submitting"
+              :loading="submitting"
           >
             Proceed
           </v-btn>
         </div>
       </v-card>
       <DisclaimerModal
-        v-if="modal"
-        :message="disclaimerMsg"
-        :submitting="submitting"
-        actionText="Proceed to Checkout"
-        @close="modal = false"
-        @submit="bookConsultation"
+          v-if="modal"
+          :message="disclaimerMsg"
+          :submitting="submitting"
+          actionText="Proceed to Checkout"
+          @close="modal = false"
+          @submit="bookConsultation"
       />
       <ConsultationSchedule
-        v-if="showConsultationSchedule"
-        @close="showConsultationSchedule = false"
-        @submit="setDateTime"
+          v-if="showConsultationSchedule"
+          @close="showConsultationSchedule = false"
+          @submit="setDateTime"
       />
       <v-dialog v-model="intendedDateModal" width="85%" max-width="500px">
         <v-card class="select-date pa-6">
@@ -647,11 +648,11 @@ onMounted(async () => {
               <h3 class="text-center mt-5">Select date</h3>
               <div class="d-flex justify-center">
                 <v-date-picker
-                  v-model="form.intended_trip_date"
-                  :allowed-dates="allowedDates"
-                  color="#02aace"
-                  class="mt-4 ma"
-                  @update:model-value="intendedDateModal = false"
+                    v-model="form.intended_trip_date"
+                    :allowed-dates="allowedDates"
+                    color="#02aace"
+                    class="mt-4 ma"
+                    @update:model-value="intendedDateModal = false"
                 ></v-date-picker>
               </div>
             </v-col>
@@ -667,12 +668,10 @@ onMounted(async () => {
   font-size: 24px;
   margin: 16px 0;
 }
+
 a.guide-link {
   color: $loiz-pink;
   font-size: 16px;
-}
-.m-phone-number-input {
-  width: 100%;
 }
 
 .v-form {
@@ -718,6 +717,44 @@ a.guide-link {
 .terms-cond {
   & a {
     font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .v-form {
+    :deep(.m-phone-number-input) {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.38);
+      border-radius: 4px;
+      font-size: 14px;
+
+      &:hover {
+        border-color: rgba(0, 0, 0, 0.87);
+      }
+
+      :deep(.m-phone-number-input__country-selector) {
+        min-width: 80px;
+        max-width: 80px;
+        padding: 0 4px;
+        border-right: 1px solid rgba(0, 0, 0, 0.12);
+
+        :deep(.m-phone-number-input__country-selector-button) {
+          padding: 0 2px;
+        }
+      }
+
+      :deep(.m-phone-number-input__input) {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 12px;
+        font-size: 14px;
+        border: none;
+        outline: none;
+        background: transparent;
+      }
+    }
   }
 }
 </style>
