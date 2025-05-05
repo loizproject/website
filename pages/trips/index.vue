@@ -275,6 +275,6 @@ const banner = (images) => images.find((image) => image.type === "banner");
 }
 
 .tw-text-sm {
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 </style>

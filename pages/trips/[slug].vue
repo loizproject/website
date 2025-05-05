@@ -1,6 +1,6 @@
 <script setup>
-import { useStore } from "~/store";
-import { useRoute } from "vue-router";
+import {useStore} from "~/store";
+import {useRoute} from "vue-router";
 
 const route = useRoute();
 const store = useStore();
@@ -8,7 +8,7 @@ const isNigerian = computed(() => store.location.countryCode === "NG");
 
 
 //Fetching the api
-const { data: apires } = await useAxiosFetch(`/trips/${route.params.slug}`);
+const {data: apires} = await useAxiosFetch(`/trips/${route.params.slug}`);
 const trip = apires.data.trip;
 
 console.log(trip, "trip from the backend request");
@@ -54,8 +54,8 @@ const itinerary = computed(() => {
           <h3 class="tw-text-4xl">{{ trip.title }}</h3>
           <p class="tw-my-4">{{ trip.description }}</p>
           <v-btn
-            class="submit tw-flex tw-w-[100px] tw-mt-2 tw-justify-center open-modal-btn"
-            @click="openModal"
+              class="submit tw-flex tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn"
+              @click="openModal"
           >
             Book Trip
           </v-btn>
@@ -65,19 +65,13 @@ const itinerary = computed(() => {
 
         <div class="tw-flex tw-gap-3 tw-items-center tw-mt-8">
           <h4 class="tw-text-2xl">More Details</h4>
-          <client-only
-            ><iconify-icon
-              icon="iconamoon:arrow-down-6-circle-light"
-              class="tw-text-4xl"
-            ></iconify-icon
-          ></client-only>
         </div>
 
         <div class="tw-mt-8">
           <img
-            :src="intro.url"
-            alt=""
-            class="tw-rounded-md tw-w-[100%] tw-mx-auto"
+              :src="intro.url"
+              alt=""
+              class="tw-rounded-md tw-w-[100%] tw-mx-auto"
           />
         </div>
 
@@ -91,18 +85,18 @@ const itinerary = computed(() => {
         </div>
 
         <div
-          class="tw-grid tw-grid-cols-1 tw-w-full md:tw-grid-cols-3 tw-mx-auto tw-gap-3 tw-mt-8"
+            class="tw-grid tw-grid-cols-1 tw-w-full md:tw-grid-cols-3 tw-mx-auto tw-gap-3 tw-mt-8"
         >
           <div
-            v-for="(image, index) in images"
-            :key="index"
-            class="tw-border-2 tw-border-[F585C7] tw-rounded-lg"
+              v-for="(image, index) in images"
+              :key="index"
+              class="tw-border-2 tw-border-[F585C7] tw-rounded-lg"
           >
             <div class="tw-p-2">
               <img
-                :src="image.url"
-                class="tw-w-full tw-h-60 tw-object-cover tw-rounded-md"
-                alt="image.caption"
+                  :src="image.url"
+                  class="tw-w-full tw-h-60 tw-object-cover tw-rounded-md"
+                  alt="image.caption"
               />
             </div>
             <p class="tw-text-center tw-text-lg">{{ image.caption }}</p>
@@ -113,14 +107,14 @@ const itinerary = computed(() => {
           <p class="tw-font-semibold">Itenary</p>
           <ul class="styled-list tw-ml-4">
             <li
-              v-for="(bullet, index) in trip.itinerary"
-              :key="index"
-              class="tw-flex tw-items-start tw-gap-2"
+                v-for="(bullet, index) in trip.itinerary"
+                :key="index"
+                class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                  icon="teenyicons:tick-circle-outline"
-                  class="tw-text-xl tw-mt-1"
+                    icon="teenyicons:tick-circle-outline"
+                    class="tw-text-xl tw-mt-1"
                 ></iconify-icon>
               </client-only>
               <p>{{ bullet.description }}</p>
@@ -130,14 +124,16 @@ const itinerary = computed(() => {
 
         <div class="tw-mt-8 tw-flex tw-flex-col tw-max-w-[70%] tw-mx-auto" v-if="trip.included">
           <div class="horizontal-line"></div>
-          <p class="tw-font-semibold tw-m-0 tw-text-center">Included in the package are {{ trip.included.join(", ") }}</p>
+          <p class="tw-font-semibold tw-m-0 tw-text-center">Included in the package are {{
+              trip.included.join(", ")
+            }}</p>
           <div class="horizontal-line"></div>
         </div>
 
         <div class="tw-mx-auto tw-mt-4">
           <v-btn
-            class="submit tw-p-5 tw-flex tw-w-[100px] tw-mt-2 tw-justify-center open-modal-btn"
-            @click="openModal"
+              class="submit tw-p-5 tw-flex tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn"
+              @click="openModal"
           >
             Book Trip
           </v-btn>
@@ -145,27 +141,27 @@ const itinerary = computed(() => {
         </div>
 
         <div class="tw-mt-8">
-          <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full" />
+          <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full"/>
         </div>
 
         <div class="tw-flex tw-flex-col tw-mt-8" v-if="trip.tips.length > 0">
           <p class="tw-font-semibold">Tips for the Tour</p>
           <ul class="styled-list tw-ml-4">
             <li
-              v-for="(bullet, index) in trip.tips"
-              :key="index"
-              class="tw-flex tw-items-start tw-gap-2"
+                v-for="(bullet, index) in trip.tips"
+                :key="index"
+                class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                  icon="teenyicons:tick-circle-outline"
-                  class="tw-text-xl tw-mt-1"
+                    icon="teenyicons:tick-circle-outline"
+                    class="tw-text-xl tw-mt-1"
                 ></iconify-icon>
               </client-only>
               <div>
                 <p v-if="Array.isArray(bullet.description)">
                   <span v-for="(desc, i) in bullet.description" :key="i">
-                    {{ desc.description }}<br />
+                    {{ desc.description }}<br/>
                   </span>
                 </p>
                 <p v-else>
@@ -177,9 +173,9 @@ const itinerary = computed(() => {
         </div>
 
         <div
-          class="tw-mt-8 tw-flex tw-flex-col tw-text-center tw-max-w-[95%] tw-mx-auto tw-bg-[#F9DAED] tw-rounded-md"
-        v-if="trip.not_included">
-        <p class="tw-font-semibold">The Package Does not include</p>
+            class="tw-mt-8 tw-flex tw-flex-col tw-text-center tw-max-w-[95%] tw-mx-auto tw-bg-[#F9DAED] tw-rounded-md"
+            v-if="trip.not_included">
+          <p class="tw-font-semibold">The Package Does not include</p>
           <p class="tw-mb-0 tw-p-3">{{ trip.not_included.join(", ") }}</p>
         </div>
 
@@ -187,14 +183,14 @@ const itinerary = computed(() => {
           <p class="tw-font-semibold">Booking Requirements</p>
           <ul class="styled-list tw-ml-4">
             <li
-              v-for="(bullet, index) in trip.booking_requirements"
-              :key="index"
-              class="tw-flex tw-items-start tw-gap-2"
+                v-for="(bullet, index) in trip.booking_requirements"
+                :key="index"
+                class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                  icon="teenyicons:tick-circle-outline"
-                  class="tw-text-xl tw-mt-1"
+                    icon="teenyicons:tick-circle-outline"
+                    class="tw-text-xl tw-mt-1"
                 ></iconify-icon>
               </client-only>
               <p>{{ bullet }}</p>
@@ -206,14 +202,14 @@ const itinerary = computed(() => {
           <p class="tw-font-semibold">Payment Plan/Discount Offers</p>
           <ul class="styled-list tw-ml-4">
             <li
-              v-for="(bullet, index) in trip.payment_plans"
-              :key="index"
-              class="tw-flex tw-items-start tw-gap-2"
+                v-for="(bullet, index) in trip.payment_plans"
+                :key="index"
+                class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                  icon="teenyicons:tick-circle-outline"
-                  class="tw-text-xl tw-mt-1"
+                    icon="teenyicons:tick-circle-outline"
+                    class="tw-text-xl tw-mt-1"
                 ></iconify-icon>
               </client-only>
               <p>{{ bullet }}</p>
@@ -222,32 +218,24 @@ const itinerary = computed(() => {
         </div>
 
         <v-btn
-          class="submit tw-flex tw-p-5 tw-w-[100px] tw-mt-2 tw-justify-center open-modal-btn tw-items-center"
-          @click="openModal"
+            class="submit tw-flex tw-p-5 tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn tw-items-center"
+            @click="openModal"
         >
           Book Trip
-          <span>
-            <client-only>
-              <iconify-icon
-                icon="teenyicons:arrow-right-solid"
-                class="tw-text-xl tw-text-[#eb0c8f] tw-ml-2"
-              ></iconify-icon>
-            </client-only>
-          </span>
         </v-btn>
 
         <TripsForm
-          :trip="trip"
-          :isModalOpen="isModalOpen"
-          @close-modal="closeModal"
+            :trip="trip"
+            :isModalOpen="isModalOpen"
+            @close-modal="closeModal"
         />
       </div>
     </div>
 
     <TripsForm
-      :trip="trip"
-      :isModalOpen="isModalOpen"
-      @close-modal="closeModal"
+        :trip="trip"
+        :isModalOpen="isModalOpen"
+        @close-modal="closeModal"
     />
   </main>
   <!-- </div>
