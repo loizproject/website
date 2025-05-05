@@ -48,7 +48,7 @@ onMounted(() => {
             <p class=" tw-text-[32px]">{{ slide.title }}</p>
             <p class=" tw-text-md">{{ slide.desc}}</p>
             <v-btn :to="`/trips/${slide.slug}`" class=" submit tw-rounded-lg">
-              Book Now
+              See Details
             </v-btn>
           </div>
       </div>
