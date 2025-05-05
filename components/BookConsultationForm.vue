@@ -350,6 +350,7 @@ onMounted(async () => {
             v-if="_Includes(form.service.fields, 'phone')"
             v-model="form.phone"
             default-country-code="NG"
+            label="Example: 0802 123 45678"
             :class="$vuetify.display.smAndDown ? 'mb-4' : 'mb-6'"
             maxlength="20"
             @update="phoneResult = $event"

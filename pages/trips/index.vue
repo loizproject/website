@@ -1,8 +1,9 @@
 <script setup>
 import slides from "~/utils/site-content/sliderData.json";
 //Script for the cnpards
-import { ref, onMounted } from "vue";
-import { formatDate } from "~/utils/lib";
+import {ref, onMounted} from "vue";
+import {formatDate} from "~/utils/lib";
+
 let trips = ref([]);
 
 const tripsSlides = computed(() => slides.filter((item) => item.image));
@@ -40,10 +41,10 @@ const currentShowingCards = computed(() => {
     const enabled = item.enabled;
 
     const isSearchMatch =
-      !search.value ||
-      [item.title, item.text].some((field) =>
-        field?.toUpperCase().includes(search.value.toUpperCase())
-      );
+        !search.value ||
+        [item.title, item.text].some((field) =>
+            field?.toUpperCase().includes(search.value.toUpperCase())
+        );
 
     if (enabled && isSearchMatch) {
       res.push(item);
@@ -53,7 +54,7 @@ const currentShowingCards = computed(() => {
   });
 
   return res;
-} );
+});
 
 const banner = (images) => images.find((image) => image.type === "banner");
 </script>
@@ -61,11 +62,11 @@ const banner = (images) => images.find((image) => image.type === "banner");
 <template>
   <main>
     <div>
-      <Slider :sliderTrips="tripsSlides" />
+      <Slider :sliderTrips="tripsSlides"/>
     </div>
 
     <section
-      class="max-w-[90%] tw-items-center tw-bg-[F9DAED] tw-flex tw-flex-col tw-justify-center"
+        class="max-w-[90%] tw-items-center tw-bg-[F9DAED] tw-flex tw-flex-col tw-justify-center"
     >
       <div class="tw-flex tw-flex-col pt-10">
         <h3 class="tw-text-4xl tw-flex">Our Latest Trips</h3>
@@ -76,23 +77,23 @@ const banner = (images) => images.find((image) => image.type === "banner");
         <div class="tw-flex tw-items-center tw-justify-between tw-w-full">
           <div class="filter tw-flex tw-gap-6">
             <button
-              @click="clearDateFilter"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === null }"
+                @click="clearDateFilter"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === null }"
             >
               All
             </button>
             <button
-              @click="showCurrentTrips"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === true }"
+                @click="showCurrentTrips"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === true }"
             >
               Latest
             </button>
             <button
-              @click="showPastTrips"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === false }"
+                @click="showPastTrips"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === false }"
             >
               Previous
             </button>
@@ -100,13 +101,13 @@ const banner = (images) => images.find((image) => image.type === "banner");
 
           <div class="lg:tw-w-1/4">
             <v-text-field
-              v-model="search"
-              variant="outlined"
-              flat
-              clearable
-              placeholder="Search for a campaign"
-              prepend-inner-icon="mdi-magnify"
-              density="comfortable"
+                v-model="search"
+                variant="outlined"
+                flat
+                clearable
+                placeholder="Search for a campaign"
+                prepend-inner-icon="mdi-magnify"
+                density="comfortable"
             >
             </v-text-field>
           </div>
@@ -116,28 +117,29 @@ const banner = (images) => images.find((image) => image.type === "banner");
           <!-- Trips Display -->
           <!-- Trips Display -->
           <div
-            v-for="(card, index) in trips"
-            :key="index"
-            class="card"
+              v-for="(card, index) in trips"
+              :key="index"
+              class="card"
           >
             <div class="image-hover-effect">
               <img
-                :src="banner(card.images).url"
-                :alt="card.title"
-                class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
+                  :src="banner(card.images).url"
+                  :alt="card.title"
+                  class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
               />
             </div>
             <div class="tw-flex tw-justify-between tw-items-center">
               <h4
-                class="card-title tw-text-left tw-font-semibold tw-max-w-[70%]"
+                  class="card-title tw-text-left tw-font-semibold tw-max-w-[70%]"
+                  :class="{ 'tw-text-sm': card.title.length > 40 }"
               >
-                {{ card.title }}
+              {{ card.title }}
               </h4>
               <div class="tw-gap-2 tw-flex tw-items-center" v-if="card.start_date && card.end_date">
                 <client-only>
                   <iconify-icon
-                    icon="oui:token-date"
-                    class="tw-text-2xl tw-text-black"
+                      icon="oui:token-date"
+                      class="tw-text-2xl tw-text-black"
                   ></iconify-icon>
                 </client-only>
                 {{ formatDate(card.start_date) }} - {{ formatDate(card.end_date) }}
@@ -150,24 +152,24 @@ const banner = (images) => images.find((image) => image.type === "banner");
               <div class="tw-flex tw-items-center tw-gap-3">
                 <client-only>
                   <iconify-icon
-                    v-show="card.type === 'domestic'"
-                    icon="bxs:train"
-                    class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
+                      v-show="card.type === 'domestic'"
+                      icon="bxs:train"
+                      class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
                   ></iconify-icon>
                   <iconify-icon
-                    v-show="card.type === 'foreign'"
-                    icon="bxs:plane-alt"
-                    class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
+                      v-show="card.type === 'foreign'"
+                      icon="bxs:plane-alt"
+                      class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
                   ></iconify-icon>
                 </client-only>
                 <div
-                  class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#fef3f9] tw-rounded-2xl"
+                    class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#fef3f9] tw-rounded-2xl"
                 >
                   <span
-                    v-for="destination in card.destinations"
-                    :key="destination.city"
-                    class="tw-m-0 tw-text-[#eb0c8f]"
-                    >{{ destination.state }}</span
+                      v-for="destination in card.destinations"
+                      :key="destination.city"
+                      class="tw-m-0 tw-text-[#eb0c8f]"
+                  >{{ destination.state }}</span
                   >
                 </div>
               </div>
@@ -225,6 +227,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
   font-size: 16px;
   color: #1a1a1a;
 }
+
 .plane {
   border: 1px solid;
   border-radius: 50%;
@@ -269,5 +272,9 @@ const banner = (images) => images.find((image) => image.type === "banner");
   background-color: #f585c7;
   color: white;
   transition: 0.3s ease;
+}
+
+.tw-text-sm {
+  font-size: 0.875rem;
 }
 </style>
