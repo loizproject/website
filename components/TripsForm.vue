@@ -1,16 +1,16 @@
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
-import { useRouter } from "vue-router";
-import { computed } from "vue";
-import { useBasketStore } from "~/store/basket";
-import { ulid } from "ulid";
-import { useStore } from "~/store";
-import { useContentStore } from "~/store/content";
-import { useConsultationStore } from "~/store/consultation";
+import {ref, defineProps, defineEmits, onMounted} from "vue";
+import {useRouter} from "vue-router";
+import {computed} from "vue";
+import {useBasketStore} from "~/store/basket";
+import {ulid} from "ulid";
+import {useStore} from "~/store";
+import {useContentStore} from "~/store/content";
+import {useConsultationStore} from "~/store/consultation";
 
 const convertToUTC = (dateTimeObject) => {
   const localDate = new Date(
-    `${dateTimeObject.booked_date}T${dateTimeObject.booked_time}`
+      `${dateTimeObject.booked_date}T${dateTimeObject.booked_time}`
   );
   const utcYear = localDate.getUTCFullYear();
   const utcMonth = localDate.getUTCMonth() + 1;
@@ -19,7 +19,7 @@ const convertToUTC = (dateTimeObject) => {
   const utcMinutes = localDate.getUTCMinutes();
   const utcSeconds = localDate.getUTCSeconds();
   const utcString = `${utcYear}-${pad(utcMonth)}-${pad(utcDay)}T${pad(
-    utcHours
+      utcHours
   )}:${pad(utcMinutes)}:${pad(utcSeconds)}Z`;
   dateTimeObject.utcDateTime = utcString;
   return utcString;
@@ -72,6 +72,35 @@ const formData = ref({
   passport_biodata_page: "",
 });
 
+// Add these for phone validation
+const phoneValid = ref(true);
+const phoneErrorMessage = ref("");
+
+// Function to validate phone number
+const validatePhone = (isValid, phoneData) => {
+  phoneValid.value = isValid;
+  if (!isValid) {
+    phoneErrorMessage.value = "Please enter a valid phone number";
+  } else {
+    phoneErrorMessage.value = "";
+  }
+};
+
+// Function to check if phone is empty or invalid on submit
+const checkPhoneEmpty = () => {
+  if (!formData.value.phone || formData.value.phone.trim() === '') {
+    phoneValid.value = false;
+    phoneErrorMessage.value = "Phone number is required";
+    return false;
+  }
+  // Trigger validation if phone is not empty but potentially invalid
+  if (!phoneValid.value) {
+    phoneErrorMessage.value = "Please enter a valid phone number";
+    return false;
+  }
+  return true;
+};
+
 definePageMeta({
   middleware: ["auth"],
 });
@@ -83,20 +112,32 @@ const setSearchterm = () => {
 
 // Form submission
 const submitForm = async () => {
+  // Check phone validation first
+  if (!checkPhoneEmpty()) {
+    return; // Stop submission if phone is invalid or empty
+  }
+
+  // Check for empty fields (excluding phone and conditional vacationDate)
   const emptyFields = Object.entries(formData.value)
-    .filter(([key, value]) => {
-      if (props.trip.type !== "domestic" && key === "vacationDate")
-        return false;
-      return value === "" || value === null || value === undefined;
-    })
-    .map(([key]) => key);
+      .filter(([key, value]) => {
+        if (props.trip.type !== "domestic" && key === "vacationDate")
+          return false;
+        if (key === "phone") return false; // Handled separately
+        return value === "" || value === null || value === undefined;
+      })
+      .map(([key]) => key);
 
-  // if form fields are empty return
-  if (emptyFields.length !== 0) return;
+  if (emptyFields.length > 0) {
+    return; // Stop if other required fields are empty
+  }
 
-  const { valid } = await formHtml.value.validate(); // Validate form
+  // Validate the entire form (including Vuetify rules)
+  const {valid} = await formHtml.value.validate();
+  if (!valid) {
+    return; // Stop if form validation fails
+  }
 
-  const { country_of_residence, vacationDate, ...customer } = formData.value;
+  const {country_of_residence, vacationDate, ...customer} = formData.value;
   let price = 0;
   let payment_type = "";
 
@@ -105,15 +146,14 @@ const submitForm = async () => {
     payment_type = "onetime";
   } else {
     price = isNigerian.value
-      ? props.trip?.installments.ngn.first
-      : props.trip?.installments.usd.first;
+        ? props.trip?.installments.ngn.first
+        : props.trip?.installments.usd.first;
     payment_type = "installments";
   }
 
-  if (valid) {
-    const request_data =
+  const request_data =
       props.trip.type === "foreign"
-        ? {
+          ? {
             qty: 1,
             price,
             type: "trip",
@@ -123,7 +163,7 @@ const submitForm = async () => {
                 customer: {
                   ...customer,
                   country_of_residence,
-                  location: isNigerian ? "Nigeria" : "Other",
+                  location: isNigerian.value ? "Nigeria" : "Other",
                 },
                 trip: {
                   title: props.trip.title,
@@ -137,14 +177,14 @@ const submitForm = async () => {
               },
             },
           }
-        : {
+          : {
             qty: 1,
             price,
             type: "trip",
             attributes: {
               id: ulid(),
               requestDetails: {
-                customer: { ...customer, country },
+                customer: {...customer, country_of_residence},
                 trip: {
                   title: props.trip.title,
                   trip_type: props.trip.type,
@@ -154,8 +194,7 @@ const submitForm = async () => {
               },
             },
           };
-    basketStore.addToBasket(request_data);
-  }
+  basketStore.addToBasket(request_data);
   router.push("/basket");
 };
 
@@ -165,41 +204,17 @@ async function uploadFile() {
   const uploadData = new FormData();
   uploadData.append("file", file.value); // Take the first file
 
-  const { data } = await useAxiosPost("/biodata/upload", uploadData, {
+  const {data} = await useAxiosPost("/biodata/upload", uploadData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
-  if ( data )
-  {
+  if (data) {
     formData.value.passport_biodata_page = data?.url;
   } else {
     alert("File upload failed");
   }
 }
-
-// const handleFileUpload = async () => {
-//   if (!file.value) {
-//     alert("Please select a file!");
-//     return;
-//   }
-
-//   const formData = new FormData();
-//   formData.append("file", file.value[0]); // Take the first file
-//   console.log( formData );
-
-//   try {
-//     // const response = await fetch("/api/upload", {
-//     //   method: "POST",
-//     //   body: formData,
-//     // });
-
-//     // const data = await response.json();
-//     // alert(data.message);
-//   } catch (error) {
-//     console.error("Upload failed:", error);
-//   }
-// };
 
 // Props to control modal visibility
 const props = defineProps({
@@ -226,25 +241,25 @@ onMounted(() => {
   <div v-if="isModalOpen" class="modal modal-content tw-md:w-5/6 tw-w-5/6">
     <div class="tw-rounded-lg tw-max-h-screen">
       <div
-        class="tw-bg-[#C40977] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center"
+          class="tw-bg-[#C40977] tw-text-white tw-p-4 tw-w-full tw-flex tw-justify-between tw-items-center"
       >
         <h4>{{ props.trip.title }}</h4>
         <button>
           <client-only>
             <iconify-icon
-              icon="ic:baseline-close"
-              class="tw-text-2xl tw-text-white"
-              @click="closeModal"
+                icon="ic:baseline-close"
+                class="tw-text-2xl tw-text-white"
+                @click="closeModal"
             ></iconify-icon>
           </client-only>
         </button>
       </div>
 
       <v-form
-        ref="formHtml"
-        @submit.prevent="submitForm"
-        lazy-validation
-        class="tw-p-10 tw-overflow-y-auto tw-h-[80vh] md:tw-h-[50vh] tw-w-full"
+          ref="formHtml"
+          @submit.prevent="submitForm"
+          lazy-validation
+          class="tw-p-10 tw-overflow-y-auto tw-h-[80vh] md:tw-h-[50vh] tw-w-full"
       >
         <p>Please fill out the form</p>
 
@@ -252,90 +267,90 @@ onMounted(() => {
           <!-- Left Column -->
           <v-col>
             <v-text-field
-              label="Title"
-              v-model="formData.title"
-              :rules="[
+                label="Title"
+                v-model="formData.title"
+                :rules="[
                 (v) => !!v || 'Title is required',
                 (v) =>
                   /^[A-Za-z.]+$/.test(v) || 'Title must only contain letters',
               ]"
-              required
-              variant="outlined"
-              maxlength="10"
+                required
+                variant="outlined"
+                maxlength="10"
             ></v-text-field>
 
             <v-text-field
-              label="Surname"
-              v-model="formData.surname"
-              :rules="[
+                label="Surname"
+                v-model="formData.surname"
+                :rules="[
                 (v) => !!v || 'Surname is required',
                 (v) =>
                   /^[A-Za-z-]+$/.test(v) || 'Surname must only contain letters',
               ]"
-              required
-              variant="outlined"
-              maxlength="20"
+                required
+                variant="outlined"
+                maxlength="20"
             ></v-text-field>
 
             <v-text-field
-              label="First Name"
-              v-model="formData.firstName"
-              :rules="[
+                label="First Name"
+                v-model="formData.firstName"
+                :rules="[
                 (v) => !!v || 'Firstname is required',
                 (v) =>
                   /^[A-Za-z]+$/.test(v) ||
                   'Firstname must only contain letters',
               ]"
-              required
-              variant="outlined"
-              maxlength="20"
+                required
+                variant="outlined"
+                maxlength="20"
             ></v-text-field>
 
             <v-text-field
-              label="Middle Name"
-              v-model="formData.middleName"
-              :rules="[
+                label="Middle Name"
+                v-model="formData.middleName"
+                :rules="[
                 (v) => !!v || 'Middlename is required',
                 (v) =>
                   /^[A-Za-z]+$/.test(v) ||
                   'Middlename must only contain letters',
               ]"
-              required
-              variant="outlined"
-              maxlength="20"
+                required
+                variant="outlined"
+                maxlength="20"
             ></v-text-field>
 
             <v-text-field
-              label="Email Address"
-              v-model="formData.email"
-              type="email"
-              :rules="[
+                label="Email Address"
+                v-model="formData.email"
+                type="email"
+                :rules="[
                 (v) => !!v || 'Email is required',
                 (v) => /.+@.+\..+/.test(v) || 'Email must be valid',
               ]"
-              required
-              variant="outlined"
+                required
+                variant="outlined"
             ></v-text-field>
 
             <v-file-upload
-              label="International Data Page"
-              accept=".pdf"
-              :rules="[
+                label="International Data Page"
+                accept=".pdf"
+                :rules="[
                 (v) => !!v || 'Please upload your International Data Page',
               ]"
-              required
-              variant="outlined"
-              @change="uploadFile"
-              v-if="props.trip.type === 'foreign'"
+                required
+                variant="outlined"
+                @change="uploadFile"
+                v-if="props.trip.type === 'foreign'"
             ></v-file-upload>
           </v-col>
 
           <!-- Right Column -->
           <v-col>
             <v-select
-              label="Age"
-              v-model="formData.age"
-              :items="[
+                label="Age"
+                v-model="formData.age"
+                :items="[
                 '0 - 6',
                 '7 - 12',
                 '13 - 18',
@@ -345,51 +360,60 @@ onMounted(() => {
                 '51 - 65',
                 '65+',
               ]"
-              type="number"
-              :rules="[(v) => !!v || 'Age is required']"
-              required
-              variant="outlined"
+                type="number"
+                :rules="[(v) => !!v || 'Age is required']"
+                required
+                variant="outlined"
             ></v-select>
 
-            <div class="tw-w-min-1/5 tw-max-w-auto tw-flex tw-pb-8">
+            <div class="tw-w-min-1/5 tw-max-w-auto tw-flex tw-flex-col tw-pb-8">
               <MazPhoneNumberInput
-                label="Phone Number"
-                v-model="formData.phone"
-                class="tw-w-full"
-                default-country-code="NG"
-                variant="outlined"
-                required
+                  label="Phone Number"
+                  v-model="formData.phone"
+                  class="tw-w-full"
+                  default-country-code="NG"
+                  variant="outlined"
+                  required
+                  :error="!phoneValid"
+                  :error-message="phoneErrorMessage"
+                  @update:valid="validatePhone"
+                  :rules="[
+                    () => phoneValid.value || phoneErrorMessage.value
+                  ]"
               />
+              <span v-if="!phoneValid" class="tw-text-red-500 tw-text-xs tw-mt-1">
+                {{ phoneErrorMessage }}
+              </span>
             </div>
 
             <v-select
-              label="Gender"
-              v-model="formData.gender"
-              :items="['Male', 'Female', 'Others']"
-              :rules="[(v) => !!v || 'Gender is required']"
-              required
-              variant="outlined"
+                label="Gender"
+                v-model="formData.gender"
+                :items="['Male', 'Female', 'Others']"
+                :rules="[(v) => !!v || 'Gender is required']"
+                required
+                variant="outlined"
             ></v-select>
 
             <v-select
-              v-model="formData.country_of_residence"
-              :items="hello"
-              item-title="name"
-              variant="outlined"
-              label="Country of Residence"
-              @update:model-value="setSearchterm"
+                v-model="formData.country_of_residence"
+                :items="hello"
+                item-title="name"
+                variant="outlined"
+                label="Country of Residence"
+                @update:model-value="setSearchterm"
             >
               <template v-slot:prepend-item>
                 <div class="d-flex align-center justify-end">
                   <v-text-field
-                    v-model="searchTerm"
-                    hide-details
-                    type="text"
-                    label="Search"
-                    placeholder="Search"
-                    variant="outlined"
-                    class="mx-3 mt-4"
-                    required
+                      v-model="searchTerm"
+                      hide-details
+                      type="text"
+                      label="Search"
+                      placeholder="Search"
+                      variant="outlined"
+                      class="mx-3 mt-4"
+                      required
                   />
                 </div>
                 <v-divider class="mt-2"></v-divider>
@@ -398,21 +422,21 @@ onMounted(() => {
 
             <div>
               <v-text-field
-                v-if="trip.type === 'domestic'"
-                label="Select your Intended Trip Date "
-                v-model="formData.vacationDate"
-                type="date"
-                :rules="[(v) => !!v || 'Date is required']"
-                required
-                variant="outlined"
+                  v-if="props.trip.type === 'domestic'"
+                  label="Select your Intended Trip Date "
+                  v-model="formData.vacationDate"
+                  type="date"
+                  :rules="[(v) => !!v || 'Date is required']"
+                  required
+                  variant="outlined"
               >
               </v-text-field>
 
               <label
-                class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
-                v-else
-                style="color: rgba(0, 0, 0, 0.6)"
-                @click="showConsultationSchedule = true"
+                  class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+                  v-else
+                  style="color: rgba(0, 0, 0, 0.6)"
+                  @click="showConsultationSchedule = true"
               >
                 <span v-if="formData.booked_date_formatted">
                   {{ formData.booked_date_formatted }}
@@ -422,15 +446,15 @@ onMounted(() => {
                 <span v-else>Select Consultation Date and Time</span>
               </label>
               <ConsultationSchedule
-                v-if="showConsultationSchedule"
-                @close="showConsultationSchedule = false"
-                @submit="setDateTime"
+                  v-if="showConsultationSchedule"
+                  @close="showConsultationSchedule = false"
+                  @submit="setDateTime"
               />
               <v-dialog
-                v-model="intendedDateModal"
-                width="85%"
-                max-width="500px"
-                variant="outlined"
+                  v-model="intendedDateModal"
+                  width="85%"
+                  max-width="500px"
+                  variant="outlined"
               >
                 <v-card class="select-date pa-6">
                   <v-row no-gutters justify="center">
@@ -438,12 +462,12 @@ onMounted(() => {
                       <h3 class="text-center mt-5">Select date</h3>
                       <div class="d-flex justify-center">
                         <v-date-picker
-                          v-model="form.intended_trip_date"
-                          :allowed-dates="allowedDates"
-                          color="#02aace"
-                          class="mt-4 ma"
-                          variant="outlined"
-                          @update:model-value="intendedDateModal = false"
+                            v-model="form.intended_trip_date"
+                            :allowed-dates="allowedDates"
+                            color="#02aace"
+                            class="mt-4 ma"
+                            variant="outlined"
+                            @update:model-value="intendedDateModal = false"
                         ></v-date-picker>
                       </div>
                     </v-col>
@@ -453,38 +477,43 @@ onMounted(() => {
             </div>
           </v-col>
         </v-row>
-        <v-row>
-          <v-select
-            label="Payment Option"
-            v-model="formData.payment_option"
-            :items="['Full Payment', 'Installmental Payment']"
-            type="string"
-            required
-            :rules="[(v) => !!v || 'Payment Option is required']"
-            variant="outlined"
-          ></v-select>
-
-          <!-- Here the customer will upload the data page for their passport -->
-          <v-file-input
-            label="Passport Data Page"
-            accept=".pdf"
-            :rules="[(v) => !!v || 'Please upload your passport biodata page']"
-            required
-            v-if="props.trip.type === 'foreign'"
-            @change="uploadFile"
-            v-model="file"
-            variant="outlined"
-            show-size
-          ></v-file-input>
+        <v-row class="tw-grid md:tw-grid-cols-2 tw-grid-cols-1 tw-items-center">
+          <v-col>
+            <v-select
+                label="Payment Option"
+                v-model="formData.payment_option"
+                :items="['Full Payment', 'Installmental Payment']"
+                type="string"
+                required
+                :rules="[(v) => !!v || 'Payment Option is required']"
+                variant="outlined"
+                class="fixed-size-select"
+            ></v-select>
+          </v-col>
+          <v-col>
+            <v-file-input
+                label="Passport Data Page"
+                accept=".pdf"
+                :rules="[(v) => !!v || 'Please upload your passport biodata page']"
+                required
+                v-if="props.trip.type === 'foreign'"
+                @change="uploadFile"
+                v-model="file"
+                variant="outlined"
+                show-size
+                class="fixed-size-file-input"
+            ></v-file-input>
+          </v-col>
         </v-row>
 
         <!-- Form actions -->
         <v-row class="d-flex justify-end">
           <v-btn class="submit" type="submit"
-            >Submit<client-only>
+          >Submit
+            <client-only>
               <iconify-icon
-                icon="teenyicons:arrow-right-solid"
-                class="tw-text-xl tw-text-white tw-ml-2"
+                  icon="teenyicons:arrow-right-solid"
+                  class="tw-text-xl tw-text-white tw-ml-2"
               ></iconify-icon>
             </client-only>
           </v-btn>
@@ -492,17 +521,17 @@ onMounted(() => {
       </v-form>
 
       <DisclaimerModal
-        v-if="modal"
-        :message="disclaimerMsg"
-        :submitting="submitting"
-        actionText="Proceed to Checkout"
-        @close="modal = false"
-        @submit="bookConsultation"
+          v-if="modal"
+          :message="disclaimerMsg"
+          :submitting="submitting"
+          actionText="Proceed to Checkout"
+          @close="modal = false"
+          @submit="bookConsultation"
       />
       <ConsultationSchedule
-        v-if="showConsultationSchedule"
-        @close="showConsultationSchedule = false"
-        @submit="setDateTime"
+          v-if="showConsultationSchedule"
+          @close="showConsultationSchedule = false"
+          @submit="setDateTime"
       />
     </div>
   </div>
@@ -524,6 +553,7 @@ onMounted(() => {
   border: none;
   outline: none;
 }
+
 .modal-content {
   overflow-y: auto;
   flex-grow: 1;
@@ -538,6 +568,7 @@ onMounted(() => {
     font-size: 1rem;
   }
 }
+
 .modal {
   position: fixed;
   top: 50%;
@@ -564,5 +595,49 @@ onMounted(() => {
 
 .maz-border {
   border-width: 40px !important;
+}
+
+.fixed-size-select,
+.fixed-size-file-input {
+  width: 100%;
+}
+
+/* Mobile responsiveness for phone number input */
+@media screen and (max-width: 600px) {
+  .v-form {
+    :deep(.m-phone-number-input) {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.38);
+      border-radius: 4px;
+      font-size: 14px;
+
+      &:hover {
+        border-color: rgba(0, 0, 0, 0.87);
+      }
+
+      :deep(.m-phone-number-input__country-selector) {
+        min-width: 80px;
+        max-width: 80px;
+        padding: 0 4px;
+        border-right: 1px solid rgba(0, 0, 0, 0.12);
+
+        :deep(.m-phone-number-input__country-selector-button) {
+          padding: 0 2px;
+        }
+      }
+
+      :deep(.m-phone-number-input__input) {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 12px;
+        font-size: 14px;
+        border: none;
+        outline: none;
+        background: transparent;
+      }
+    }
+  }
 }
 </style>

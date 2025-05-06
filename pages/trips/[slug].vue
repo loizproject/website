@@ -175,7 +175,7 @@ const itinerary = computed(() => {
         <div
             class="tw-mt-8 tw-flex tw-flex-col tw-text-center tw-max-w-[95%] tw-mx-auto tw-bg-[#F9DAED] tw-rounded-md"
             v-if="trip.not_included">
-          <p class="tw-font-semibold">The Package Does not include</p>
+          <p class="tw-font-semibold">The Package does not include</p>
           <p class="tw-mb-0 tw-p-3">{{ trip.not_included.join(", ") }}</p>
         </div>
 
