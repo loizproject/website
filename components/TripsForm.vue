@@ -112,12 +112,10 @@ const setSearchterm = () => {
 
 // Form submission
 const submitForm = async () => {
-  // Check phone validation first
   if (!checkPhoneEmpty()) {
-    return; // Stop submission if phone is invalid or empty
+    return;
   }
 
-  // Check for empty fields (excluding phone and conditional vacationDate)
   const emptyFields = Object.entries(formData.value)
       .filter(([key, value]) => {
         if (props.trip.type !== "domestic" && key === "vacationDate")
@@ -401,6 +399,8 @@ onMounted(() => {
                 item-title="name"
                 variant="outlined"
                 label="Country of Residence"
+                :rules="[(v) => !!v || 'Country of residence is required']"
+                required
                 @update:model-value="setSearchterm"
             >
               <template v-slot:prepend-item>
@@ -430,20 +430,25 @@ onMounted(() => {
                   required
                   variant="outlined"
               >
+
               </v-text-field>
 
               <label
                   class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
                   v-else
-                  style="color: rgba(0, 0, 0, 0.6)"
+                  :class="{ 'error-state': showConsultationError }"
                   @click="showConsultationSchedule = true"
               >
                 <span v-if="formData.booked_date_formatted">
                   {{ formData.booked_date_formatted }}
                   <i>({{ formData.booked_time_formatted }})</i>
                 </span>
-
-                <span v-else>Select Consultation Date and Time</span>
+                <span v-else>
+                  Select Consultation Date and Time
+                  <span v-if="showConsultationError" class="tw-text-red-500 tw-text-xs">
+                    * Required
+                  </span>
+                </span>
               </label>
               <ConsultationSchedule
                   v-if="showConsultationSchedule"
