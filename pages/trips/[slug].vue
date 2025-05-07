@@ -67,11 +67,11 @@ const itinerary = computed(() => {
           <h4 class="tw-text-2xl">More Details</h4>
         </div>
 
-        <div class="tw-mt-8">
+        <div class="tw-mt-8 tw-flex tw-justify-center">
           <img
               :src="intro.url"
-              alt=""
-              class="tw-rounded-md tw-w-[100%] tw-mx-auto"
+              alt="Trip introduction image"
+              class="tw-rounded-md tw-w-full tw-max-w-3xl tw-h-auto tw-mx-auto"
           />
         </div>
 
