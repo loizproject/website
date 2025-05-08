@@ -516,7 +516,7 @@ onMounted(() => {
                 accept=".pdf"
                 :rules="[
                     (v) => !!v || 'Please upload your passport biodata page',
-                    (v) => !v || v.size < 5000000 || 'File size should be less than 5 MB',
+                    (v) => !v || v.size < 5000000 || 'Please upload your passport biodata page',
                     ]"
                 required
                 v-if="props.trip.type === 'foreign'"
