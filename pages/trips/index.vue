@@ -1,7 +1,7 @@
 <script setup>
 import slides from "~/utils/site-content/sliderData.json";
 //Script for the cnpards
-import {ref, onMounted} from "vue";
+import {ref, onMounted, computed} from "vue";
 import {formatDate} from "~/utils/lib";
 
 let trips = ref([]);
@@ -18,10 +18,12 @@ onMounted(async () => {
     console.error(error);
   }
 });
+
 // Search query
 const search = ref("");
 // Toggle for future or past trips (true = future, false = past)
 const showFutureTrips = ref(null); // null means no date filter
+
 // Functions for date filter
 const showCurrentTrips = () => {
   showFutureTrips.value = true;
@@ -32,28 +34,36 @@ const showPastTrips = () => {
 const clearDateFilter = () => {
   showFutureTrips.value = null;
 };
-// Computed property to filter trips based on search and/or date
+
+// Computed property to filter trips based on search and date
 const currentShowingCards = computed(() => {
-  // const currentDate = new Date().toISOString().split("T")[0]; // Get today’s date in YYYY-MM-DD format
-  let res = [];
+  const today = new Date().toISOString().split('T')[0];
 
-  trips.value.forEach((item) => {
-    const enabled = item.enabled;
+  return trips.value.filter((item) => {
+    // Skip if not enabled
+    if (!item.enabled) return false;
 
-    const isSearchMatch =
-        !search.value ||
-        [item.title, item.text].some((field) =>
-            field?.toUpperCase().includes(search.value.toUpperCase())
-        );
+    // Apply search filter
+    if (search.value) {
+      const searchQuery = search.value.toUpperCase();
+      const titleMatch = item.title?.toUpperCase().includes(searchQuery);
+      const textMatch = item.text?.toUpperCase().includes(searchQuery);
 
-    if (enabled && isSearchMatch) {
-      res.push(item);
-    } else if (enabled) {
-      res.push(item);
+      if (!titleMatch && !textMatch) return false;
     }
-  });
 
-  return res;
+    // Apply date filter
+    if (showFutureTrips.value === true) {
+      // Show future trips (start date is after today)
+      return item.start_date >= today;
+    } else if (showFutureTrips.value === false) {
+      // Show past trips (end date is before today)
+      return item.end_date < today;
+    }
+
+    // If no date filter, show all
+    return true;
+  });
 });
 
 const banner = (images) => images.find((image) => image.type === "banner");
@@ -115,9 +125,8 @@ const banner = (images) => images.find((image) => image.type === "banner");
 
         <div class="card-container tw-grid tw-grid-cols-1 md:tw-grid-cols-2">
           <!-- Trips Display -->
-          <!-- Trips Display -->
           <div
-              v-for="(card, index) in trips"
+              v-for="(card, index) in currentShowingCards"
               :key="index"
               class="card"
           >
@@ -176,12 +185,6 @@ const banner = (images) => images.find((image) => image.type === "banner");
               </div>
               <v-btn :to="`/trips/${card.slug}`" class="submit" elevation="0">
                 See details
-                <!-- <client-only>
-                  <iconify-icon
-                    icon="teenyicons:arrow-right-solid"
-                    class="tw-text-xl tw-text-[#eb0c8f] tw-ml-2"
-                  ></iconify-icon>
-                </client-only> -->
               </v-btn>
             </div>
           </div>
@@ -276,7 +279,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
 }
 
 @media (max-width: 768px) {
-  .card > div:first-child {
+  .card > div:first-child { /* This targets the flex container with title and date */
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
