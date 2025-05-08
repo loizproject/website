@@ -141,7 +141,7 @@ const itinerary = computed(() => {
         </div>
 
         <div class="tw-mt-8">
-          <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full"/>
+          <img :src="outro.url" alt="campaign image" class="tw-rounded-md tw-w-full tw-max-w-3xl tw-h-auto tw-mx-auto"/>
         </div>
 
         <div class="tw-flex tw-flex-col tw-mt-8" v-if="trip.tips.length > 0">
