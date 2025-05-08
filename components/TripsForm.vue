@@ -35,6 +35,7 @@ const hello = countries.value;
 const isNigerian = computed(() => store.location.countryCode === "NG");
 const file = ref(null);
 const fileUrl = ref(null);
+const showConsultationError = ref(false);
 
 const showConsultationSchedule = ref(false);
 const setDateTime = (args) => {
@@ -116,23 +117,37 @@ const submitForm = async () => {
     return;
   }
 
+  // Consultation date validation for foreign trips
+  if (props.trip.type === 'foreign' && (!formData.value.booked_date || !formData.value.booked_time)) {
+    showConsultationError.value = true;
+    return;
+  } else {
+    showConsultationError.value = false;
+  }
+
+  // Passport biodata page validation for foreign trips
+  if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
+    // This will trigger the file input's validation
+    await formHtml.value.validate();
+    return;
+  }
+
   const emptyFields = Object.entries(formData.value)
       .filter(([key, value]) => {
-        if (props.trip.type !== "domestic" && key === "vacationDate")
-          return false;
+        if (props.trip.type !== "domestic" && key === "vacationDate") return false;
         if (key === "phone") return false; // Handled separately
         return value === "" || value === null || value === undefined;
       })
       .map(([key]) => key);
 
   if (emptyFields.length > 0) {
-    return; // Stop if other required fields are empty
+    return;
   }
 
   // Validate the entire form (including Vuetify rules)
   const {valid} = await formHtml.value.validate();
   if (!valid) {
-    return; // Stop if form validation fails
+    return;
   }
 
   const {country_of_residence, vacationDate, ...customer} = formData.value;
@@ -499,7 +514,10 @@ onMounted(() => {
             <v-file-input
                 label="Passport Data Page"
                 accept=".pdf"
-                :rules="[(v) => !!v || 'Please upload your passport biodata page']"
+                :rules="[
+                    (v) => !!v || 'Please upload your passport biodata page',
+                    (v) => !v || v.size < 5000000 || 'File size should be less than 5 MB',
+                    ]"
                 required
                 v-if="props.trip.type === 'foreign'"
                 @change="uploadFile"
@@ -605,6 +623,11 @@ onMounted(() => {
 .fixed-size-select,
 .fixed-size-file-input {
   width: 100%;
+}
+
+.error-state {
+  border-color: #ff5252 !important;
+  color: #ff5252;
 }
 
 /* Mobile responsiveness for phone number input */
