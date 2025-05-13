@@ -125,6 +125,12 @@ const submitForm = async () => {
     showConsultationError.value = false;
   }
 
+  // Add passport validation for foreign trips
+  if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
+    alert("Please upload your passport biodata page");
+    return;
+  }
+
   const emptyFields = Object.entries(formData.value)
       .filter(([key, value]) => {
         if (props.trip.type !== "domestic" && key === "vacationDate") return false;
@@ -194,11 +200,14 @@ const submitForm = async () => {
   router.push("/basket");
 };
 
-async function uploadFile() {
-  if (!file.value) return;
+
+async function uploadFile(e) {
+  if (!e?.target?.files?.[0]) return;
+
+  file.value = e.target.files[0];
 
   const uploadData = new FormData();
-  uploadData.append("file", file.value); // Take the first file
+  uploadData.append("file", file.value);
 
   const {data} = await useAxiosPost("/biodata/upload", uploadData, {
     headers: {
