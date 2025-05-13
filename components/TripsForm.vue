@@ -125,13 +125,6 @@ const submitForm = async () => {
     showConsultationError.value = false;
   }
 
-  // Passport biodata page validation for foreign trips
-  if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
-    // This will trigger the file input's validation
-    await formHtml.value.validate();
-    return;
-  }
-
   const emptyFields = Object.entries(formData.value)
       .filter(([key, value]) => {
         if (props.trip.type !== "domestic" && key === "vacationDate") return false;
@@ -139,16 +132,6 @@ const submitForm = async () => {
         return value === "" || value === null || value === undefined;
       })
       .map(([key]) => key);
-
-  if (emptyFields.length > 0) {
-    return;
-  }
-
-  // Validate the entire form (including Vuetify rules)
-  const {valid} = await formHtml.value.validate();
-  if (!valid) {
-    return;
-  }
 
   const {country_of_residence, vacationDate, ...customer} = formData.value;
   let price = 0;
