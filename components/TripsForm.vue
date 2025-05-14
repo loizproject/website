@@ -36,6 +36,8 @@ const isNigerian = computed(() => store.location.countryCode === "NG");
 const file = ref(null);
 const fileUrl = ref(null);
 const showConsultationError = ref(false);
+const isUploading = ref(false);
+const isSubmitting = ref(false);
 
 const showConsultationSchedule = ref(false);
 const setDateTime = (args) => {
@@ -113,111 +115,136 @@ const setSearchterm = () => {
 
 // Form submission
 const submitForm = async () => {
-  if (!checkPhoneEmpty()) {
+  if (isUploading.value) {
+    alert("Please wait for passport upload to complete");
     return;
   }
 
-  // Consultation date validation for foreign trips
-  if (props.trip.type === 'foreign' && (!formData.value.booked_date || !formData.value.booked_time)) {
-    showConsultationError.value = true;
-    return;
-  } else {
-    showConsultationError.value = false;
-  }
+  isSubmitting.value = true;
 
-  // Add passport validation for foreign trips
-  if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
-    alert("Please upload your passport biodata page");
-    return;
-  }
+  try {
 
-  const emptyFields = Object.entries(formData.value)
-      .filter(([key, value]) => {
-        if (props.trip.type !== "domestic" && key === "vacationDate") return false;
-        if (key === "phone") return false; // Handled separately
-        return value === "" || value === null || value === undefined;
-      })
-      .map(([key]) => key);
+    if (!checkPhoneEmpty()) {
+      return;
+    }
 
-  const {country_of_residence, vacationDate, ...customer} = formData.value;
-  let price = 0;
-  let payment_type = "";
+    // Consultation date validation for foreign trips
+    if (props.trip.type === 'foreign' && (!formData.value.booked_date || !formData.value.booked_time)) {
+      showConsultationError.value = true;
+      return;
+    } else {
+      showConsultationError.value = false;
+    }
 
-  if (formData.value.payment_option === "Full Payment") {
-    price = isNigerian.value ? props.trip?.ngn_price : props.trip?.usd_price;
-    payment_type = "onetime";
-  } else {
-    price = isNigerian.value
-        ? props.trip?.installments.ngn.first
-        : props.trip?.installments.usd.first;
-    payment_type = "installments";
-  }
+    // Add passport validation for foreign trips
+    if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
+      alert("Please upload your passport biodata page");
+      return;
+    }
 
-  const request_data =
-      props.trip.type === "foreign"
-          ? {
-            qty: 1,
-            price,
-            type: "trip",
-            attributes: {
-              id: ulid(),
-              requestDetails: {
-                customer: {
-                  ...customer,
-                  country_of_residence,
-                  location: isNigerian.value ? "Nigeria" : "Other",
-                },
-                trip: {
-                  title: props.trip.title,
-                  trip_type: "foreign",
-                  expected_trip_month: "",
-                  payment_type,
-                  selected_consultation_date: formData.value.booked_date,
-                  selected_consultation_time: formData.value.booked_time,
-                  destination: props.trip.destinations[0].country,
-                },
-              },
-            },
-          }
-          : {
-            qty: 1,
-            price,
-            type: "trip",
-            attributes: {
-              id: ulid(),
-              requestDetails: {
-                customer: {...customer, country_of_residence},
-                trip: {
-                  title: props.trip.title,
-                  trip_type: props.trip.type,
-                  expected_trip_month: "",
-                  payment_type,
+    const emptyFields = Object.entries(formData.value)
+        .filter(([key, value]) => {
+          if (props.trip.type !== "domestic" && key === "vacationDate") return false;
+          if (key === "phone") return false; // Handled separately
+          return value === "" || value === null || value === undefined;
+        })
+        .map(([key]) => key);
+
+    const {country_of_residence, vacationDate, ...customer} = formData.value;
+    let price = 0;
+    let payment_type = "";
+
+    if (formData.value.payment_option === "Full Payment") {
+      price = isNigerian.value ? props.trip?.ngn_price : props.trip?.usd_price;
+      payment_type = "onetime";
+    } else {
+      price = isNigerian.value
+          ? props.trip?.installments.ngn.first
+          : props.trip?.installments.usd.first;
+      payment_type = "installments";
+    }
+
+    const request_data =
+        props.trip.type === "foreign"
+            ? {
+              qty: 1,
+              price,
+              type: "trip",
+              attributes: {
+                id: ulid(),
+                requestDetails: {
+                  customer: {
+                    ...customer,
+                    country_of_residence,
+                    location: isNigerian.value ? "Nigeria" : "Other",
+                  },
+                  trip: {
+                    title: props.trip.title,
+                    trip_type: "foreign",
+                    expected_trip_month: "",
+                    payment_type,
+                    selected_consultation_date: formData.value.booked_date,
+                    selected_consultation_time: formData.value.booked_time,
+                    destination: props.trip.destinations[0].country,
+                  },
                 },
               },
-            },
-          };
-  basketStore.addToBasket(request_data);
-  router.push("/basket");
+            }
+            : {
+              qty: 1,
+              price,
+              type: "trip",
+              attributes: {
+                id: ulid(),
+                requestDetails: {
+                  customer: {...customer, country_of_residence},
+                  trip: {
+                    title: props.trip.title,
+                    trip_type: props.trip.type,
+                    expected_trip_month: "",
+                    payment_type,
+                  },
+                },
+              },
+            };
+    basketStore.addToBasket(request_data);
+    router.push("/basket");
+  } catch (error) {
+    console.error("Submission error:", error);
+    alert("An error occurred during submission");
+  } finally {
+    isSubmitting.value = false;
+  }
 };
-
 
 async function uploadFile(e) {
   if (!e?.target?.files?.[0]) return;
 
+  isUploading.value = true;
   file.value = e.target.files[0];
 
-  const uploadData = new FormData();
-  uploadData.append("file", file.value);
+  try {
+    const uploadData = new FormData();
+    uploadData.append("file", file.value);
 
-  const {data} = await useAxiosPost("/biodata/upload", uploadData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  if (data) {
-    formData.value.passport_biodata_page = data?.url;
-  } else {
-    alert("File upload failed");
+    const {data} = await useAxiosPost("/biodata/upload", uploadData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (data) {
+      formData.value.passport_biodata_page = data?.url;
+
+      alert("Passport uploaded successfully!");
+    } else {
+      alert("File upload failed");
+    }
+  } catch (error) {
+    alert("Error uploading file");
+    console.error(error);
+  } finally {
+    isUploading.value = false;
   }
 }
 
@@ -523,10 +550,19 @@ onMounted(() => {
 
         <!-- Form actions -->
         <v-row class="d-flex justify-end">
-          <v-btn class="submit" type="submit"
-          >Submit
+          <v-btn
+              class="submit"
+              type="submit"
+              :disabled="isUploading || isSubmitting"
+              :loading="isSubmitting"
+          >
+            <span v-if="isUploading">Uploading Passport...</span>
+            <span v-else-if="isSubmitting">Processing...</span>
+            <span v-else>Submit</span>
+
             <client-only>
               <iconify-icon
+                  v-if="!isUploading && !isSubmitting"
                   icon="teenyicons:arrow-right-solid"
                   class="tw-text-xl tw-text-white tw-ml-2"
               ></iconify-icon>
