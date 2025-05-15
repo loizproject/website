@@ -428,6 +428,11 @@ const navigateToTrip = (slug) => {
   font-size: 18px;
 }
 
+.sub-header__list .v-list-item-title {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 @media screen and (max-width: 1264px) {
   .sub-header__title {
     flex: 0 0 auto;
