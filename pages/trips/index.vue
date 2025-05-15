@@ -1,7 +1,8 @@
 <script setup>
 import slides from "~/utils/site-content/sliderData.json";
-import { ref, onMounted, computed } from "vue";
-import { formatDate } from "~/utils/lib";
+//Script for the cnpards
+import {ref, onMounted, computed} from "vue";
+import {formatDate} from "~/utils/lib";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -10,17 +11,14 @@ const menuOpen = ref(false);
 
 const tripsSlides = computed(() => slides.filter((item) => item.image));
 
-// Fetch trips with error handling
+// Fetch the data when the component is mounted
 onMounted(async () => {
   try {
+    // Fetch the data
     const res = await useAxiosFetch("/trips");
-    if (res.data?.data?.trips) {
-      trips.value.push(...res.data.data.trips);
-    } else {
-      console.error("No trips data received");
-    }
+    trips.value.push(...res.data.data.trips);
   } catch (error) {
-    console.error("Failed to fetch trips:", error);
+    console.error(error);
   }
 });
 
@@ -40,31 +38,38 @@ const clearDateFilter = () => {
   showFutureTrips.value = null;
 };
 
-// Computed property to filter trips with safety checks
+// Computed property to filter trips based on search and date
 const currentShowingCards = computed(() => {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().split('T')[0];
 
   return trips.value.filter((item) => {
+    // Skip if not enabled
     if (!item.enabled) return false;
 
+    // Apply search filter
     if (search.value) {
       const searchQuery = search.value.toUpperCase();
-      const titleMatch = item.title?.toUpperCase?.().includes(searchQuery) ?? false;
-      const textMatch = item.text?.toUpperCase?.().includes(searchQuery) ?? false;
+      const titleMatch = item.title?.toUpperCase().includes(searchQuery);
+      const textMatch = item.text?.toUpperCase().includes(searchQuery);
+
       if (!titleMatch && !textMatch) return false;
     }
 
+    // Apply date filter
     if (showFutureTrips.value === true) {
+      // Show future trips (start date is after today)
       return item.start_date >= today;
     } else if (showFutureTrips.value === false) {
+      // Show past trips (end date is before today)
       return item.end_date < today;
     }
 
+    // If no date filter, show all
     return true;
   });
 });
 
-const banner = (images) => images?.find((image) => image.type === "banner") ?? { url: "/fallback-image.jpg" };
+const banner = (images) => images.find((image) => image.type === "banner");
 
 const navigateToTrip = (slug) => {
   if (slug) {
@@ -77,7 +82,7 @@ const navigateToTrip = (slug) => {
 <template>
   <main>
     <div>
-      <Slider :sliderTrips="tripsSlides" />
+      <Slider :sliderTrips="tripsSlides"/>
     </div>
 
     <!-- Custom Sub-Header for Trips Page -->
@@ -136,7 +141,7 @@ const navigateToTrip = (slug) => {
     </section>
 
     <section
-      class="max-w-[90%] tw-items-center tw-bg-[F9DAED] tw-flex tw-flex-col tw-justify-center"
+        class="max-w-[90%] tw-items-center tw-bg-[F9DAED] tw-flex tw-flex-col tw-justify-center"
     >
       <div class="tw-flex tw-flex-col pt-10">
         <h3 class="tw-text-4xl tw-flex">Our Latest Trips</h3>
@@ -147,23 +152,23 @@ const navigateToTrip = (slug) => {
         <div class="tw-flex tw-items-center tw-justify-between tw-w-full">
           <div class="filter tw-flex tw-gap-6">
             <button
-              @click="clearDateFilter"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === null }"
+                @click="clearDateFilter"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === null }"
             >
               All
             </button>
             <button
-              @click="showCurrentTrips"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === true }"
+                @click="showCurrentTrips"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === true }"
             >
               Latest
             </button>
             <button
-              @click="showPastTrips"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === false }"
+                @click="showPastTrips"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === false }"
             >
               Previous
             </button>
@@ -171,44 +176,43 @@ const navigateToTrip = (slug) => {
 
           <div class="lg:tw-w-1/4">
             <v-text-field
-              v-model="search"
-              variant="outlined"
-              flat
-              clearable
-              placeholder="Search for a campaign"
-              prepend-inner-icon="mdi-magnify"
-              density="comfortable"
-            ></v-text-field>
+                v-model="search"
+                variant="outlined"
+                flat
+                clearable
+                placeholder="Search for a campaign"
+                prepend-inner-icon="mdi-magnify"
+                density="comfortable"
+            >
+            </v-text-field>
           </div>
         </div>
 
         <div class="card-container tw-grid tw-grid-cols-1 md:tw-grid-cols-2">
+          <!-- Trips Display -->
           <div
-            v-for="(card, index) in currentShowingCards"
-            :key="index"
-            class="card"
+              v-for="(card, index) in currentShowingCards"
+              :key="index"
+              class="card"
           >
             <div class="image-hover-effect">
               <img
-                :src="banner(card.images).url"
-                :alt="card.title || 'Trip Image'"
-                class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
+                  :src="banner(card.images).url"
+                  :alt="card.title"
+                  class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
               />
             </div>
             <div class="tw-flex tw-justify-between tw-items-center">
               <h4
-                class="card-title tw-text-left tw-font-semibold tw-max-w-[70%]"
+                  class="card-title tw-text-left tw-font-semibold tw-max-w-[70%]"
               >
-                {{ card.title || "Untitled Trip" }}
+                {{ card.title }}
               </h4>
-              <div
-                class="tw-gap-2 tw-flex tw-items-center"
-                v-if="card.start_date && card.end_date"
-              >
+              <div class="tw-gap-2 tw-flex tw-items-center" v-if="card.start_date && card.end_date">
                 <client-only>
                   <iconify-icon
-                    icon="oui:token-date"
-                    class="tw-text-lg tw-text-black"
+                      icon="oui:token-date"
+                      class="tw-text-lg tw-text-black"
                   ></iconify-icon>
                 </client-only>
                 <span class="tw-text-sm tw-whitespace-nowrap">
@@ -217,38 +221,34 @@ const navigateToTrip = (slug) => {
               </div>
             </div>
             <p class="card-text tw-font-normal tw-text-left">
-              {{ card.caption || "No description available" }}
+              {{ card.caption }}
             </p>
             <div class="tw-flex tw-flex-row tw-justify-between tw-text-left">
               <div class="tw-flex tw-items-center tw-gap-3">
                 <client-only>
                   <iconify-icon
-                    v-show="card.type === 'domestic'"
-                    icon="bxs:train"
-                    class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
+                      v-show="card.type === 'domestic'"
+                      icon="bxs:train"
+                      class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
                   ></iconify-icon>
                   <iconify-icon
-                    v-show="card.type === 'foreign'"
-                    icon="bxs:plane-alt"
-                    class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
+                      v-show="card.type === 'foreign'"
+                      icon="bxs:plane-alt"
+                      class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
                   ></iconify-icon>
                 </client-only>
                 <div
-                  class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#fef3f9] tw-rounded-2xl"
+                    class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#fef3f9] tw-rounded-2xl"
                 >
                   <span
-                    v-for="destination in card.destinations || []"
-                    :key="destination?.city"
-                    class="tw-m-0 tw-text-[#eb0c8f]"
-                  >{{ destination?.state || "Unknown" }}</span>
+                      v-for="destination in card.destinations"
+                      :key="destination.city"
+                      class="tw-m-0 tw-text-[#eb0c8f]"
+                  >{{ destination.state }}</span
+                  >
                 </div>
               </div>
-              <v-btn
-                :to="`/trips/${card.slug}`"
-                class="submit"
-                elevation="0"
-                :disabled="!card.slug"
-              >
+              <v-btn :to="`/trips/${card.slug}`" class="submit" elevation="0">
                 See details
               </v-btn>
             </div>
@@ -259,12 +259,12 @@ const navigateToTrip = (slug) => {
   </main>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .horizontal-line {
-  width: 100%;
-  height: 2px;
-  background-color: #cccccc;
-  margin: 20px 0;
+  width: 100%; /* Full-width line */
+  height: 2px; /* Line thickness */
+  background-color: #cccccc; /* Line color */
+  margin: 20px 0; /* Optional spacing */
 }
 
 .card-container {
@@ -284,7 +284,7 @@ const navigateToTrip = (slug) => {
 
 .card-image {
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 8px 8px 8px 8px;
 }
 
 .card-title {
@@ -311,17 +311,17 @@ const navigateToTrip = (slug) => {
 }
 
 .image-hover-effect {
-  overflow: hidden;
+  overflow: hidden; /* Ensures that scaling doesn't overflow the container */
 }
 
 .image-hover-effect img {
-  display: block;
-  width: 100%;
-  transition: transform 0.3s ease;
+  display: block; /* Ensures no extra space at the bottom */
+  width: 100%; /* Ensure image takes up the width of its container */
+  transition: transform 0.3s ease; /* Smooth hover transition */
 }
 
 .image-hover-effect img:hover {
-  transform: scale(1.1);
+  transform: scale(1.1); /* Scales the image slightly on hover */
 }
 
 .toggle-button {
@@ -343,8 +343,26 @@ const navigateToTrip = (slug) => {
   transition: 0.3s ease;
 }
 
+@media (max-width: 768px) {
+  .card > div:first-child { /* This targets the flex container with title and date */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .card-title {
+    max-width: 100% !important;
+  }
+
+  .tw-gap-2.tw-flex.tw-items-center {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Sub-Header Styles from default.vue */
 .sub-header {
-  background: #c40a77; // Fallback color if $funsha-pink is unavailable
+  background: $funsha-pink;
   backdrop-filter: blur(15px);
   color: white;
   min-height: 60px;
@@ -371,7 +389,7 @@ const navigateToTrip = (slug) => {
 }
 
 .sub-header__title:hover {
-  color: #f585c7 !important; // Fallback for $loiz-pink-light
+  color: $loiz-pink-light !important;
   transition: 0.2s;
 }
 
@@ -401,7 +419,7 @@ const navigateToTrip = (slug) => {
 }
 
 .sub-header__list .v-list-item button:hover {
-  color: #eb0c8f !important; // Fallback for $loiz-pink
+  color: $loiz-pink !important;
   transition: 0.2s;
 }
 
@@ -410,27 +428,16 @@ const navigateToTrip = (slug) => {
   font-size: 18px;
 }
 
-@media (max-width: 768px) {
-  .card > div:first-child {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .card-title {
-    max-width: 100% !important;
-  }
-
-  .tw-gap-2.tw-flex.tw-items-center {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-
 @media screen and (max-width: 1264px) {
   .sub-header__title {
     flex: 0 0 auto;
     font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .sub-header {
+    z-index: 1;
   }
 }
 
