@@ -1,33 +1,31 @@
 <script setup>
-import {useStore} from "~/store";
-import {useRoute} from "vue-router";
+import { ref, onMounted, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "~/store";
 
 const route = useRoute();
 const store = useStore();
+const isModalOpen = ref(false);
 const isNigerian = computed(() => store.location.countryCode === "NG");
 
+// Fetch trips data for the subheader
+let trips = ref([]);
+onMounted(async () => {
+  try {
+    const res = await useAxiosFetch("/trips");
+    trips.value = res.data.data.trips;
+  } catch (error) {
+    console.error(error);
+  }
+});
 
-//Fetching the api
-const {data: apires} = await useAxiosFetch(`/trips/${route.params.slug}`);
+// Fetch the current trip data
+const { data: apires } = await useAxiosFetch(`/trips/${route.params.slug}`);
 const trip = apires.data.trip;
-
-console.log(trip, "trip from the backend request");
 
 const intro = trip.images.find((image) => image.type === "intro");
 const images = trip.images.filter((image) => image.type === "caption");
 const outro = trip.images.find((image) => image.type === "outro");
-
-// Modal visibility state
-const isModalOpen = ref(false);
-
-// Methods to control modal visibility
-const openModal = () => {
-  isModalOpen.value = true;
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-};
 
 function formatCurrency(currency, amount, locale = "en-NG") {
   return new Intl.NumberFormat(locale, {
@@ -37,25 +35,36 @@ function formatCurrency(currency, amount, locale = "en-NG") {
 }
 
 const itinerary = computed(() => {
-  // if the description is an array then loop over it
   if (Array.isArray(trip.itinerary)) {
-    trip.itinerary.forEach((item) => {
-      return item.description;
-    });
+    return trip.itinerary.map(item => item.description);
   }
+  return [];
 });
+
+const openModal = () => {
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
 </script>
 
 <template>
   <main class="tw-pt-10">
+    <TripsSubHeader
+      :trips="trips"
+      :currentShowingCards="trips"
+    />
+
     <div class="tw-bg-white tw-p-8 tw-rounded-md tw-w-[90%] tw-mx-auto">
       <div class="tw-flex tw-flex-col">
         <div class="tw-flex tw-flex-col tw-mt-8">
           <h3 class="tw-text-4xl">{{ trip.title }}</h3>
           <p class="tw-my-4">{{ trip.description }}</p>
           <v-btn
-              class="submit tw-flex tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn"
-              @click="openModal"
+            class="submit tw-flex tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn"
+            @click="openModal"
           >
             Book Trip
           </v-btn>
@@ -69,9 +78,9 @@ const itinerary = computed(() => {
 
         <div class="tw-mt-8 tw-flex tw-justify-center">
           <img
-              :src="intro.url"
-              alt="Trip introduction image"
-              class="tw-rounded-md tw-w-full tw-max-w-3xl tw-h-auto tw-mx-auto"
+            :src="intro.url"
+            alt="Trip introduction image"
+            class="tw-rounded-md tw-w-full tw-max-w-3xl tw-h-auto tw-mx-auto"
           />
         </div>
 
@@ -84,19 +93,17 @@ const itinerary = computed(() => {
           </h6>
         </div>
 
-        <div
-            class="tw-grid tw-grid-cols-1 tw-w-full md:tw-grid-cols-3 tw-mx-auto tw-gap-3 tw-mt-8"
-        >
+        <div class="tw-grid tw-grid-cols-1 tw-w-full md:tw-grid-cols-3 tw-mx-auto tw-gap-3 tw-mt-8">
           <div
-              v-for="(image, index) in images"
-              :key="index"
-              class="tw-border-2 tw-border-[F585C7] tw-rounded-lg"
+            v-for="(image, index) in images"
+            :key="index"
+            class="tw-border-2 tw-border-[F585C7] tw-rounded-lg"
           >
             <div class="tw-p-2">
               <img
-                  :src="image.url"
-                  class="tw-w-full tw-h-60 tw-object-cover tw-rounded-md"
-                  alt="image.caption"
+                :src="image.url"
+                class="tw-w-full tw-h-60 tw-object-cover tw-rounded-md"
+                :alt="image.caption"
               />
             </div>
             <p class="tw-text-center tw-text-lg">{{ image.caption }}</p>
@@ -104,18 +111,18 @@ const itinerary = computed(() => {
         </div>
 
         <div class="tw-flex tw-flex-col tw-mt-8">
-          <p class="tw-font-semibold">Itenary</p>
+          <p class="tw-font-semibold">Itinerary</p>
           <ul class="styled-list tw-ml-4">
             <li
-                v-for="(bullet, index) in trip.itinerary"
-                :key="index"
-                class="tw-flex tw-items-start tw-gap-2"
+              v-for="(bullet, index) in trip.itinerary"
+              :key="index"
+              class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                    icon="teenyicons:tick-circle-outline"
-                    class="tw-text-xl tw-mt-1"
-                ></iconify-icon>
+                  icon="teenyicons:tick-circle-outline"
+                  class="tw-text-xl tw-mt-1"
+                />
               </client-only>
               <p>{{ bullet.description }}</p>
             </li>
@@ -124,20 +131,19 @@ const itinerary = computed(() => {
 
         <div class="tw-mt-8 tw-flex tw-flex-col tw-max-w-[70%] tw-mx-auto" v-if="trip.included">
           <div class="horizontal-line"></div>
-          <p class="tw-font-semibold tw-m-0 tw-text-center">Included in the package are {{
-              trip.included.join(", ")
-            }}</p>
+          <p class="tw-font-semibold tw-m-0 tw-text-center">
+            Included in the package are {{ trip.included.join(", ") }}
+          </p>
           <div class="horizontal-line"></div>
         </div>
 
         <div class="tw-mx-auto tw-mt-4">
           <v-btn
-              class="submit tw-p-5 tw-flex tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn"
-              @click="openModal"
+            class="submit tw-p-5 tw-flex tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn"
+            @click="openModal"
           >
             Book Trip
           </v-btn>
-          <p>{{ trip.icon }}</p>
         </div>
 
         <div class="tw-mt-8">
@@ -148,33 +154,25 @@ const itinerary = computed(() => {
           <p class="tw-font-semibold">Tips for the Tour</p>
           <ul class="styled-list tw-ml-4">
             <li
-                v-for="(bullet, index) in trip.tips"
-                :key="index"
-                class="tw-flex tw-items-start tw-gap-2"
+              v-for="(bullet, index) in trip.tips"
+              :key="index"
+              class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                    icon="teenyicons:tick-circle-outline"
-                    class="tw-text-xl tw-mt-1"
-                ></iconify-icon>
+                  icon="teenyicons:tick-circle-outline"
+                  class="tw-text-xl tw-mt-1"
+                />
               </client-only>
-              <div>
-                <p v-if="Array.isArray(bullet.description)">
-                  <span v-for="(desc, i) in bullet.description" :key="i">
-                    {{ desc.description }}<br/>
-                  </span>
-                </p>
-                <p v-else>
-                  {{ bullet.description }}
-                </p>
-              </div>
+              <p>{{ bullet.description }}</p>
             </li>
           </ul>
         </div>
 
         <div
-            class="tw-mt-8 tw-flex tw-flex-col tw-text-center tw-max-w-[95%] tw-mx-auto tw-bg-[#F9DAED] tw-rounded-md"
-            v-if="trip.not_included">
+          class="tw-mt-8 tw-flex tw-flex-col tw-text-center tw-max-w-[95%] tw-mx-auto tw-bg-[#F9DAED] tw-rounded-md"
+          v-if="trip.not_included"
+        >
           <p class="tw-font-semibold">The Package does not include</p>
           <p class="tw-mb-0 tw-p-3">{{ trip.not_included.join(", ") }}</p>
         </div>
@@ -183,15 +181,15 @@ const itinerary = computed(() => {
           <p class="tw-font-semibold">Booking Requirements</p>
           <ul class="styled-list tw-ml-4">
             <li
-                v-for="(bullet, index) in trip.booking_requirements"
-                :key="index"
-                class="tw-flex tw-items-start tw-gap-2"
+              v-for="(bullet, index) in trip.booking_requirements"
+              :key="index"
+              class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                    icon="teenyicons:tick-circle-outline"
-                    class="tw-text-xl tw-mt-1"
-                ></iconify-icon>
+                  icon="teenyicons:tick-circle-outline"
+                  class="tw-text-xl tw-mt-1"
+                />
               </client-only>
               <p>{{ bullet }}</p>
             </li>
@@ -202,15 +200,15 @@ const itinerary = computed(() => {
           <p class="tw-font-semibold">Payment Plan/Discount Offers</p>
           <ul class="styled-list tw-ml-4">
             <li
-                v-for="(bullet, index) in trip.payment_plans"
-                :key="index"
-                class="tw-flex tw-items-start tw-gap-2"
+              v-for="(bullet, index) in trip.payment_plans"
+              :key="index"
+              class="tw-flex tw-items-start tw-gap-2"
             >
               <client-only>
                 <iconify-icon
-                    icon="teenyicons:tick-circle-outline"
-                    class="tw-text-xl tw-mt-1"
-                ></iconify-icon>
+                  icon="teenyicons:tick-circle-outline"
+                  class="tw-text-xl tw-mt-1"
+                />
               </client-only>
               <p>{{ bullet }}</p>
             </li>
@@ -218,29 +216,20 @@ const itinerary = computed(() => {
         </div>
 
         <v-btn
-            class="submit tw-flex tw-p-5 tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn tw-items-center"
-            @click="openModal"
+          class="submit tw-flex tw-p-5 tw-w-[100px] tw-mt-2 tw-justify-center tw-mx-auto open-modal-btn tw-items-center"
+          @click="openModal"
         >
           Book Trip
         </v-btn>
-
-        <TripsForm
-            :trip="trip"
-            :isModalOpen="isModalOpen"
-            @close-modal="closeModal"
-        />
       </div>
     </div>
 
     <TripsForm
-        :trip="trip"
-        :isModalOpen="isModalOpen"
-        @close-modal="closeModal"
+      :trip="trip"
+      :isModalOpen="isModalOpen"
+      @close-modal="closeModal"
     />
   </main>
-  <!-- </div>
-    </div>
-  </main> -->
 </template>
 
 <style scoped>
@@ -252,32 +241,15 @@ const itinerary = computed(() => {
 }
 
 .styled-list li {
-  font-size: 18px; /* Custom font size for the list items */
-  color: #1a1a1a; /* Customize color */
+  font-size: 18px;
+  color: #1a1a1a;
 }
 
 .styled-list {
-  list-style-type: none; /* Remove default bullet */
+  list-style-type: none;
   padding-left: 0;
 }
 
-.image-hover-effect {
-  display: inline-block;
-  overflow: hidden; /* Ensures that scaling doesn't overflow the container */
-}
-
-.image-hover-effect img {
-  display: block; /* Ensures no extra space at the bottom */
-  width: 100%; /* Ensure image takes up the width of its container */
-  transition: transform 0.3s ease; /* Smooth hover transition */
-}
-
-.image-hover-effect img:hover {
-  transform: scale(1.1); /* Scales the image slightly on hover */
-  border-radius: 10px;
-}
-
-/* Button styles */
 .open-modal-btn {
   padding: 12px 24px;
   background-color: #007bff;
