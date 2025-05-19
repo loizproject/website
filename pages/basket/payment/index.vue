@@ -1,31 +1,29 @@
 <script setup>
-import { useDisplay } from "vuetify";
-import { useStore } from "~/store";
-import { useContentStore } from "~/store/content";
-import { useConsultationStore } from "~/store/consultation";
-import { useBasketStore } from "~/store/basket";
+import {useDisplay} from "vuetify";
+import {useStore} from "~/store";
+import {useContentStore} from "~/store/content";
+import {useConsultationStore} from "~/store/consultation";
+import {useBasketStore} from "~/store/basket";
 
 let installment = ref(false);
 const toggleDropdown = (state) => {
   installment.value = state;
 };
 
-const viewRefs = ref( [] );
-const activeRef = ref( null );
+const viewRefs = ref([]);
+const activeRef = ref(null);
 
-const setViewRefs = ( index ) => (el) =>
-{
-  if ( el ) viewRefs.value[ index ] = el;
+const setViewRefs = (index) => (el) => {
+  if (el) viewRefs.value[index] = el;
 }
 
-const setActiveViewRef = ( index ) =>
-{
+const setActiveViewRef = (index) => {
   activeRef.value = index;
 }
 
 const activeInstallment = ref(null);
 
-const { xs, sm, mdAndUp, lgAndUp } = useDisplay();
+const {xs, sm, mdAndUp, lgAndUp} = useDisplay();
 const route = useRoute();
 const router = useRouter();
 
@@ -36,8 +34,8 @@ const basketStore = useBasketStore();
 
 const textLimit = ref(xs.value ? 12 : sm.value ? 25 : 40);
 const showConsultationSchedule = ref(false);
-const updatingService = ref( null );
-const showDetails = ref( false );
+const updatingService = ref(null);
+const showDetails = ref(false);
 
 const services = computed(() => contentStore.services);
 const consultationPrice = computed(() => consultationStore.price_usd);
@@ -58,8 +56,8 @@ watch(basket, async (newBasket, oldBasket) => {
         case "consultation":
           return {
             price: isNigerian.value
-              ? consultationPriceNGN.value
-              : consultationPrice.value,
+                ? consultationPriceNGN.value
+                : consultationPrice.value,
             ...item,
           };
 
@@ -68,7 +66,7 @@ watch(basket, async (newBasket, oldBasket) => {
 
         default:
           item.parentService = contentStore.getSubservicesById(
-            item.options.subservice_id
+              item.options.subservice_id
           );
       }
       // items.value.push()
@@ -79,14 +77,14 @@ watch(basket, async (newBasket, oldBasket) => {
 });
 
 function formatCurrency(currency, amount, locale = "en-NG") {
-  return new Intl.NumberFormat(locale, { style: "currency", currency }).format(
-    amount
+  return new Intl.NumberFormat(locale, {style: "currency", currency}).format(
+      amount
   );
 }
 
 function checkTripconsultationExpiry(trip) {
-  const { selected_consultation_date: date, selected_consultation_time: time } =
-    trip.options.trip_details.consultation_details;
+  const {selected_consultation_date: date, selected_consultation_time: time} =
+      trip.options.trip_details.consultation_details;
 
   const inputDateTime = new Date(date);
   const [hours, minutes] = time.split(":");
@@ -119,7 +117,7 @@ function consultationExpired(consltn) {
   for (const date in dates) {
     const times = dates[date]; // "2023-08-31": ["7:00", "12:30", "20:00", "21:00"], these are available times
     if (consltn.options.booked_date === date) {
-      obj = { date, times };
+      obj = {date, times};
     }
   }
   // return true;
@@ -165,7 +163,7 @@ async function updateConsultationDate(service) {
 }
 
 async function updateConsultationDetails(args) {
-  const { date, time } = args;
+  const {date, time} = args;
   showConsultationSchedule.value = false;
   const data = {
     requestDetails: {
@@ -190,16 +188,16 @@ function formatDate(date) {
   return `${day}-${month}-${year}`;
 }
 
-function futureDate( days ){
+function futureDate(days) {
   const today = new Date();
   const futureDate = new Date(today);
   futureDate.setDate(today.getDate() + days);
   return futureDate.toLocaleDateString('en-US', {
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-});
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 }
 
 function formatTime(time24) {
@@ -212,8 +210,8 @@ function formatTime(time24) {
 
   // Convert to 12-hour format
   const hours12 = (hours % 12 === 0 ? 12 : hours % 12)
-    .toString()
-    .padStart(2, "0");
+      .toString()
+      .padStart(2, "0");
   const minutesPadded = minutes.toString().padStart(2, "0");
 
   // Construct the formatted time string
@@ -225,7 +223,7 @@ function proceedCheckout() {
   if (basket.value && basket.value.length > 0) {
     router.push("/basket/payment/checkout");
   } else {
-    store.setToast("You have no item in your basket!", { type: "info" });
+    store.setToast("You have no item in your basket!", {type: "info"});
   }
 }
 
@@ -240,13 +238,13 @@ definePageMeta({
 
 const meta = {
   title:
-    "Loiz Tours & Travels Ltd - Your Gateway to Exhilarating & Seamless Travel Experiences!",
+      "Loiz Tours & Travels Ltd - Your Gateway to Exhilarating & Seamless Travel Experiences!",
   description:
-    "Whether you're planning your next adventure or seeking assistance with visa services, flights, or tours, trust Loiz Tours & Travels to make your travel experience unforgettable. Join us on our journey as we redefine the standards of excellence in the travel industry. Discover the world with Loiz Tours & Travels – Where Every Journey Begins with Excellence!",
+      "Whether you're planning your next adventure or seeking assistance with visa services, flights, or tours, trust Loiz Tours & Travels to make your travel experience unforgettable. Join us on our journey as we redefine the standards of excellence in the travel industry. Discover the world with Loiz Tours & Travels – Where Every Journey Begins with Excellence!",
   image:
-    "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
+      "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
   keywords:
-    "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in nigeria",
+      "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in nigeria",
 };
 useSeoMeta({
   title: meta.title,
@@ -268,9 +266,9 @@ useSeoMeta({
     <div class="header d-flex align-center py-4">
       <v-container class="d-flex align-center">
         <button
-          v-if="mdAndUp"
-          class="d-flex align-center action__btn"
-          @click="router.go(-1)"
+            v-if="mdAndUp"
+            class="d-flex align-center action__btn"
+            @click="router.go(-1)"
         >
           <v-icon color="#e7028e" class="mr-2"> mdi-chevron-left</v-icon>
           Back
@@ -284,30 +282,31 @@ useSeoMeta({
           <v-icon color="#555" class="mx-2 mt-1">mdi-chevron-right</v-icon>
           <div v-for="(item, index) in paths" :key="index">
             <nuxt-link
-              v-if="item !== 'services'"
-              :to="getPageRoute(item, index)"
-              :style="index === paths.length - 1 ? 'color: #e7028e' : ''"
+                v-if="item !== 'services'"
+                :to="getPageRoute(item, index)"
+                :style="index === paths.length - 1 ? 'color: #e7028e' : ''"
             >
               {{
                 item && item.length > textLimit
-                  ? `${_StartCase(_ToLower(item.substring(0, textLimit)))}...`
-                  : _StartCase(_ToLower(item))
+                    ? `${_StartCase(_ToLower(item.substring(0, textLimit)))}...`
+                    : _StartCase(_ToLower(item))
               }}
             </nuxt-link>
             <v-icon
-              v-if="item !== 'services' && showHeaderIcon(index)"
-              color="#555"
-              class="mx-2"
-              >mdi-chevron-right</v-icon
+                v-if="item !== 'services' && showHeaderIcon(index)"
+                color="#555"
+                class="mx-2"
+            >mdi-chevron-right
+            </v-icon
             >
           </div>
         </div>
 
         <v-spacer></v-spacer>
         <button
-          v-if="mdAndUp"
-          class="d-flex align-center action__btn"
-          @click="basket.length > 0 ? router.go(+1) : null"
+            v-if="mdAndUp"
+            class="d-flex align-center action__btn"
+            @click="basket.length > 0 ? router.go(+1) : null"
         >
           Next
           <v-icon color="#e7028e" class="ml-2"> mdi-chevron-right</v-icon>
@@ -327,42 +326,50 @@ useSeoMeta({
 
         <div class="details mt-8">
           <v-card
-            v-for="(item, index) in basketRef"
-            :key="index"
-            flat
-            class="pa-6 my-2"
+              v-for="(item, index) in basketRef"
+              :key="index"
+              flat
+              class="pa-6 my-2"
           >
             <div v-if="item.type === 'trip'" class="w-full">
               <div
-                class="details__head d-flex align-center justify-space-between"
+                  class="details__head d-flex align-center justify-space-between"
               >
                 <h4>{{ item.title }}</h4>
-                <p v-if="isNigerian" class="ml-2 d-none d-md-block">
-                  {{ formatCurrency("NGN", item.price * item.qty) }}
-                </p>
-                <p v-else class="ml-2 d-none d-md-block">
-                  {{ formatCurrency("USD", item.price * item.qty, "en-US") }}
-                </p>
+                <div class="price-container">
+                  <p v-if="isNigerian" class="ml-2 d-none d-md-block">
+                    {{ formatCurrency("NGN", item.price * item.qty) }}
+                  </p>
+                  <p v-else class="ml-2 d-none d-md-block">
+                    {{ formatCurrency("USD", item.price * item.qty, "en-US") }}
+                  </p>
+                  <p v-if="isNigerian" class="mobile-price d-md-none">
+                    {{ formatCurrency("NGN", item.price * item.qty) }}
+                  </p>
+                  <p v-else class="mobile-price d-md-none">
+                    {{ formatCurrency("USD", item.price * item.qty, "en-US") }}
+                  </p>
+                </div>
               </div>
 
               <div
-                class="details__body d-md-flex tw-flex align-center justify-space-between tw-border tw-p-6 tw-shadow-md tw-border-[#e7028e] tw-rounded-md"
+                  class="details__body d-md-flex tw-flex align-center justify-space-between tw-border tw-p-6 tw-shadow-md tw-border-[#e7028e] tw-rounded-md"
               >
                 <div class="tw-flex tw-justify-between">
                   <div>
                     <div class="tw-flex tw-flex-col">
                       <div
-                        class="tw-flex tw-flex-col tw-gap-2"
-                        v-if="item.options.trip_details.trip_type === 'foreign'"
+                          class="tw-flex tw-flex-col tw-gap-2"
+                          v-if="item.options.trip_details.trip_type === 'foreign'"
                       >
                         <div class="tw-flex tw-gap-x-10">
                           <h4>
                             Consultation Details
                             <v-tooltip
-                              v-if="checkTripconsultationExpiry(item)"
-                              right
-                              max-width="400px"
-                              content-class="tooltip"
+                                v-if="checkTripconsultationExpiry(item)"
+                                right
+                                max-width="400px"
+                                content-class="tooltip"
                             >
                               <template v-slot:activator="{ props }">
                                 <v-icon color="red" dark v-bind="props">
@@ -376,9 +383,9 @@ useSeoMeta({
                             </v-tooltip>
                           </h4>
                           <v-btn
-                            small
-                            class="consultation-date elevation-0"
-                            @click="updateConsultationDate(item)"
+                              small
+                              class="consultation-date elevation-0"
+                              @click="updateConsultationDate(item)"
                           >
                             <v-icon class="mr-lg-2">mdi-calendar-edit</v-icon>
                             <span v-if="lgAndUp"> Change Date/Time </span>
@@ -386,32 +393,32 @@ useSeoMeta({
                         </div>
                         <p>
                           <span class="tw-font-bold"
-                            >Selected Consultation Date:</span
+                          >Selected Consultation Date:</span
                           >
                           {{
                             formatDate(
-                              item.options.trip_details.consultation_details
-                                .selected_consultation_date
+                                item.options.trip_details.consultation_details
+                                    .selected_consultation_date
                             )
                           }}
                         </p>
                         <p>
                           <span class="tw-font-bold"
-                            >Selected Consultation Time:</span
+                          >Selected Consultation Time:</span
                           >
                           {{
                             formatTime(
-                              item.options.trip_details.consultation_details
-                                .selected_consultation_time
+                                item.options.trip_details.consultation_details
+                                    .selected_consultation_time
                             )
                           }}
                         </p>
                       </div>
                       <div
-                        v-if="item.options.payment_type === 'installments' && activeRef === index"
-                        class="tw-border tw-w-[30rem] tw-border-[#EB5757] tw-rounded-md tw-py-3 tw-px-1 my-2"
-                        :data-aos="fade-up"
-                        :ref="setViewRefs(index)"
+                          v-if="item.options.payment_type === 'installments' && activeRef === index"
+                          class="tw-border tw-w-[30rem] tw-border-[#EB5757] tw-rounded-md tw-py-3 tw-px-1 my-2"
+                          :data-aos="fade-up"
+                          :ref="setViewRefs(index)"
                       >
                         <div class="tw-px-2">
                           <h3>Payment Summary</h3>
@@ -420,17 +427,17 @@ useSeoMeta({
                             <span v-if="isNigerian">
                               {{
                                 formatCurrency(
-                                  "NGN",
-                                  item.options.payment_details.ngn.first
+                                    "NGN",
+                                    item.options.payment_details.ngn.first
                                 )
                               }}
                             </span>
                             <span v-else>
                               {{
                                 formatCurrency(
-                                  "USD",
-                                  item.options.payment_details.usd.first,
-                                  "en-US"
+                                    "USD",
+                                    item.options.payment_details.usd.first,
+                                    "en-US"
                                 )
                               }}
                             </span>
@@ -440,23 +447,24 @@ useSeoMeta({
                             <span v-if="isNigerian">
                               {{
                                 formatCurrency(
-                                  "NGN",
-                                  item.options.payment_details.ngn.second
+                                    "NGN",
+                                    item.options.payment_details.ngn.second
                                 )
                               }}
                             </span>
                             <span v-else>
                               {{
                                 formatCurrency(
-                                  "USD",
-                                  item.options.payment_details.usd.second,
-                                  "en-US"
+                                    "USD",
+                                    item.options.payment_details.usd.second,
+                                    "en-US"
                                 )
                               }}
                             </span>
                           </p>
                           <p class="tw-italic tw-font-semibold">
-                            Please note that the second installment will be due on {{futureDate(30)}} if you make a payment today
+                            Please note that the second installment will be due on {{ futureDate(30) }} if you make a
+                            payment today
                           </p>
                         </div>
                       </div>
@@ -466,27 +474,31 @@ useSeoMeta({
                     </div>
                     <div class="tw-flex tw-gap-4 tw-mt-4">
                       <button
-                        class="clear-basket d-flex align-center tw-gap-1"
-                        @click="removeItem(item)"
+                          class="clear-basket d-flex align-center tw-gap-1"
+                          @click="removeItem(item)"
                       >
                         <client-only
-                          ><iconify-icon
-                            icon="mdi:cancel-circle-outline"
-                            class="tw-text-xl tw-text-[#EB5757]"
+                        >
+                          <iconify-icon
+                              icon="mdi:cancel-circle-outline"
+                              class="tw-text-xl tw-text-[#EB5757]"
                           ></iconify-icon
-                        ></client-only>
+                          >
+                        </client-only>
                         Remove
                       </button>
                       <button
-                        @click="setActiveViewRef(index)"
-                        class="clear-basket d-flex tw-align-center tw-gap-1"
+                          @click="setActiveViewRef(index)"
+                          class="clear-basket d-flex tw-align-center tw-gap-1"
                       >
                         <client-only
-                          ><iconify-icon
-                            icon="iconoir:eye-solid"
-                            class="tw-text-xl tw-text-[#EB5757]"
+                        >
+                          <iconify-icon
+                              icon="iconoir:eye-solid"
+                              class="tw-text-xl tw-text-[#EB5757]"
                           ></iconify-icon
-                        ></client-only>
+                          >
+                        </client-only>
                         {{
                           activeRef === index ? "Hide Details" : "Show Details"
                         }}
@@ -494,30 +506,20 @@ useSeoMeta({
                     </div>
                   </div>
 
-                  <div class="align-center justify-space-between">
-                    <p v-if="isNigerian" class="details__price mr-2 d-md-none">
-                      {{ formatCurrency("NGN", item.price * item.qty) }}
-                    </p>
-                    <p v-else class="details__price mr-2 d-md-none">
-                      {{
-                        formatCurrency("USD", item.price * item.qty, "en-US")
-                      }}
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
             <div v-else>
               <div
-                class="details__head d-flex align-center justify-space-between"
+                  class="details__head d-flex align-center justify-space-between"
               >
                 <h4>
                   Consultation session
                   <v-tooltip
-                    v-if="consultationExpired(item)"
-                    right
-                    max-width="400px"
-                    content-class="tooltip"
+                      v-if="consultationExpired(item)"
+                      right
+                      max-width="400px"
+                      content-class="tooltip"
                   >
                     <template v-slot:activator="{ props }">
                       <v-icon color="red" dark v-bind="props">
@@ -531,9 +533,9 @@ useSeoMeta({
                   </v-tooltip>
                 </h4>
                 <v-btn
-                  small
-                  class="consultation-date elevation-0"
-                  @click="updateConsultationDate(item)"
+                    small
+                    class="consultation-date elevation-0"
+                    @click="updateConsultationDate(item)"
                 >
                   <v-icon class="mr-lg-2">mdi-calendar-edit</v-icon>
                   <span v-if="lgAndUp"> Change Date/Time </span>
@@ -546,7 +548,7 @@ useSeoMeta({
                 </p>
               </div>
               <div
-                class="details__body d-md-flex flex-wrap justify-space-between"
+                  class="details__body d-md-flex flex-wrap justify-space-between"
               >
                 <div class="tw-flex tw-flex-col tw-gap-4">
                   <p>{{ item.name }}</p>
@@ -567,15 +569,17 @@ useSeoMeta({
                       }}
                     </p>
                     <button
-                      class="clear-basket d-flex align-center tw-gap-1"
-                      @click="removeItem(item)"
+                        class="clear-basket d-flex align-center tw-gap-1"
+                        @click="removeItem(item)"
                     >
                       <client-only
-                        ><iconify-icon
-                          icon="mdi:cancel-circle-outline"
-                          class="tw-text-xl tw-text-[#EB5757]"
+                      >
+                        <iconify-icon
+                            icon="mdi:cancel-circle-outline"
+                            class="tw-text-xl tw-text-[#EB5757]"
                         ></iconify-icon
-                      ></client-only>
+                        >
+                      </client-only>
                       Remove
                     </button>
                   </div>
@@ -593,7 +597,7 @@ useSeoMeta({
               <p>Subtotal</p>
               <p class="summary__price">
                 <span v-if="isNigerian">
-                  <b>{{ formatCurrency("NGN",totalPrice) }}</b>
+                  <b>{{ formatCurrency("NGN", totalPrice) }}</b>
                 </span>
                 <span v-else> {{ formatCurrency("USD", totalPrice, "en-US") }} </span>
               </p>
@@ -602,7 +606,7 @@ useSeoMeta({
               <p>VAT (7.5%)</p>
               <p class="summary__price">
                 <span v-if="isNigerian">
-                  <b>{{ formatCurrency("NGN",totalPrice * 0.075) }}</b>
+                  <b>{{ formatCurrency("NGN", totalPrice * 0.075) }}</b>
                 </span>
                 <span v-else> {{ formatCurrency("USD", totalPrice * 0.075, "en-US") }} </span>
               </p>
@@ -620,18 +624,19 @@ useSeoMeta({
             </div> -->
           </div>
           <v-btn
-            large
-            class="submit mt-10 d-flex align-center justify-space-between"
-            :disabled="expiredConsultationInBasket"
-            @click="proceedCheckout"
-            >Proceed to checkout <v-icon>mdi-chevron-right</v-icon>
+              large
+              class="submit mt-10 d-flex align-center justify-space-between"
+              :disabled="expiredConsultationInBasket"
+              @click="proceedCheckout"
+          >Proceed to checkout
+            <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </div>
       </div>
       <ConsultationSchedule
-        v-if="showConsultationSchedule"
-        @close="showConsultationSchedule = false"
-        @submit="updateConsultationDetails"
+          v-if="showConsultationSchedule"
+          @close="showConsultationSchedule = false"
+          @submit="updateConsultationDetails"
       />
     </v-container>
   </div>
@@ -845,9 +850,22 @@ useSeoMeta({
       p {
         margin-bottom: 10px;
       }
+
+      & .price-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      & .mobile-price {
+        margin-top: 8px;
+        font-size: 1.12rem;
+        font-weight: 700;
+      }
     }
 
     &__price {
+      width: 100%;
       font-weight: 700;
       font-size: 1.12rem !important;
       margin-bottom: 0 !important;
@@ -864,6 +882,7 @@ useSeoMeta({
     font-size: 0.8rem;
   }
 }
+
 .horizontal-line {
   width: 100%;
   height: 1px;

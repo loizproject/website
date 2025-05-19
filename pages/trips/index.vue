@@ -256,7 +256,8 @@ const banner = (images) => images.find((image) => image.type === "banner");
 }
 
 @media (max-width: 768px) {
-  .card > div:first-child {
+  .card > div:first-child,
+  .tw-flex.tw-justify-between.tw-items-center {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
@@ -264,11 +265,13 @@ const banner = (images) => images.find((image) => image.type === "banner");
 
   .card-title {
     max-width: 100% !important;
+    margin-bottom: 0;
   }
 
   .tw-gap-2.tw-flex.tw-items-center {
     width: 100%;
     justify-content: flex-start;
+    margin: 4px 0 12px 0;
   }
 }
 </style>

@@ -1,12 +1,12 @@
 <script setup>
-import { loadScript } from "@paypal/paypal-js";
-import { ref } from "vue";
-import { useDisplay } from "vuetify";
-import { useStore } from "~/store";
-import { useAuthStore } from "~/store/auth";
-import { useBasketStore } from "~/store/basket";
-import { useConsultationStore } from "~/store/consultation";
-import { useContentStore } from "~/store/content";
+import {loadScript} from "@paypal/paypal-js";
+import {ref} from "vue";
+import {useDisplay} from "vuetify";
+import {useStore} from "~/store";
+import {useAuthStore} from "~/store/auth";
+import {useBasketStore} from "~/store/basket";
+import {useConsultationStore} from "~/store/consultation";
+import {useContentStore} from "~/store/content";
 
 const store = useStore();
 const authStore = useAuthStore();
@@ -15,7 +15,7 @@ const contentStore = useContentStore();
 const consultationStore = useConsultationStore();
 
 const rules = useFormRules;
-const { xs, mdAndUp } = useDisplay();
+const {xs, mdAndUp} = useDisplay();
 const config = useRuntimeConfig();
 const route = useRoute();
 const router = useRouter();
@@ -73,8 +73,8 @@ const errorMsg = ref({
 const basket = computed(() => basketStore.basket);
 
 function formatCurrency(currency, amount, locale = "en-NG") {
-  return new Intl.NumberFormat(locale, { style: "currency", currency }).format(
-    amount
+  return new Intl.NumberFormat(locale, {style: "currency", currency}).format(
+      amount
   );
 }
 
@@ -84,7 +84,7 @@ const filteredCountries = computed(() => {
   } else {
     return countries.filter((country) => {
       return (
-        country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1
+          country.name.toLowerCase().indexOf(searchTerm.value.toLowerCase()) > -1
       );
     });
   }
@@ -116,7 +116,7 @@ function getPageRoute(item, index) {
 }
 
 function autofill() {
-  const { email, firstName, lastName, phoneNumber } = user.value || {};
+  const {email, firstName, lastName, phoneNumber} = user.value || {};
   form.value.email = email;
   form.value.fName = firstName;
   form.value.lName = lastName;
@@ -130,12 +130,12 @@ function generateREF() {
     d += performance.now();
   }
   let ref = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-    /[xy]/g,
-    function (c) {
-      let r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d / 16);
-      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-    }
+      /[xy]/g,
+      function (c) {
+        let r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+      }
   );
   // fetch the reference for the basket item
   return sellectdInstallment ? installment_reference : ref;
@@ -149,27 +149,28 @@ async function payWithPaystack(e) {
   const reference = generateREF();
   form.value.amount = amount;
   form.value.country = userLocation.value;
-  store.setToast("Initializing Transaction. Please wait...", { type: "info" });
+  store.setToast("Initializing Transaction. Please wait...", {type: "info"});
   const newTrx = {
     reference,
     form: form.value,
   };
   try {
+    console.log(installment_reference, "installment reference");
     !installment_reference && (await useAxiosPost("/orders/checkout", newTrx));
     paystack.newTransaction({
       key: config.public.PAYSTACK_PUBLIC_KEY,
       email: form.value.email,
       reference,
       amount:
-        config.public.APP_ENV !== "production" ? testAmount : amount * 100,
+          config.public.APP_ENV !== "production" ? testAmount : amount * 100,
       currency: isNigerian.value ? "NGN" : "USD",
       onSuccess: async (transaction) => {
         info.value = true;
-        const { data, status } = await useAxiosPost(
-          `/orders/paystack/payments/${transaction.reference}/verify`,
-          {
-            status: "success",
-          }
+        const {data, status} = await useAxiosPost(
+            `/orders/paystack/payments/${transaction.reference}/verify`,
+            {
+              status: "success",
+            }
         );
         if (status === 200) {
           infoStatus.value = false;
@@ -226,12 +227,12 @@ async function payWithRave(e) {
       callback: async (payment) => {
         msg.value.info = `LTT Transaction Reference: ${payment.tx_ref}.`;
         success.value = true;
-        const { data, status } = await useAxiosPost(
-          `/orders/flutterwave/payments/${payment.tx_ref}/verify`,
-          {
-            status: "success",
-            payment_id: payment.transaction_id,
-          }
+        const {data, status} = await useAxiosPost(
+            `/orders/flutterwave/payments/${payment.tx_ref}/verify`,
+            {
+              status: "success",
+              payment_id: payment.transaction_id,
+            }
         );
         if (status === 200) {
           infoStatus.value = false;
@@ -253,7 +254,8 @@ async function payWithRave(e) {
   }
 }
 
-function showPaymentType() {}
+function showPaymentType() {
+}
 
 // This implementation has been descoped since October 2024
 // async function initPayPal() {
@@ -353,10 +355,8 @@ onMounted(async () => {
   autofill();
 });
 
-function displayPaymentType ( type )
-{
-  if ( type === "installments" )
-  {
+function displayPaymentType(type) {
+  if (type === "installments") {
     return "Installment Payment";
   }
 
@@ -369,7 +369,7 @@ definePageMeta({
 
 useHead({
   script: [
-    { src: "https://js.paystack.co/v2/inline.js", async: true, defer: true },
+    {src: "https://js.paystack.co/v2/inline.js", async: true, defer: true},
     {
       src: "https://checkout.flutterwave.com/v3.js",
       async: true,
@@ -384,9 +384,9 @@ useHead({
     <div class="header d-flex align-center py-4">
       <v-container class="d-flex align-center">
         <button
-          v-if="mdAndUp"
-          class="d-flex align-center action__btn"
-          @click="router.go(-1)"
+            v-if="mdAndUp"
+            class="d-flex align-center action__btn"
+            @click="router.go(-1)"
         >
           <v-icon color="#e7028e" class="mr-2"> mdi-chevron-left</v-icon>
           Back
@@ -397,28 +397,30 @@ useHead({
           <v-icon color="#555" class="mx-2 mt-1">mdi-chevron-right</v-icon>
           <div v-for="(item, index) in paths" :key="index">
             <nuxt-link
-              v-if="item !== 'services'"
-              :to="getPageRoute(item, index)"
-              :style="index === paths.length - 1 ? 'color: #e7028e' : ''"
-              >{{
+                v-if="item !== 'services'"
+                :to="getPageRoute(item, index)"
+                :style="index === paths.length - 1 ? 'color: #e7028e' : ''"
+            >{{
                 item && item.length > textLimit
-                  ? `${_StartCase(_ToLower(item.substring(0, textLimit)))}...`
-                  : _StartCase(_ToLower(item))
-              }}</nuxt-link
+                    ? `${_StartCase(_ToLower(item.substring(0, textLimit)))}...`
+                    : _StartCase(_ToLower(item))
+              }}
+            </nuxt-link
             >
             <v-icon
-              v-if="item !== 'services' && showHeaderIcon(index)"
-              color="#555"
-              class="mx-2"
-              >mdi-chevron-right</v-icon
+                v-if="item !== 'services' && showHeaderIcon(index)"
+                color="#555"
+                class="mx-2"
+            >mdi-chevron-right
+            </v-icon
             >
           </div>
         </div>
         <v-spacer></v-spacer>
         <button
-          v-if="mdAndUp"
-          class="d-flex align-center action__btn"
-          @click="router.go(+1)"
+            v-if="mdAndUp"
+            class="d-flex align-center action__btn"
+            @click="router.go(+1)"
         >
           Next
           <v-icon color="#e7028e" class="ml-2"> mdi-chevron-right</v-icon>
@@ -432,29 +434,30 @@ useHead({
           <div class="tile pa-3 mt-8">
             <div v-for="(n, i) in basket" :key="i">
               <div
-                v-if="n.type === 'consultation'"
-                class="d-flex align-center justify-space-between"
+                  v-if="n.type === 'consultation'"
+                  class="d-flex align-center justify-space-between"
               >
                 <p>{{ n.name }}</p>
                 <p v-if="isNigerian">
                   <strong>{{
-                    formatCurrency("NGN", consultationPriceNGN)
-                  }}</strong>
+                      formatCurrency("NGN", consultationPriceNGN)
+                    }}</strong>
                 </p>
                 <p v-else>
                   <strong>{{
-                    formatCurrency("USD", consultationPrice, "en-US")
-                  }}</strong>
+                      formatCurrency("USD", consultationPrice, "en-US")
+                    }}</strong>
                 </p>
               </div>
               <div v-else class="d-flex align-start justify-space-between mb-3">
                 <p>
-                  {{ n.title }} 
-                  <span
-                    class="tw-w-full tw-p-1 text-center tw-rounded-full tw-border-2 tw-border-[#e7028e] tw-ml-2"
-                  >
-                    {{ displayPaymentType(n.options.payment_type) }}
-                  </span></p>
+                  {{ n.title }}
+                  <span class="payment-type-container">
+                    <span class="payment-type-tag tw-w-full tw-p-1 text-center tw-rounded-full tw-border-2 tw-border-[#e7028e] tw-ml-2">
+                      {{ displayPaymentType(n.options.payment_type) }}
+                    </span>
+                  </span>
+                </p>
                 <p v-if="isNigerian" class="ml-5">
                   <strong>
                     {{ formatCurrency("NGN", n.price * n.qty) }}
@@ -462,7 +465,7 @@ useHead({
                 </p>
                 <p v-else class="ml-5">
                   <span
-                    class="tw-w-16 tw-rounded-full tw-border tw-border-[#e7028e]"
+                      class="tw-w-16 tw-rounded-full tw-border tw-border-[#e7028e]"
                   >
                     {{ n.options.payment_type }}
                   </span>
@@ -489,7 +492,7 @@ useHead({
               </p>
             </div>
             <div
-              class="d-flex align-end justify-space-between mt-5 tw-font-bolder"
+                class="d-flex align-end justify-space-between mt-5 tw-font-bolder"
             >
               <p class="tw-text-3xl"><strong>Total</strong></p>
               <p v-if="isNigerian" class="summary__price">
@@ -519,25 +522,25 @@ useHead({
         <v-row class="mt-5">
           <v-col cols="6">
             <button
-              class="provider__btn provider__btn--paystack"
-              :disabled="basket.length === 0"
-              @click="payWithPaystack"
+                class="provider__btn provider__btn--paystack"
+                :disabled="basket.length === 0"
+                @click="payWithPaystack"
             >
               <img
-                src="https://res.cloudinary.com/loiztours/image/upload/v1687731972/checkout/paystack.svg"
-                alt="paysatack btn"
+                  src="https://res.cloudinary.com/loiztours/image/upload/v1687731972/checkout/paystack.svg"
+                  alt="paysatack btn"
               />
             </button>
           </v-col>
           <v-col cols="6">
             <button
-              :disabled="basket.length === 0"
-              class="provider__btn provider__btn--flw"
-              @click="payWithRave"
+                :disabled="basket.length === 0"
+                class="provider__btn provider__btn--flw"
+                @click="payWithRave"
             >
               <img
-                src="https://res.cloudinary.com/loiztours/image/upload/v1690765889/checkout/rave.svg"
-                alt="flutterwave btn"
+                  src="https://res.cloudinary.com/loiztours/image/upload/v1690765889/checkout/rave.svg"
+                  alt="flutterwave btn"
               />
             </button>
           </v-col>
@@ -549,9 +552,9 @@ useHead({
         </v-row>
       </div>
     </v-container>
-    <InfoModal v-if="info" :message="infoMsg" @close="info = false" />
-    <SuccessModal v-if="success" :message="msg" @close="handleSuccessClose" />
-    <FailureModal v-if="error" :message="errorMsg" @close="error = false" />
+    <InfoModal v-if="info" :message="infoMsg" @close="info = false"/>
+    <SuccessModal v-if="success" :message="msg" @close="handleSuccessClose"/>
+    <FailureModal v-if="error" :message="errorMsg" @close="error = false"/>
   </div>
 </template>
 
@@ -711,6 +714,41 @@ useHead({
         width: 100%;
       }
     }
+  }
+
+  payment-type-container {
+    display: block !important;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .payment-type-tag {
+    display: inline-block;
+    margin-left: 0 !important;
+  }
+
+  .navigation {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+
+  .navigation::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navigation > div {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .navigation a {
+    white-space: nowrap;
   }
 }
 </style>
