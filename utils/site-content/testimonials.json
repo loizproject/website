@@ -1,6 +1,15 @@
 [
   {
     "id": 0,
+    "name": "Elizabeth",
+    "imgUrl": "elizabeth.png",
+    "location": "Lagos, Nigeria",
+    "date": "March 2025",
+    "content": "I am beyond thrilled to have successfully obtained my United Kingdom visa with the expert guidance of Loiz Tours & Travels Ltd. Their team demonstrated exceptional professionalism, efficiency, and support throughout the entire process. From our initial consultation to the final approval, they meticulously guided me, ensuring that all my documents were in order and that I was well-prepared for the application process. I highly recommend Loiz Tours & Travels Ltd to anyone seeking assistance with visa applications. Their expertise and dedication are truly unparalleled.",
+    "aos": "fade-left"
+  },
+  {
+    "id": 1,
     "name": "Adaobi",
     "imgUrl": "adaobi-24.png",
     "location": "Abuja, Nigeria",
@@ -9,7 +18,7 @@
     "aos": "zoom-out"
   },
   {
-    "id": 1,
+    "id": 2,
     "name": "Zino",
     "imgUrl": "zino.jpg",
     "location": "Benin City, Nigeria",
@@ -18,7 +27,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 2,
+    "id": 3,
     "name": "Nkechi",
     "imgUrl": "nkechi.jpg",
     "location": "Lagos, Nigeria",
@@ -27,7 +36,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 3,
+    "id": 4,
     "name": "Adaobi",
     "imgUrl": "adaobi.png",
     "location": "Abuja, Nigeria",
@@ -36,7 +45,7 @@
     "aos": "zoom-out"
   },
   {
-    "id": 4,
+    "id": 5,
     "name": "Nosa",
     "imgUrl": "nosa.png",
     "location": "Lagos, Nigeria",
@@ -45,7 +54,7 @@
     "aos": "fade-left"
   },
   {
-    "id": 5,
+    "id": 6,
     "name": "Honourable Lucy",
     "imgUrl": "lucy.png",
     "location": "Edo State, Nigeria.",
@@ -54,7 +63,7 @@
     "aos": "zoom-in"
   },
   {
-    "id": 6,
+    "id": 7,
     "name": "Onose",
     "imgUrl": "nono.jpg",
     "location": "Ibadan, Nigeria",
@@ -63,7 +72,16 @@
     "aos": "zoom-in"
   },
   {
-    "id": 7,
+    "id": 8,
+    "name": "Margaret",
+    "imgUrl": "margaret.jpg",
+    "location": "Lagos, Nigeria",
+    "date": "January 2017",
+    "content": "Loiz Tours & Travels have been my International Travel Consultants for over six years as they facilitate the renewals of my U.S visa. They communicate vital information about visa requirements and the right supporting documents. They do personalise my services and continue to stay in touch.",
+    "aos": "fade-left"
+  },
+  {
+    "id": 9,
     "name": "Ify",
     "imgUrl": "ify.png",
     "location": "Lagos, Nigeria",
@@ -72,7 +90,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 8,
+    "id": 10,
     "name": "Lauretta",
     "imgUrl": "lauretta.png",
     "location": "Asaba, Nigeria",
@@ -81,7 +99,7 @@
     "aos": "fade-right"
   },
   {
-    "id": 9,
+    "id": 11,
     "name": "Taiwo Family",
     "imgUrl": "taiwo.png",
     "location": "Lagos, Nigeria",
