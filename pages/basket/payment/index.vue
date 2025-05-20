@@ -393,7 +393,7 @@ useSeoMeta({
                         </div>
                         <p>
                           <span class="tw-font-bold"
-                          >Selected Consultation Date:</span
+                          >Consultation Date:</span
                           >
                           {{
                             formatDate(
@@ -404,7 +404,7 @@ useSeoMeta({
                         </p>
                         <p>
                           <span class="tw-font-bold"
-                          >Selected Consultation Time:</span
+                          >Consultation Time:</span
                           >
                           {{
                             formatTime(
@@ -880,6 +880,25 @@ useSeoMeta({
 
   .clear-basket {
     font-size: 0.8rem;
+  }
+
+
+  .details__head {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-container {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .mobile-price {
+    margin-top: 0;
+    margin-bottom: 12px;
+    width: 100%;
   }
 }
 
