@@ -62,24 +62,27 @@ const trips = ref([
 <style scoped>
 .latest-trips {
   text-align: center;
-  padding: 2rem;
+  padding: 2rem 1rem;
   background: #f9f9f9;
 }
 
 .section-title {
   color: #e05aa5;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   margin-bottom: 0.5rem;
 }
 
 .section-subtitle {
   color: #555;
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
   margin-bottom: 1.5rem;
+  padding: 0 0.5rem;
 }
 
 .latest-trips-slider {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .trip-card {
@@ -88,11 +91,12 @@ const trips = ref([
   border-radius: 12px;
   padding: 1rem;
   text-align: center;
+  margin: 0 0.5rem;
 }
 
 .trip-title {
   color: #333;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
   margin-bottom: 0.5rem;
 }
 
@@ -101,12 +105,15 @@ const trips = ref([
   height: auto;
   border-radius: 8px;
   margin-bottom: 1rem;
+  max-height: 200px;
+  object-fit: cover;
 }
 
 .trip-description {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 3vw, 1rem);
   color: #555;
   margin-bottom: 1rem;
+  padding: 0 0.5rem;
 }
 
 .trip-tags {
@@ -114,6 +121,7 @@ const trips = ref([
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -121,7 +129,8 @@ const trips = ref([
   padding: 0.3rem 0.6rem;
   border-radius: 12px;
   color: #777;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
+  white-space: nowrap;
 }
 
 .check-out-button {
@@ -131,10 +140,26 @@ const trips = ref([
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
+  margin-top: 0.5rem;
 }
 
 .check-out-button:hover {
   background: #d04a92;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 480px) {
+  .latest-trips {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .trip-card {
+    padding: 0.8rem;
+  }
+
+  .trip-image {
+    max-height: 180px;
+  }
 }
 </style>
