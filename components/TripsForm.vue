@@ -129,11 +129,9 @@ const submitForm = async () => {
     }
 
     // Consultation date validation for foreign trips
-    if (props.trip.type === 'foreign' && (!formData.value.booked_date || !formData.value.booked_time)) {
-      showConsultationError.value = true;
+    if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
+      alert("Please upload your passport biodata page");
       return;
-    } else {
-      showConsultationError.value = false;
     }
 
     // Add passport validation for foreign trips
@@ -533,10 +531,12 @@ onMounted(() => {
             <v-file-input
                 label="Passport Data Page"
                 accept=".pdf"
-                :rules="[
+                :rules="formData.value.passport_biodata_page ? [] : [
                     (v) => !!v || 'Please upload your passport biodata page',
-                    (v) => !v || v.size < 5000000 || 'Please upload your passport biodata page',
+                    (v) => !v || v.size < 5000000 || 'File size should be less than 5MB',
                     ]"
+                :hint="formData.value.passport_biodata_page ? 'Passport uploaded successfully' : ''"
+                :persistent-hint="!!formData.value.passport_biodata_page"
                 required
                 v-if="props.trip.type === 'foreign'"
                 @change="uploadFile"
