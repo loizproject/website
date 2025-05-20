@@ -129,9 +129,11 @@ const submitForm = async () => {
     }
 
     // Consultation date validation for foreign trips
-    if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
-      alert("Please upload your passport biodata page");
+    if (props.trip.type === 'foreign' && (!formData.value.booked_date || !formData.value.booked_time)) {
+      showConsultationError.value = true;
       return;
+    } else {
+      showConsultationError.value = false;
     }
 
     // Add passport validation for foreign trips
@@ -528,23 +530,35 @@ onMounted(() => {
             ></v-select>
           </v-col>
           <v-col>
-            <v-file-input
-                label="Passport Data Page"
-                accept=".pdf"
-                :rules="formData.value.passport_biodata_page ? [] : [
-                    (v) => !!v || 'Please upload your passport biodata page',
-                    (v) => !v || v.size < 5000000 || 'File size should be less than 5MB',
-                    ]"
-                :hint="formData.value.passport_biodata_page ? 'Passport uploaded successfully' : ''"
-                :persistent-hint="!!formData.value.passport_biodata_page"
-                required
-                v-if="props.trip.type === 'foreign'"
-                @change="uploadFile"
-                v-model="file"
-                variant="outlined"
-                show-size
-                class="fixed-size-file-input"
-            ></v-file-input>
+            <!-- Modified passport upload component -->
+            <div v-if="props.trip.type === 'foreign'">
+              <v-file-input
+                  v-if="!formData.passport_biodata_page"
+                  label="Passport Data Page"
+                  accept=".pdf"
+                  :rules="[
+                      (v) => !!v || 'Please upload your passport biodata page',
+                      (v) => !v || v.size < 5000000 || 'File size should be less than 5MB',
+                  ]"
+                  required
+                  @change="uploadFile"
+                  v-model="file"
+                  variant="outlined"
+                  show-size
+                  class="fixed-size-file-input"
+              ></v-file-input>
+
+              <v-text-field
+                  v-else
+                  label="Passport Data Page"
+                  :model-value="'Passport uploaded successfully'"
+                  readonly
+                  variant="outlined"
+                  class="fixed-size-file-input"
+                  color="success"
+                  append-inner-icon="mdi-check-circle"
+              ></v-text-field>
+            </div>
           </v-col>
         </v-row>
 
