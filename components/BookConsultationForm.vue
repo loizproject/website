@@ -325,6 +325,11 @@ onMounted(async () => {
             variant="outlined"
             maxlength="20"
             label="Middle Name"
+            :rules="[
+            rules.text,
+            (v) =>
+              /^[A-Za-z]+$/.test(v) || 'Middlename must only contain letters',
+          ]"
             @change="save"
         ></v-text-field>
         <v-text-field
@@ -333,7 +338,12 @@ onMounted(async () => {
             variant="outlined"
             label="Surname"
             maxlength="20"
-            :rules="[rules.required, rules.text]"
+            :rules="[
+            rules.required,
+            rules.text,
+            (v) =>
+              /^[A-Za-z]+$/.test(v) || 'Surname must only contain letters',
+          ]"
             @change="save"
         ></v-text-field>
         <v-text-field
