@@ -32,11 +32,12 @@ const clearDateFilter = () => {
   showFutureTrips.value = null;
 };
 
-// Computed property to filter trips
+// Computed property to filter and sort trips
 const currentShowingCards = computed(() => {
   const today = new Date().toISOString().split('T')[0];
 
-  return trips.value.filter((item) => {
+  // Filter trips first
+  const filteredTrips = trips.value.filter((item) => {
     if (!item.enabled) return false;
 
     // Search filter
@@ -56,6 +57,9 @@ const currentShowingCards = computed(() => {
 
     return true;
   });
+
+  // Sort trips by start_date in ascending order
+  return filteredTrips.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 });
 
 const banner = (images) => images.find((image) => image.type === "banner");
