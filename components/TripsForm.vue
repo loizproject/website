@@ -128,14 +128,6 @@ const submitForm = async () => {
       return;
     }
 
-    // Consultation date validation for foreign trips
-    if (props.trip.type === 'foreign' && (!formData.value.booked_date || !formData.value.booked_time)) {
-      showConsultationError.value = true;
-      return;
-    } else {
-      showConsultationError.value = false;
-    }
-
     // Add passport validation for foreign trips
     if (props.trip.type === 'foreign' && !formData.value.passport_biodata_page) {
       alert("Please upload your passport biodata page");
@@ -467,23 +459,19 @@ onMounted(() => {
 
               </v-text-field>
 
-              <label
-                  class="form-entry pa-4 mb-4 d-flex justify-space-between align-center pointer"
+              <v-text-field
                   v-else
-                  :class="{ 'error-state': showConsultationError }"
+                  label="Select Consultation Date and Time"
+                  :model-value="formData.booked_date_formatted ?
+                  `${formData.booked_date_formatted} (${formData.booked_time_formatted})` : ''"
+                  readonly
+                  :rules="[(v) => !!formData.booked_date || 'Consultation date and time is required']"
+                  required
+                  variant="outlined"
                   @click="showConsultationSchedule = true"
-              >
-                <span v-if="formData.booked_date_formatted">
-                  {{ formData.booked_date_formatted }}
-                  <i>({{ formData.booked_time_formatted }})</i>
-                </span>
-                <span v-else>
-                  Select Consultation Date and Time
-                  <span v-if="showConsultationError" class="tw-text-red-500 tw-text-xs">
-                    * Required
-                  </span>
-                </span>
-              </label>
+                  class="pointer"
+                  placeholder="Click to select consultation date and time"
+              ></v-text-field>
               <ConsultationSchedule
                   v-if="showConsultationSchedule"
                   @close="showConsultationSchedule = false"
