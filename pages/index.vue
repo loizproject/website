@@ -1,15 +1,15 @@
 <script setup>
 import getSiteHead from "~/utils/getSiteHead";
-import { useDisplay } from "vuetify";
-import { useStore } from "~/store";
-import { useContentStore } from "~/store/content";
-import { useConsultationStore } from "~/store/consultation";
+import {useDisplay} from "vuetify";
+import {useStore} from "~/store";
+import {useContentStore} from "~/store/content";
+import {useConsultationStore} from "~/store/consultation";
 
-const { mdAndUp } = useDisplay();
+const {mdAndUp} = useDisplay();
 const router = useRouter();
 const config = useRuntimeConfig();
 
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 
 // Reference to the modal component
 const modal = ref(null);
@@ -76,22 +76,22 @@ function truncateText(text) {
 
 function bookConsultation() {
   router.push(
-    `/consultations/bookings/${useGetSlug(consultationService.value.text)}`
+      `/consultations/bookings/${useGetSlug(consultationService.value.text)}`
   );
 }
 
 function setServiceDestinations() {
   const service = services.value.filter(
-    (item) => item.id === form.value.serviceCategory.service_id
+      (item) => item.id === form.value.serviceCategory.service_id
   )[0];
   form.value.service = service;
 }
 
 function getStarted() {
   router.push(
-    `/${form.value.service.slug}/${form.value.serviceCategory.slug}?country=${
-      form.value.location.id - 1
-    }`
+      `/${form.value.service.slug}/${form.value.serviceCategory.slug}?country=${
+          form.value.location.id - 1
+      }`
   );
 }
 
@@ -101,7 +101,7 @@ function toggleContent(item) {
 
 const slideImageStyle = (item) => `
 background-image: linear-gradient(to right, ${
-  item.showContent ? "#000000AA, #000000AA" : "#00000010, #00000010"
+    item.showContent ? "#000000AA, #000000AA" : "#00000010, #00000010"
 }), url(${config.public.MEDIA_ASSETS_URL}${item.img})
 `;
 
@@ -119,13 +119,13 @@ onUnmounted(() => {
 
 const meta = {
   title:
-    "Loiz Tours & Travels Ltd - Your Gateway to Exhilarating & Seamless Travel Experiences!",
+      "Loiz Tours & Travels Ltd - Your Gateway to Exhilarating & Seamless Travel Experiences!",
   description:
-    "Whether you're planning your next adventure or seeking assistance with visa services, flights, or tours, trust Loiz Tours & Travels to make your travel experience unforgettable. Join us on our journey as we redefine the standards of excellence in the travel industry. Discover the world with Loiz Tours & Travels – Where Every Journey Begins with Excellence!",
+      "Whether you're planning your next adventure or seeking assistance with visa services, flights, or tours, trust Loiz Tours & Travels to make your travel experience unforgettable. Join us on our journey as we redefine the standards of excellence in the travel industry. Discover the world with Loiz Tours & Travels – Where Every Journey Begins with Excellence!",
   image:
-    "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
+      "https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png",
   keywords:
-    "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in Nigeria",
+      "travel, tours, vacations, domestic tours in nigeria, visa, visa services, 3rd party travel companies, travel companies in Nigeria",
 };
 useSeoMeta({
   title: meta.title,
@@ -144,7 +144,7 @@ useSeoMeta({
 
 <template>
   <div>
-    <Modal ref="modal" />
+    <Modal ref="modal"/>
 
     <section id="home-banner" class="home-banner d-flex align-center">
       <v-container class="home-banner__main" data-aos="zoom-in">
@@ -154,45 +154,45 @@ useSeoMeta({
         <div class="d-flex align-center justify-space-betweenn mt-5">
           <div>
             <v-btn
-              :size="mdAndUp ? 'x-large' : 'large'"
-              class="submit play-video d-flex align-center py-4"
-              @click="toggleWatchVideoModal"
+                :size="mdAndUp ? 'x-large' : 'large'"
+                class="submit play-video d-flex align-center py-4"
+                @click="toggleWatchVideoModal"
             >
               <p class="mb-0">Services Video</p>
               <iconify-icon
-                icon="gravity-ui:play-fill"
-                class="play-video__icon ml-2"
+                  icon="gravity-ui:play-fill"
+                  class="play-video__icon ml-2"
               ></iconify-icon>
             </v-btn>
             <VideoPlayer
-              v-if="watchVideoModal"
-              videoId="company-video"
-              videoSrc="https://res.cloudinary.com/loiztours/video/upload/q_50/site-media/videos/watch-video.mp4"
-              :videoType="videoType"
-              @close="toggleWatchVideoModal"
+                v-if="watchVideoModal"
+                videoId="company-video"
+                videoSrc="https://res.cloudinary.com/loiztours/video/upload/q_50/site-media/videos/watch-video.mp4"
+                :videoType="videoType"
+                @close="toggleWatchVideoModal"
             >
             </VideoPlayer>
           </div>
           <div class="ml-4">
             <v-btn
-              :size="mdAndUp ? 'x-large' : 'large'"
-              class="submit play-video d-flex align-center py-4"
-              @click="toggleBookingVideoModal"
+                :size="mdAndUp ? 'x-large' : 'large'"
+                class="submit play-video d-flex align-center py-4"
+                @click="toggleBookingVideoModal"
             >
               <p class="mb-0">
                 Booking <span v-if="mdAndUp">Journey</span> Video
               </p>
               <iconify-icon
-                icon="gravity-ui:play-fill"
-                class="play-video__icon ml-2"
+                  icon="gravity-ui:play-fill"
+                  class="play-video__icon ml-2"
               ></iconify-icon>
             </v-btn>
             <VideoPlayer
-              v-if="bookingVideoModal"
-              videoId="booking-video"
-              videoSrc="https://res.cloudinary.com/loiztours/video/upload/site-media/videos/booking-journey-video.mp4"
-              :videoType="videoType"
-              @close="toggleBookingVideoModal"
+                v-if="bookingVideoModal"
+                videoId="booking-video"
+                videoSrc="https://res.cloudinary.com/loiztours/video/upload/site-media/videos/booking-journey-video.mp4"
+                :videoType="videoType"
+                @close="toggleBookingVideoModal"
             >
             </VideoPlayer>
           </div>
@@ -200,27 +200,26 @@ useSeoMeta({
       </v-container>
       <div class="home-banner__actions">
         <v-container class="">
-          <div
-            class="search relative d-sm-flex align-center justify-space-around"
-          >
-            <h3 class="mr-4">
-              Search from a long list <br class="d-none d-md-block" />
+          <div class="search relative d-sm-flex align-center justify-space-around">
+            <h3 class="mr-4 tw-text-center md:tw-text-left">
+              Search from a long list <br class="d-none d-md-block"/>
               of travel services
             </h3>
-            <div class="d-flex align-center justify-end">
+            <div class="d-flex align-center justify-end tw-w-full md:tw-w-auto">
               <input
-                v-model="search"
-                type="text"
-                placeholder="Start your search here..."
-                @keyup="startSearch"
+                  v-model="search"
+                  type="text"
+                  placeholder="Start your search here..."
+                  @keyup="startSearch"
+                  class="tw-w-full md:tw-w-[350px]"
               />
               <div class="search__btn d-flex align-center" @click="startSearch">
                 <v-icon>mdi-magnify</v-icon>
               </div>
             </div>
             <div
-              v-if="search && search.length >= 3"
-              class="search__results mt-1"
+                v-if="search && search.length >= 3"
+                class="search__results mt-1"
             >
               <v-card class="pa-5">
                 <h4>Top Results</h4>
@@ -280,34 +279,34 @@ useSeoMeta({
 
       <div class="our-services__slider">
         <v-slide-group
-          ref="ourServicesSlider"
-          multiple
-          class="my-5"
-          show-arrows
-          center-active
+            ref="ourServicesSlider"
+            multiple
+            class="my-5"
+            show-arrows
+            center-active
         >
           <v-slide-group-item
-            v-for="item in services"
-            :key="item.title"
-            v-slot="{ toggle }"
+              v-for="item in services"
+              :key="item.title"
+              v-slot="{ toggle }"
           >
             <v-card
-              class="slide-card mx-2 my-2 tw-w-[350px] 2xl:tw-w-[400px]"
-              @click="toggle"
+                class="slide-card mx-2 my-2 tw-w-[350px] 2xl:tw-w-[400px]"
+                @click="toggle"
             >
               <v-img
-                class="slide-card__img"
-                cover
-                :style="`backgroundImage: linear-gradient(to right, #00000020, #00000020), url(${item.image})`"
+                  class="slide-card__img"
+                  cover
+                  :style="`backgroundImage: linear-gradient(to right, #00000020, #00000020), url(${item.image})`"
               >
                 <v-btn
-                  elevation="0"
-                  color="#34343450"
-                  @click="likeService(item)"
+                    elevation="0"
+                    color="#34343450"
+                    @click="likeService(item)"
                 >
                   <v-icon
-                    :key="likeServiceKey"
-                    :color="item.like ? 'orange !important' : '#fff'"
+                      :key="likeServiceKey"
+                      :color="item.like ? 'orange !important' : '#fff'"
                   >
                     mdi-heart
                   </v-icon>
@@ -318,8 +317,8 @@ useSeoMeta({
                 <p>
                   {{
                     item.description && item.description.length < textLimit
-                      ? item.description
-                      : `${truncateText(item.description)}...`
+                        ? item.description
+                        : `${truncateText(item.description)}...`
                   }}
                 </p>
               </div>
@@ -330,29 +329,29 @@ useSeoMeta({
     </section>
 
     <section
-      id="consultationn"
-      class="consultationn d-flex align-center justify-center my-4"
+        id="consultationn"
+        class="consultationn d-flex align-center justify-center my-4"
     >
       <v-container class="text-center">
         <div data-aos="zoom-in">
           <h2>BOOK PAID CONSULTATION</h2>
           <v-select
-            :items="consultationServices"
-            item-title="text"
-            :item-value="(e) => e"
-            placeholder="Select consultation service"
-            :menu-props="{
+              :items="consultationServices"
+              item-title="text"
+              :item-value="(e) => e"
+              placeholder="Select consultation service"
+              :menu-props="{
               contentClass: 'consultation-dropdown',
             }"
-            variant="solo"
-            flat
-            v-model="consultationService"
-            class="consultation-select my-2 mx-auto"
+              variant="solo"
+              flat
+              v-model="consultationService"
+              class="consultation-select my-2 mx-auto"
           ></v-select>
           <v-btn
-            class="submit"
-            :disabled="!consultationService"
-            @click="bookConsultation"
+              class="submit"
+              :disabled="!consultationService"
+              @click="bookConsultation"
           >
             Proceed
           </v-btn>
@@ -365,24 +364,24 @@ useSeoMeta({
         <h2>Awesome Destinations</h2>
         <div class="tw-overflow-x-scroll no-scroll">
           <div
-            class="tw-flex lg:tw-grid lg:tw-grid-cols-3 xl:tw-grid-cols-4 lg:tw-gap-6 tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap tw-justify-center"
+              class="tw-flex lg:tw-grid lg:tw-grid-cols-3 xl:tw-grid-cols-4 lg:tw-gap-6 tw-w-[1800px] lg:tw-w-full lg:tw-flex-wrap tw-justify-center"
           >
             <v-card
-              v-for="item in destinations"
-              :key="item.title"
-              class="slide-card slide-card--destination mx-2 my-2 tw-w-[300px] lg:tw-w-full"
-              @mouseenter="toggleContent(item)"
-              @mouseleave="toggleContent(item)"
+                v-for="item in destinations"
+                :key="item.title"
+                class="slide-card slide-card--destination mx-2 my-2 tw-w-[300px] lg:tw-w-full"
+                @mouseenter="toggleContent(item)"
+                @mouseleave="toggleContent(item)"
             >
               <div
-                class="slide-card__img slide-card--destination__img d-flex align-center"
-                cover
-                :style="slideImageStyle(item)"
+                  class="slide-card__img slide-card--destination__img d-flex align-center"
+                  cover
+                  :style="slideImageStyle(item)"
               >
                 <div
-                  v-if="item.showContent"
-                  data-aos="zoom-in"
-                  class="slide-card--destination__content pa-4"
+                    v-if="item.showContent"
+                    data-aos="zoom-in"
+                    class="slide-card--destination__content pa-4"
                 >
                   <h4 class="mb-10">{{ item.title }}</h4>
                   <p class="mb-0">{{ item.text }}</p>
@@ -419,7 +418,7 @@ useSeoMeta({
     <section id="trips-section" class="trips__container">
       <v-container>
         <h2 class="tw-mx-auto tw-capitalize tw-mb-6">Latest Trips</h2>
-        <TripSlider />
+        <TripSlider/>
       </v-container>
     </section>
 
@@ -430,13 +429,13 @@ useSeoMeta({
           <v-col data-aos="fade-left" cols="12" md="6" xl="5">
             <div class="card">
               <div
-                v-for="item in advisoryServices"
-                :key="item"
-                class="advisory-services__item d-flex align-center my-8"
+                  v-for="item in advisoryServices"
+                  :key="item"
+                  class="advisory-services__item d-flex align-center my-8"
               >
                 <iconify-icon
-                  icon="ant-design:check-circle-outlined"
-                  class="advisory-services__icon"
+                    icon="ant-design:check-circle-outlined"
+                    class="advisory-services__icon"
                 ></iconify-icon>
                 <p class="mb-0 ml-3">
                   {{ item }}
@@ -445,9 +444,9 @@ useSeoMeta({
             </div>
           </v-col>
           <v-col
-            cols="12"
-            md="6"
-            class="advisory-services__img d-none d-md-block"
+              cols="12"
+              md="6"
+              class="advisory-services__img d-none d-md-block"
           >
           </v-col>
         </v-row>
@@ -462,10 +461,10 @@ useSeoMeta({
           <div class="tw-overflow-x-scroll no-scroll">
             <div class="tw-flex tw-items-center">
               <nuxt-img
-                v-for="n in 14"
-                :key="n"
-                :src="`/img/gallery/${n}.png`"
-                class="mx-2 tw-w-[300px]"
+                  v-for="n in 14"
+                  :key="n"
+                  :src="`/img/gallery/${n}.png`"
+                  class="mx-2 tw-w-[300px]"
               ></nuxt-img>
             </div>
           </div>
@@ -486,22 +485,22 @@ useSeoMeta({
         </div>
         <v-row class="my-5" align="stretch">
           <v-col
-            cols="12"
-            sm="6"
-            md="4"
-            v-for="item in testimonials"
-            :key="item.id"
-            :data-aos="item.aos"
+              cols="12"
+              sm="6"
+              md="4"
+              v-for="item in testimonials"
+              :key="item.id"
+              :data-aos="item.aos"
           >
             <div class="card">
               <div
-                class="d-flex flex-column justify-space-between px-5 px-md-8 h-full"
+                  class="d-flex flex-column justify-space-between px-5 px-md-8 h-full"
               >
                 <p class="testimonials__content">{{ item.content }}</p>
                 <div class="d-flex align-center">
                   <img
-                    class="testimonials__img mr-2"
-                    :src="`${config.public.MEDIA_ASSETS_URL}/img/testimonials/${item.imgUrl}`"
+                      class="testimonials__img mr-2"
+                      :src="`${config.public.MEDIA_ASSETS_URL}/img/testimonials/${item.imgUrl}`"
                   />
                   <div>
                     <p class="testimonials__name mb-0">
@@ -531,12 +530,12 @@ useSeoMeta({
   background-position: center;
   background-repeat: no-repeat;
   background-image: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.26) 10.59%,
-      rgba(0, 0, 0, 0.42) 62.69%,
-      #fff 99.73%
-    ),
-    url("https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png");
+          180deg,
+          rgba(0, 0, 0, 0.26) 10.59%,
+          rgba(0, 0, 0, 0.42) 62.69%,
+          #fff 99.73%
+  ),
+  url("https://res.cloudinary.com/loiztours/image/upload/site-media/img/atikh-bana.png");
   margin-bottom: 150px;
 
   &__main {
@@ -654,18 +653,22 @@ h2 {
 .slide-card {
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.14) !important;
   width: 30%;
+
   &--destination {
     &__img {
       height: 400px !important;
       width: 100%;
     }
+
     &__content {
       color: #fff;
+
       & h4 {
         font-family: trip-bold, sans-serif !important;
         font-size: 1.25rem !important;
         font-weight: 900;
       }
+
       & p {
         font-size: 16px !important;
       }
@@ -677,6 +680,7 @@ h2 {
     background-color: #00000060;
     background-position: center;
     background-size: cover;
+
     & .v-btn {
       margin: 10px;
       padding: 10px 10px !important;
@@ -697,7 +701,7 @@ h2 {
 
 .consultationn {
   background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
-    url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings.jpg");
+  url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings.jpg");
   background-size: cover;
   background-position: center;
   min-height: 550px;
@@ -782,7 +786,7 @@ h2 {
 .our-history {
   padding: 7% 0;
   background-image: linear-gradient(to right, #00000060, #00000060),
-    url("https://res.cloudinary.com/loiztours/image/upload/site-media/img/historyback.png");
+  url("https://res.cloudinary.com/loiztours/image/upload/site-media/img/historyback.png");
   background-position: center;
   background-size: cover;
 
@@ -802,7 +806,7 @@ h2 {
   padding: 5% 10%;
   height: 68.56rem;
   background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
-    url("https://res.cloudinary.com/loiztours/image/upload/v1733477469/site-media/img/trips/trips_backgound.png");
+  url("https://res.cloudinary.com/loiztours/image/upload/v1733477469/site-media/img/trips/trips_backgound.png");
   background-size: cover;
   background-position: center;
 }
@@ -924,7 +928,7 @@ h2 {
   .consultationn {
     min-height: 650px;
     background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
-      url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings-mob.jpg");
+    url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings-mob.jpg");
 
     & .v-btn {
       margin-top: 5%;
@@ -1055,6 +1059,30 @@ h2 {
 
     & .v-list-item__title {
       font-size: 0.8rem;
+    }
+  }
+}
+
+.search {
+  @media (min-width: 600px) and (max-width: 960px) {
+    flex-direction: column;
+    padding: 20px;
+
+    h3 {
+      width: 100% !important;
+      font-size: 1.5rem !important;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input {
+      width: 100% !important;
+      max-width: 500px;
+    }
+
+    &__results {
+      width: 100% !important;
+      left: 0;
     }
   }
 }
