@@ -701,7 +701,7 @@ h2 {
 
 .consultationn {
   background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
-  url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings.jpg");
+  url("https://res.cloudinary.com/loiztours/image/upload/v1684709087/site-media/img/book-consultation.jpg");
   background-size: cover;
   background-position: center;
   min-height: 550px;
@@ -928,7 +928,7 @@ h2 {
   .consultationn {
     min-height: 650px;
     background-image: linear-gradient(to right, #00000090, #00000090, #00000070),
-    url("https://res.cloudinary.com/emino/image/upload/loiztours/site-media/img/consultations/bookings-mob.jpg");
+    url("https://res.cloudinary.com/loiztours/image/upload/v1684709087/site-media/img/book-consultation.jpg");
 
     & .v-btn {
       margin-top: 5%;
