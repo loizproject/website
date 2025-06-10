@@ -379,7 +379,8 @@ onMounted(async () => {
             'Study',
             'Work ',
             'Migrant',
-            'Migrant Super Special visa',
+            'Migrant Super Special Visa',
+            'Visiting Visa'
           ]"
           variant="outlined"
           label="Visa Type"
