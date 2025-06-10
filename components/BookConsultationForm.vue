@@ -372,6 +372,9 @@ onMounted(async () => {
           v-if="_Includes(form.service.fields, 'visa type')"
           v-model="form.visaType"
           :items="[
+            'Visiting Visa',
+            'Study Visa',
+            'Medical Visa',
             'Spouse',
             'Family',
             'Settlement',
@@ -379,8 +382,7 @@ onMounted(async () => {
             'Study',
             'Work ',
             'Migrant',
-            'Migrant Super Special Visa',
-            'Visiting Visa'
+            'Migrant Super Special Visa'
           ]"
           variant="outlined"
           label="Visa Type"
