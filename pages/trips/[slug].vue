@@ -72,10 +72,6 @@ const closeModal = () => {
 
         <div class="horizontal-line tw-mt-8"></div>
 
-        <div class="tw-flex tw-gap-3 tw-items-center tw-mt-8">
-          <h4 class="tw-text-2xl">More Details</h4>
-        </div>
-
         <div class="tw-mt-8 tw-flex tw-justify-center">
           <img
             :src="intro.url"
