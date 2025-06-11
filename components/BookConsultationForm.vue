@@ -444,15 +444,16 @@ onMounted(async () => {
             v-if="_Includes(form.service.fields, 'visa type')"
             v-model="form.visaType"
             :items="[
+            'Visiting visa',
+            'Study Visa',
+            'Medical Visa',
             'Spouse',
             'Family',
             'Settlement',
-            'Medical',
-            'Study',
             'Work ',
             'Migrant',
             'Migrant Super Special visa',
-            'Visiting visa',
+
           ]"
             variant="outlined"
             label="Visa Type"
