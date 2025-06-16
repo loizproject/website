@@ -1,7 +1,7 @@
 <script setup>
 import slides from "~/utils/site-content/sliderData.json";
-import { ref, onMounted, computed } from "vue";
-import { formatDate } from "~/utils/lib";
+import {ref, onMounted, computed} from "vue";
+import {formatDate} from "~/utils/lib";
 
 // Fetch trips data
 let trips = ref([]);
@@ -65,12 +65,12 @@ const banner = (images) => images.find((image) => image.type === "banner");
 <template>
   <main>
     <div>
-      <Slider :sliderTrips="tripsSlides" />
+      <Slider :sliderTrips="tripsSlides"/>
     </div>
 
     <TripsSubHeader
-      :trips="trips"
-      :currentShowingCards="currentShowingCards"
+        :trips="trips"
+        :currentShowingCards="currentShowingCards"
     />
 
     <section class="max-w-[90%] tw-items-center tw-bg-[F9DAED] tw-flex tw-flex-col tw-justify-center">
@@ -80,55 +80,56 @@ const banner = (images) => images.find((image) => image.type === "banner");
       </div>
 
       <div class="tw-bg-white tw-p-8 tw-rounded-md tw-w-[90%]">
-        <div class="tw-flex tw-items-center tw-justify-between tw-w-full">
-          <div class="filter tw-flex tw-gap-6">
+        <div class="tw-flex tw-flex-col md:tw-flex-row tw-items-center tw-justify-between tw-w-full tw-gap-4">
+          <div class="filter tw-flex tw-gap-2 md:tw-gap-6 tw-w-full md:tw-w-auto tw-justify-between">
             <button
-              @click="clearDateFilter"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === null }"
+                @click="clearDateFilter"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === null }"
             >
               All
             </button>
             <button
-              @click="showCurrentTrips"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === true }"
+                @click="showCurrentTrips"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === true }"
             >
               Latest
             </button>
             <button
-              @click="showPastTrips"
-              class="toggle-button"
-              :class="{ active: showFutureTrips === false }"
+                @click="showPastTrips"
+                class="toggle-button"
+                :class="{ active: showFutureTrips === false }"
             >
               Previous
             </button>
           </div>
 
-          <div class="lg:tw-w-1/4">
+          <div class="tw-w-full md:tw-w-1/4">
             <v-text-field
-              v-model="search"
-              variant="outlined"
-              flat
-              clearable
-              placeholder="Search for a campaign"
-              prepend-inner-icon="mdi-magnify"
-              density="comfortable"
+                v-model="search"
+                variant="outlined"
+                flat
+                clearable
+                placeholder="Search for a campaign"
+                prepend-inner-icon="mdi-magnify"
+                density="comfortable"
+                class="tw-w-full"
             />
           </div>
         </div>
 
         <div class="card-container tw-grid tw-grid-cols-1 md:tw-grid-cols-2">
           <div
-            v-for="(card, index) in currentShowingCards"
-            :key="index"
-            class="card"
+              v-for="(card, index) in currentShowingCards"
+              :key="index"
+              class="card"
           >
             <div class="image-hover-effect">
               <img
-                :src="banner(card.images).url"
-                :alt="card.title"
-                class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
+                  :src="banner(card.images).url"
+                  :alt="card.title"
+                  class="card-image tw-h-[200px] md:tw-h-[300px] tw-w-[100%]"
               />
             </div>
             <div class="tw-flex tw-justify-between tw-items-center">
@@ -138,8 +139,8 @@ const banner = (images) => images.find((image) => image.type === "banner");
               <div class="tw-gap-2 tw-flex tw-items-center" v-if="card.start_date && card.end_date">
                 <client-only>
                   <iconify-icon
-                    icon="oui:token-date"
-                    class="tw-text-lg tw-text-black"
+                      icon="oui:token-date"
+                      class="tw-text-lg tw-text-black"
                   />
                 </client-only>
                 <span class="tw-text-sm tw-whitespace-nowrap">
@@ -154,21 +155,21 @@ const banner = (images) => images.find((image) => image.type === "banner");
               <div class="tw-flex tw-items-center tw-gap-3">
                 <client-only>
                   <iconify-icon
-                    v-show="card.type === 'domestic'"
-                    icon="bxs:train"
-                    class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
+                      v-show="card.type === 'domestic'"
+                      icon="bxs:train"
+                      class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
                   />
                   <iconify-icon
-                    v-show="card.type === 'foreign'"
-                    icon="bxs:plane-alt"
-                    class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
+                      v-show="card.type === 'foreign'"
+                      icon="bxs:plane-alt"
+                      class="tw-border-2 tw-p-2 tw-bg-gradient-to-r from-pink-800 via-red-700 to-yellow-700 tw-rounded-full tw-text-2xl tw-text-black"
                   />
                 </client-only>
                 <div class="tw-flex tw-gap-2 tw-py-2 tw-px-4 tw-bg-[#fef3f9] tw-rounded-2xl">
                   <span
-                    v-for="destination in card.destinations"
-                    :key="destination.city"
-                    class="tw-m-0 tw-text-[#eb0c8f]"
+                      v-for="destination in card.destinations"
+                      :key="destination.city"
+                      class="tw-m-0 tw-text-[#eb0c8f]"
                   >
                     {{ destination.state }}
                   </span>
@@ -274,5 +275,7 @@ const banner = (images) => images.find((image) => image.type === "banner");
     justify-content: flex-start;
     margin: 4px 0 12px 0;
   }
+
+
 }
 </style>
