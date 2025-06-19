@@ -5,6 +5,10 @@
       "route": "/about"
     },
     {
+      "name": "Contact Us",
+      "route": "/contact"
+    },
+    {
       "name": "FAQs",
       "route": "/faqs"
     },
@@ -65,20 +69,8 @@
   ],
   "thirdPartyServices": [
     {
-      "name": "IELTS",
-      "route": "/services/third-party-services/ielts-international-english-language-testing-systems"
-    },
-    {
       "name": "Agile Online Coaching",
       "route": "/services/third-party-services/agile-online-coaching"
-    },
-    {
-      "name": "International Passport",
-      "route": "/services/third-party-services/international-passport"
-    },
-    {
-      "name": "International Drivers License",
-      "route": "/services/third-party-services/international-drivers-license"
     },
     {
       "name": "Travel Insurance",
