@@ -17,18 +17,6 @@
       "route": "/careers"
     },
     {
-      "name": "Data Privacy Notice",
-      "route": "/data-privacy"
-    },
-    {
-      "name": "Privacy Policy",
-      "route": "/privacy-policy"
-    },
-    {
-      "name": "Cookies Policy",
-      "route": "/cookies-policy"
-    },
-    {
       "name": "Terms and Conditions",
       "route": "/terms"
     },
