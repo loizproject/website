@@ -126,7 +126,16 @@ onMounted(() => {
               <div v-for="item in footerSect1" :key="item.name" class="footer__list">
                 <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
               </div>
+              <h3 class="mt-4">Third Party Services</h3>
+              <div
+                  v-for="item in thirdPartyServices"
+                  :key="item.name"
+                  class="footer__list"
+              >
+                <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
+              </div>
             </v-col>
+
             <v-col cols="6" md="4">
               <h3>Our Services</h3>
               <div v-for="item in footerSect2" :key="item.name" class="footer__list">
@@ -141,6 +150,7 @@ onMounted(() => {
                 </a>
               </div>
             </v-col>
+
             <v-col cols="12" md="4">
               <h3>Compliance</h3>
               <div class="footer__list">
@@ -156,19 +166,10 @@ onMounted(() => {
                 <a @click="toggleManageCookies">Manage Cookie Preferences</a>
               </div>
 
-              <h3 class="mt-4">Third Party Services</h3>
-              <div
-                  v-for="item in thirdPartyServices"
-                  :key="item.name"
-                  class="footer__list"
-              >
-                <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
-              </div>
               <div
                   class="footer__actions mb-8 mt-5 mb-md-0 mt-md-8 d-flex d-sm-block flex-column justify-center align-center ml-auto"
               >
                 <h4>Subscribe to our Newsletter</h4>
-                <!-- <p>Subscribe to get information about our services and events</p> -->
                 <div class="newsletter mt-3">
                   <v-form
                       ref="newsletterForm"
