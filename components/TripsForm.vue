@@ -525,9 +525,9 @@ onMounted(() => {
                   label="Passport Data Page"
                   accept=".pdf"
                   :rules="[
-                      (v) => !!v || 'Please upload your passport biodata page',
-                      (v) => !v || v.size < 5000000 || 'File size should be less than 5MB',
-                  ]"
+          (v) => !!v || 'Please upload your passport biodata page',
+          (v) => !v || v.size < 5000000 || 'File size should be less than 5MB',
+      ]"
                   required
                   @change="uploadFile"
                   v-model="file"
@@ -539,11 +539,10 @@ onMounted(() => {
               <v-text-field
                   v-else
                   label="Passport Data Page"
-                  :model-value="'Passport uploaded successfully'"
+                  :model-value="'✓ Passport uploaded successfully'"
                   readonly
                   variant="outlined"
-                  class="fixed-size-file-input"
-                  color="success"
+                  class="fixed-size-file-input passport-success"
                   append-inner-icon="mdi-check-circle"
               ></v-text-field>
             </div>
@@ -619,6 +618,25 @@ onMounted(() => {
   p {
     margin-bottom: 0;
     font-size: 1rem;
+  }
+}
+
+.passport-success {
+  :deep(.v-field) {
+    border-color: #4CAF50 !important;
+  }
+
+  :deep(.v-field__input) {
+    color: #2E7D32 !important;
+    font-weight: 500;
+  }
+
+  :deep(.v-field__append-inner .v-icon) {
+    color: #4CAF50 !important;
+  }
+
+  :deep(.v-label) {
+    color: #2E7D32 !important;
   }
 }
 
