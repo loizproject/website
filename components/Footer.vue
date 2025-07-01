@@ -126,13 +126,24 @@ onMounted(() => {
               <div v-for="item in footerSect1" :key="item.name" class="footer__list">
                 <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
               </div>
-              <h3 class="mt-4">Third Party Services</h3>
-              <div
-                  v-for="item in thirdPartyServices"
-                  :key="item.name"
-                  class="footer__list"
-              >
-                <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
+
+              <div class="footer__actions mb-8 mt-5 mb-md-0 mt-md-8">
+                <h4>Subscribe to our Newsletter</h4>
+                <div class="newsletter mt-3">
+                  <v-form
+                      ref="newsletterForm"
+                      lazy-validation
+                      class="d-flex align-center"
+                      @submit.prevent="subscribeNewsletter"
+                  >
+                    <input
+                        v-model="newsletterForm.email"
+                        type="text"
+                        placeholder="Enter Email"
+                    />
+                    <v-btn type="submit" class="submit"> Subscribe</v-btn>
+                  </v-form>
+                </div>
               </div>
             </v-col>
 
@@ -152,38 +163,28 @@ onMounted(() => {
             </v-col>
 
             <v-col cols="12" md="4">
-              <h3>Compliance</h3>
-              <div class="footer__list">
-                <nuxt-link to="/data-privacy">Data Privacy Notice</nuxt-link>
-              </div>
-              <div class="footer__list">
-                <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>
-              </div>
-              <div class="footer__list">
-                <nuxt-link to="/cookies-policy">Cookies Policy</nuxt-link>
-              </div>
-              <div class="footer__list">
-                <a @click="toggleManageCookies">Manage Cookie Preferences</a>
+              <h3>Third Party Services</h3>
+              <div
+                  v-for="item in thirdPartyServices"
+                  :key="item.name"
+                  class="footer__list"
+              >
+                <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
               </div>
 
-              <div
-                  class="footer__actions mb-8 mt-5 mb-md-0 mt-md-8 d-flex d-sm-block flex-column justify-center align-center ml-auto"
-              >
-                <h4>Subscribe to our Newsletter</h4>
-                <div class="newsletter mt-3">
-                  <v-form
-                      ref="newsletterForm"
-                      lazy-validation
-                      class="d-flex align-center"
-                      @submit.prevent="subscribeNewsletter"
-                  >
-                    <input
-                        v-model="newsletterForm.email"
-                        type="text"
-                        placeholder="Enter Email"
-                    />
-                    <v-btn type="submit" class="submit"> Subscribe</v-btn>
-                  </v-form>
+              <div class="mt-8">
+                <h3>Compliance</h3>
+                <div class="footer__list">
+                  <nuxt-link to="/data-privacy">Data Privacy Notice</nuxt-link>
+                </div>
+                <div class="footer__list">
+                  <nuxt-link to="/privacy-policy">Privacy Policy</nuxt-link>
+                </div>
+                <div class="footer__list">
+                  <nuxt-link to="/cookies-policy">Cookies Policy</nuxt-link>
+                </div>
+                <div class="footer__list">
+                  <a @click="toggleManageCookies">Manage Cookie Preferences</a>
                 </div>
               </div>
             </v-col>
