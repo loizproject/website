@@ -5,24 +5,16 @@
       "route": "/about"
     },
     {
+      "name": "Contact Us",
+      "route": "/contact"
+    },
+    {
       "name": "FAQs",
       "route": "/faqs"
     },
     {
       "name": "Careers",
       "route": "/careers"
-    },
-    {
-      "name": "Data Privacy Notice",
-      "route": "/data-privacy"
-    },
-    {
-      "name": "Privacy Policy",
-      "route": "/privacy-policy"
-    },
-    {
-      "name": "Cookies Policy",
-      "route": "/cookies-policy"
     },
     {
       "name": "Terms and Conditions",
@@ -40,7 +32,7 @@
     },
     {
       "name": "Book Paid Consultation",
-      "route": "/book-consultation"
+      "route": "/consultations/bookings"
     },
     {
       "name": "Holiday Packages",
@@ -65,20 +57,8 @@
   ],
   "thirdPartyServices": [
     {
-      "name": "IELTS",
-      "route": "/services/third-party-services/ielts-international-english-language-testing-systems"
-    },
-    {
       "name": "Agile Online Coaching",
       "route": "/services/third-party-services/agile-online-coaching"
-    },
-    {
-      "name": "International Passport",
-      "route": "/services/third-party-services/international-passport"
-    },
-    {
-      "name": "International Drivers License",
-      "route": "/services/third-party-services/international-drivers-license"
     },
     {
       "name": "Travel Insurance",
@@ -88,7 +68,7 @@
   "resources": [
     {
       "name": "Blog",
-      "route": "/"
+      "route": "/blog"
     },
     {
       "name": "Testimonials",
