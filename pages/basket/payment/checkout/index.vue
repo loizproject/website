@@ -34,7 +34,12 @@ const payPalReady = ref(false);
 const sellectdInstallment = route.query.installment;
 
 
-const subTotal = computed(() => basketStore.getSubTotal);
+const subTotal = computed(() => {
+  return basketStore.basket.reduce((total, item) => {
+    return total + (getItemPrice(item) * item.qty);
+  }, 0);
+});
+
 const vat = computed(() => subTotal.value * 0.075);
 const total = computed(() => subTotal.value + vat.value);
 const user = computed(() => authStore.user);
@@ -122,6 +127,19 @@ function autofill() {
   form.value.lName = lastName;
   form.value.phone = phoneNumber;
   form.value.installment = sellectdInstallment;
+}
+
+function getItemPrice(item) {
+  if (item.type === 'trip' && item.options.payment_type === 'installments') {
+    // For installment payments, use the first installment amount
+    if (isNigerian.value) {
+      return parseFloat(item.options.payment_details.ngn.first);
+    } else {
+      return parseFloat(item.options.payment_details.usd.first);
+    }
+  }
+  // For one-time payments or other items, use the regular price
+  return item.price;
 }
 
 function generateREF() {
@@ -453,23 +471,21 @@ useHead({
                 <p>
                   {{ n.title }}
                   <span class="payment-type-container">
-                    <span class="payment-type-tag tw-w-full tw-p-1 text-center tw-rounded-full tw-border-2 tw-border-[#e7028e] tw-ml-2">
-                      {{ displayPaymentType(n.options.payment_type) }}
-                    </span>
-                  </span>
+      <span
+          class="payment-type-tag tw-w-full tw-p-1 text-center tw-rounded-full tw-border-2 tw-border-[#e7028e] tw-ml-2">
+        {{ displayPaymentType(n.options.payment_type) }}
+      </span>
+    </span>
                 </p>
                 <p v-if="isNigerian" class="ml-5">
                   <strong>
-                    {{ formatCurrency("NGN", n.price * n.qty) }}
+                    {{ formatCurrency("NGN", getItemPrice(n) * n.qty) }}
                   </strong>
                 </p>
                 <p v-else class="ml-5">
-                  <span
-                      class="tw-w-16 tw-rounded-full tw-border tw-border-[#e7028e]"
-                  >
-                    {{ n.options.payment_type }}
-                  </span>
-                  {{ formatCurrency("USD", n.price * n.qty, "en-US") }}
+                  <strong>
+                    {{ formatCurrency("USD", getItemPrice(n) * n.qty, "en-US") }}
+                  </strong>
                 </p>
               </div>
             </div>
