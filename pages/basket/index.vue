@@ -39,7 +39,12 @@ const basket = computed(() => {
 });
 const isNigerian = computed(() => store.location.countryCode === "NG");
 
-const totalPrice = computed(() => basketStore.getSubTotal);
+const totalPrice = computed(() => {
+  return basketStore.basket.reduce((total, item) => {
+    return total + (getItemPrice(item) * item.qty);
+  }, 0);
+});
+
 const paths = computed(() => route.path.split("/"));
 
 function consultationExpired(consltn) {
@@ -161,6 +166,19 @@ function formatTime(time24) {
   // Construct the formatted time string
   const formattedTime = `${hours12}:${minutesPadded} ${period}`;
   return formattedTime;
+}
+
+function getItemPrice(item) {
+  if (item.type === 'trip' && item.options.payment_type === 'installments') {
+    // For installment payments, use the first installment amount
+    if (isNigerian.value) {
+      return parseFloat(item.options.payment_details.ngn.first);
+    } else {
+      return parseFloat(item.options.payment_details.usd.first);
+    }
+  }
+  // For one-time payments or other items, use the regular price
+  return item.price;
 }
 
 function proceedToPayment() {
@@ -287,16 +305,16 @@ useSeoMeta({
                 <h4>{{ item.title }}</h4>
                 <div class="price-container">
                   <p v-if="isNigerian" class="ml-2 d-none d-md-block">
-                    {{ formatCurrency("NGN", item.price * item.qty) }}
+                    {{ formatCurrency("NGN", getItemPrice(item) * item.qty) }}
                   </p>
                   <p v-else class="ml-2 d-none d-md-block">
-                    {{ formatCurrency("USD", item.price * item.qty, "en-US") }}
+                    {{ formatCurrency("USD", getItemPrice(item) * item.qty, "en-US") }}
                   </p>
                   <p v-if="isNigerian" class="mobile-price d-md-none">
-                    {{ formatCurrency("NGN", item.price * item.qty) }}
+                    {{ formatCurrency("NGN", getItemPrice(item) * item.qty) }}
                   </p>
                   <p v-else class="mobile-price d-md-none">
-                    {{ formatCurrency("USD", item.price * item.qty, "en-US") }}
+                    {{ formatCurrency("USD", getItemPrice(item) * item.qty, "en-US") }}
                   </p>
                 </div>
               </div>
