@@ -1,9 +1,9 @@
 <script setup>
-import { useStore } from "~/store";
-import { useAuthStore } from "~/store/auth";
-import { useContentStore } from "~/store/content";
-import { useConsultationStore } from "~/store/consultation";
-import { useBasketStore } from "~/store/basket";
+import {useStore} from "~/store";
+import {useAuthStore} from "~/store/auth";
+import {useContentStore} from "~/store/content";
+import {useConsultationStore} from "~/store/consultation";
+import {useBasketStore} from "~/store/basket";
 
 const store = useStore();
 const authStore = useAuthStore();
@@ -19,15 +19,15 @@ const emit = defineEmits(["toggleMenu"]);
 
 const cartMenu = ref(false);
 const headerRoutes = ref([
-  { name: "Home", route: "/", active: true },
-  { name: "Services", route: "#", active: true, service: true },
+  {name: "Home", route: "/", active: true},
+  {name: "Services", route: "#", active: true, service: true},
   {
     name: "Company",
     active: false,
     children: [
-      { name: "About Us", route: "/about", active: false },
-      { name: "Contact Us", route: "/contact", active: false },
-      { name: "Careers", route: "/careers", active: false },
+      {name: "About Us", route: "/about", active: false},
+      {name: "Contact Us", route: "/contact", active: false},
+      {name: "Careers", route: "/careers", active: false},
     ],
   },
   {
@@ -35,18 +35,18 @@ const headerRoutes = ref([
     route: "",
     active: false,
     children: [
-      { name: "Blog", route: "/blog", active: false },
-      { name: "FAQs", route: "/faqs", active: false },
+      {name: "Blog", route: "/blog", active: false},
+      {name: "FAQs", route: "/faqs", active: false},
     ],
   },
   {
     name: "Booking Guide",
     route:
-      "https://drive.google.com/file/d/1vdQ9dHMe7luKT2Kz24luBnryZVin6-gI/view?usp=sharing",
+        "https://drive.google.com/file/d/1vdQ9dHMe7luKT2Kz24luBnryZVin6-gI/view?usp=sharing",
     active: false,
     target: "_blank",
   },
-  { name: "Trips", route: "/trips", active: false }
+  {name: "Trips", route: "/trips", active: false}
 
 ]);
 const loggedInUserMenu = ref([
@@ -74,7 +74,7 @@ const basket = computed(() => {
   bas.forEach((item) => {
     if (!(item && item.options && item.options.booked_date)) {
       item.parentService =
-        item && item.options ? contentStore.getSubservicesById(item.options.subservice_id) : null;
+          item && item.options ? contentStore.getSubservicesById(item.options.subservice_id) : null;
     }
   });
   return bas;
@@ -83,16 +83,15 @@ const basket = computed(() => {
 const logout = async () => {
   try {
     await authStore.logout();
-    store.setToast( "Logged out succesfully", { type: "success" } );
+    store.setToast("Logged out succesfully", {type: "success"});
     router.push("/");
   } catch (error) {
     useErrorHandler(error);
   }
 };
 
-function formatCurrency ( currency, amount, locale = 'en-US' )
-{
-  return new Intl.NumberFormat( locale, { style: 'currency', currency } ).format( amount );
+function formatCurrency(currency, amount, locale = 'en-US') {
+  return new Intl.NumberFormat(locale, {style: 'currency', currency}).format(amount);
 }
 
 const setActiveRoute = (routeName) => {
@@ -106,7 +105,7 @@ const setActiveRoute = (routeName) => {
   <section class="header header-var">
     <v-container class="d-flex align-center justify-space-between">
       <nuxt-link to="/" class="logo">
-        <nuxt-img src="/svg/logo.svg" width="140px" />
+        <nuxt-img src="/svg/logo.svg" width="140px"/>
       </nuxt-link>
 
       <div class="d-none d-md-flex align-center mx-auto">
@@ -114,33 +113,33 @@ const setActiveRoute = (routeName) => {
           <div v-if="item.service" class="mx-2 mx-md-3">
             <nav class="d-flex justify-start justify-md-center align-center mx-auto">
               <v-menu
-                offset-y
-                content-class="services-menu no-scroll"
-                open-on-hover
-                :close-on-content-click="false"
-                transition="slide-y-transition"
-                min-width="300"
-                max-width="900"
+                  offset-y
+                  content-class="services-menu no-scroll"
+                  open-on-hover
+                  :close-on-content-click="false"
+                  transition="slide-y-transition"
+                  min-width="300"
+                  max-width="900"
               >
                 <template v-slot:activator="{ props }">
                   <button
-                    class="header-var__title d-flex align-center"
-                    color="primary"
-                    dark
-                    v-bind="props"
+                      class="header-var__title d-flex align-center"
+                      color="primary"
+                      dark
+                      v-bind="props"
                   >
                     Services
                     <iconify-icon icon="mingcute:down-line"></iconify-icon>
                   </button>
                 </template>
                 <v-list
-                  class="header-var__list d-flex align-center justify-space-around flex-wrap px-5 py-6"
+                    class="header-var__list d-flex align-center justify-space-around flex-wrap px-5 py-6"
                 >
                   <v-row>
                     <v-col cols="4">
                       <nuxt-link
-                        to="/consultations/bookings"
-                        class="sub-header__title d-flex align-center"
+                          to="/consultations/bookings"
+                          class="sub-header__title d-flex align-center"
                       >
                         Book Consultation
                       </nuxt-link>
@@ -158,19 +157,19 @@ const setActiveRoute = (routeName) => {
           <div v-else-if="item.children" class="mx-2 mx-md-3">
             <nav class="d-flex justify-start justify-md-center align-center mx-auto">
               <v-menu
-                offset-y
-                content-class="services-menu no-scroll"
-                :close-on-content-click="false"
-                transition="slide-y-transition"
-                min-width="300"
-                max-width="900"
+                  offset-y
+                  content-class="services-menu no-scroll"
+                  :close-on-content-click="false"
+                  transition="slide-y-transition"
+                  min-width="300"
+                  max-width="900"
               >
                 <template v-slot:activator="{ props }">
                   <button
-                    class="header-var__title d-flex align-center"
-                    color="primary"
-                    dark
-                    v-bind="props"
+                      class="header-var__title d-flex align-center"
+                      color="primary"
+                      dark
+                      v-bind="props"
                   >
                     {{ item.name }}
                     <iconify-icon icon="mingcute:down-line"></iconify-icon>
@@ -189,31 +188,31 @@ const setActiveRoute = (routeName) => {
             </nav>
           </div>
           <nuxt-link
-            v-else
-            :to="item.route"
-            class="header__routes d-block mx-2 mx-md-3"
-            :class="route.path === item.route ? 'header__routes--active' : ''"
+              v-else
+              :to="item.route"
+              class="header__routes d-block mx-2 mx-md-3"
+              :class="route.path === item.route ? 'header__routes--active' : ''"
           >
             <div @click="setActiveRoute(item.name)" class="">
               {{ item.name }}
             </div>
             <hr
-              v-if="route.path === item.route"
-              class="header__line d-none d-md-block my-0 mx-auto"
+                v-if="route.path === item.route"
+                class="header__line d-none d-md-block my-0 mx-auto"
             />
           </nuxt-link>
         </div>
         <!-- Beta testing Route Only show in UAT -->
         <nuxt-link
-          v-if="config.public.APP_ENV === 'uat'"
-          to="/beta"
-          class="header__routes d-block mx-2 mx-md-3"
-          :class="route.path === '/beta' ? 'header__routes--active' : ''"
+            v-if="config.public.APP_ENV === 'uat'"
+            to="/beta"
+            class="header__routes d-block mx-2 mx-md-3"
+            :class="route.path === '/beta' ? 'header__routes--active' : ''"
         >
           <div class="">Beta</div>
           <hr
-            v-if="route.path === '/beta'"
-            class="header__line d-none d-md-block my-0 mx-auto"
+              v-if="route.path === '/beta'"
+              class="header__line d-none d-md-block my-0 mx-auto"
           />
         </nuxt-link>
       </div>
@@ -221,13 +220,13 @@ const setActiveRoute = (routeName) => {
         <div v-if="user" class="logged-in d-flex align-center">
           <div class="cart mx-4" @click="router.push('/basket')">
             <div
-              class="cart__img__wrapper mr-5"
-              @mouseover="cartMenu = true"
-              @mouseleave="cartMenu = false"
+                class="cart__img__wrapper mr-5"
+                @mouseover="cartMenu = true"
+                @mouseleave="cartMenu = false"
             >
               <iconify-icon
-                icon="streamline:shopping-cart-1"
-                class="cart__img"
+                  icon="streamline:shopping-cart-1"
+                  class="cart__img"
               ></iconify-icon>
             </div>
             <div v-if="basket.length > 0" class="cart__data">
@@ -236,8 +235,8 @@ const setActiveRoute = (routeName) => {
             <v-card v-if="cartMenu && basket.length > 0" class="cart__menu pa-4">
               <div v-for="(item, i) in basket" class="my-2" :key="i">
                 <div
-                  v-if="item.options && item.options.booked_date"
-                  class="d-flex items-center justify-space-between"
+                    v-if="item.options && item.options.booked_date"
+                    class="d-flex items-center justify-space-between"
                 >
                   <div>
                     <h4>Consultation Session</h4>
@@ -260,9 +259,38 @@ const setActiveRoute = (routeName) => {
                       </i>
                     </p>
                   </div>
+                  <!-- Modified price display for installments -->
+                  <div>
+                    <p v-if="isNigerian" class="ml-2">
+                      <template v-if="item.options?.payment_type === 'installments'">
+                        <!-- Show installment information -->
+                        <span v-if="item.price === parseFloat(item.options.payment_details.ngn.second)">
+              {{ formatCurrency('NGN', item.options.payment_details.ngn.second, 'en-NG') }}
+            </span>
+                        <span v-else>
+              {{ formatCurrency('NGN', item.options.payment_details.ngn.first, 'en-NG') }}
+            </span>
+                      </template>
+                      <template v-else>
+                        {{ formatCurrency('NGN', item.price * item.qty, 'en-NG') }}
+                      </template>
+                    </p>
+                    <p v-else class="ml-2">
+                      <template v-if="item.options?.payment_type === 'installments'">
+                        <!-- Show installment information -->
+                        <span v-if="item.price === parseFloat(item.options.payment_details.usd.second)">
+              {{ formatCurrency('USD', item.options.payment_details.usd.second, 'en-US') }}
+            </span>
+                        <span v-else>
+              {{ formatCurrency('USD', item.options.payment_details.usd.first, 'en-US') }}
+            </span>
+                      </template>
+                      <template v-else>
+                        {{ formatCurrency('USD', item.price * item.qty, 'en-US') }}
+                      </template>
+                    </p>
+                  </div>
                 </div>
-                <p class="ml-2" v-if="isNigerian">{{ formatCurrency('NGN', item.price * item.qty, 'en-NG') }}</p>
-                <p class="ml-2" v-else>{{ formatCurrency('USD', item.price * item.qty, 'en-US') }}</p>
                 <v-divider></v-divider>
               </div>
             </v-card>
@@ -278,9 +306,9 @@ const setActiveRoute = (routeName) => {
             </template>
             <v-list class="tw-min-w-[200px]">
               <v-list-item
-                v-for="(item, index) in loggedInUserMenu"
-                :key="index"
-                @click="item.action"
+                  v-for="(item, index) in loggedInUserMenu"
+                  :key="index"
+                  @click="item.action"
               >
                 <v-list-item-title>
                   <div class="tw-flex tw-items-center">
@@ -297,10 +325,10 @@ const setActiveRoute = (routeName) => {
           <div class="cart ml-4" @click="router.push('/basket')">
             <div class="cart__img__wrapper mr-5">
               <iconify-icon
-                @mouseover="cartMenu = true"
-                @mouseleave="cartMenu = false"
-                icon="streamline:shopping-cart-1"
-                class="cart__img"
+                  @mouseover="cartMenu = true"
+                  @mouseleave="cartMenu = false"
+                  icon="streamline:shopping-cart-1"
+                  class="cart__img"
               ></iconify-icon>
             </div>
             <div v-if="basket.length > 0" class="cart__data">
@@ -309,16 +337,16 @@ const setActiveRoute = (routeName) => {
           </div>
           <div class="d-flex align-items-center">
             <button
-              class="action__btn action__btn--signin mx-3 mx-md-2 mx-lg-6"
-              @click="router.push('/auth/login')"
+                class="action__btn action__btn--signin mx-3 mx-md-2 mx-lg-6"
+                @click="router.push('/auth/login')"
             >
               Sign In
             </button>
           </div>
           <div class="d-flex align-items-center">
             <button
-              class="action__btn action__btn--register"
-              @click="router.push('/auth/register')"
+                class="action__btn action__btn--register"
+                @click="router.push('/auth/register')"
             >
               Register
             </button>
@@ -329,10 +357,10 @@ const setActiveRoute = (routeName) => {
         <div class="cart" @click="router.push('/basket')">
           <div class="cart__img__wrapper">
             <iconify-icon
-              @mouseover="cartMenu = true"
-              @mouseleave="cartMenu = false"
-              icon="streamline:shopping-cart-1"
-              class="cart__img"
+                @mouseover="cartMenu = true"
+                @mouseleave="cartMenu = false"
+                icon="streamline:shopping-cart-1"
+                class="cart__img"
             ></iconify-icon>
           </div>
           <div v-if="basket.length > 0" class="cart__data">
