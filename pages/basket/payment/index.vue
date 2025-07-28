@@ -225,10 +225,19 @@ function formatTime(time24) {
 
 function getItemPrice(item) {
   if (item.type === 'trip' && item.options.payment_type === 'installments') {
-    // For installment payments, use the first installment amount
+    // For installment payments
     if (isNigerian.value) {
+      // If the base price matches the second installment amount, show second installment
+      if (item.price === parseFloat(item.options.payment_details.ngn.second)) {
+        return parseFloat(item.options.payment_details.ngn.second);
+      }
+      // Otherwise show first installment
       return parseFloat(item.options.payment_details.ngn.first);
     } else {
+      // USD version
+      if (item.price === parseFloat(item.options.payment_details.usd.second)) {
+        return parseFloat(item.options.payment_details.usd.second);
+      }
       return parseFloat(item.options.payment_details.usd.first);
     }
   }
